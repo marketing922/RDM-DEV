@@ -9,6 +9,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/fr', request.url))
   }
 
+  // Redirect /{locale}/admin to /admin (Payload admin has no locale prefix)
+  const localeAdminMatch = pathname.match(/^\/(fr|en)\/admin(\/.*)?$/)
+  if (localeAdminMatch) {
+    const rest = localeAdminMatch[2] || ''
+    return NextResponse.redirect(new URL(`/admin${rest}`, request.url))
+  }
+
   // Skip security headers for Payload admin (it has its own CSP)
   if (pathname.startsWith('/admin')) {
     return NextResponse.next()

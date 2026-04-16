@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { getDictionary } from '@/i18n/server'
 import type { Locale } from '@/i18n/config'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
@@ -32,74 +33,109 @@ export default async function BienfaitDetailPage({ params }: Props) {
 
   const b = benefit as any
   const benefitName = b.name || slug.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
+  const benefitNameLower = benefitName.toLowerCase()
+
+  // Extract related plants from the benefit data
+  const relatedPlants: { name: string; slug?: string }[] = []
+  if (Array.isArray(b.relatedPlants)) {
+    for (const plant of b.relatedPlants) {
+      if (typeof plant === 'object' && plant?.name) {
+        relatedPlants.push({ name: plant.name, slug: plant.slug })
+      }
+    }
+  }
 
   return (
     <main className="bg-[#FEF9E9] min-h-screen">
-      <div className="mx-auto max-w-7xl px-6 py-6">
-        <Breadcrumb
-          items={[
-            { label: dict.nav.home, href: `/${locale}` },
-            { label: dict.benefits.title, href: `/${locale}/bienfaits` },
-            { label: benefitName },
-          ]}
-        />
+      <div className="mx-auto max-w-3xl px-6 py-6">
+        {/* Back arrow */}
+        <Link
+          href={`/${locale}/bienfaits`}
+          className="inline-flex items-center gap-2 text-sm text-[#712E2F] hover:text-[#A2211E] transition-colors mb-6"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M19 12H5" />
+            <path d="M12 19l-7-7 7-7" />
+          </svg>
+          {dict.benefits.title}
+        </Link>
 
-        {/* Header */}
-        <div className="mt-8 mb-12">
+        {/* Header with emoji icon */}
+        <div className="text-center mt-4 mb-8">
+          {b.icon && (
+            <span className="text-[56px] block mb-4" role="img" aria-label={benefitName}>
+              {b.icon}
+            </span>
+          )}
           <h1 className="font-heading text-4xl font-bold text-[#054A57]">
             {benefitName}
           </h1>
           {b.shortDescription && (
-            <p className="mt-4 text-lg text-[#712E2F]/70">
+            <p className="mt-3 text-lg text-gray-500">
               {b.shortDescription}
             </p>
           )}
         </div>
 
-        {/* Quick answer callout */}
-        <section className="mb-16">
-          <div className="bg-[#FFF5D5] border border-[#DCD8C7] rounded-xl p-6">
-            <h2 className="font-heading text-xl font-semibold text-[#054A57] mb-3 flex items-center gap-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#D0802C"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="16" x2="12" y2="12" />
-                <line x1="12" y1="8" x2="12.01" y2="8" />
-              </svg>
-              {dict.benefits.detail.quickAnswer}
+        {/* Content card */}
+        <section className="mb-8">
+          <div className="bg-white border border-[#DCD8C7] rounded-xl shadow-sm p-6">
+            <h2 className="font-heading text-xl font-bold text-[#054A57] mb-4">
+              Les plantes et {['a', 'e', 'i', 'o', 'u', 'é', 'è'].some(v => benefitNameLower.startsWith(v)) ? "l'" : 'la '}{benefitNameLower}
             </h2>
             {b.description ? (
-              <div className="prose prose-sm max-w-none text-[#712E2F]" dangerouslySetInnerHTML={{ __html: b.description }} />
+              <div
+                className="prose prose-sm max-w-none text-gray-700"
+                dangerouslySetInnerHTML={{ __html: b.description }}
+              />
+            ) : b.quickAnswer ? (
+              <div
+                className="prose prose-sm max-w-none text-gray-700"
+                dangerouslySetInnerHTML={{ __html: b.quickAnswer }}
+              />
             ) : (
-              <div className="space-y-2">
-                <div className="bg-[#DCD8C7]/30 rounded h-4 w-full animate-pulse" />
-                <div className="bg-[#DCD8C7]/30 rounded h-4 w-5/6 animate-pulse" />
-                <div className="bg-[#DCD8C7]/30 rounded h-4 w-3/4 animate-pulse" />
-              </div>
+              <p className="text-gray-500 italic">Contenu en cours de r&eacute;daction...</p>
             )}
           </div>
         </section>
 
-        {/* Related plants */}
-        <section className="mb-16">
-          <h2 className="font-heading text-2xl font-semibold text-[#054A57] mb-6">
-            {dict.benefits.detail.relatedPlants}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-[#FFF5D5] border border-[#DCD8C7] rounded-2xl h-[280px] animate-pulse" />
-            ))}
-          </div>
-        </section>
+        {/* Related plants - with green checkmarks */}
+        {relatedPlants.length > 0 && (
+          <section className="mb-8">
+            <h2 className="font-heading text-xl font-bold text-[#054A57] mb-4">
+              Plantes recommand&eacute;es
+            </h2>
+            <ul className="space-y-3">
+              {relatedPlants.map((plant, i) => (
+                <li key={i} className="flex items-center gap-3">
+                  <span className="text-green-600 font-bold text-lg">&#10003;</span>
+                  {plant.slug ? (
+                    <Link
+                      href={`/${locale}/wiki/${plant.slug}`}
+                      className="text-[#054A57] hover:text-[#A2211E] hover:underline transition-colors"
+                    >
+                      {plant.name}
+                    </Link>
+                  ) : (
+                    <span className="text-[#054A57]">{plant.name}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* NO "Produits recommandés" section - Phase 1 */}
       </div>
     </main>
   )

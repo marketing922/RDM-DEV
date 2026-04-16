@@ -110,7 +110,7 @@ export function Footer({ dict, locale }: FooterProps) {
       <div className="border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 text-center text-sm text-gray-400">
           <p>&copy; {new Date().getFullYear()} {dict.meta.siteName}. {dict.footer.copyright}</p>
-          <p className="mt-1">{dict.footer.company}</p>
+          <p className="mt-1">SAS CALEBASSE &mdash; RCS Paris B 415 228 311</p>
         </div>
       </div>
     </footer>
