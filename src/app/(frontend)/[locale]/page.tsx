@@ -96,9 +96,9 @@ export default async function HomePage({ params }: Props) {
       {/* ═══════════════ 1. HERO ═══════════════ */}
       <section className="bg-[#FEF9E9]">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 md:py-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
             {/* Left column */}
-            <div>
+            <div className="flex flex-col justify-center">
               <span className="inline-block bg-[#A2211E] text-white text-xs font-bold px-3 py-1 rounded-full mb-6">
                 100% Naturel
               </span>
@@ -124,13 +124,12 @@ export default async function HomePage({ params }: Props) {
               </div>
             </div>
             {/* Right column — image */}
-            <div className="flex items-center justify-center">
+            <div className="relative rounded-2xl overflow-hidden">
               <Image
                 src="https://images.unsplash.com/photo-1514733670139-4d87a1941d55?w=1200&q=85"
                 alt="Plantes médicinales et tisanes naturelles"
-                width={1200}
-                height={800}
-                className="rounded-2xl w-full h-auto max-h-[600px] object-contain"
+                fill
+                className="object-cover"
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
