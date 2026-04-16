@@ -96,18 +96,22 @@ export default async function HomePage({ params }: Props) {
       {/* ═══════════════ 1. HERO ═══════════════ */}
       <section className="bg-[#FEF9E9]">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 md:py-24">
+          {/* Badge above the grid */}
+          <span className="inline-block bg-[#A2211E] text-white text-xs font-bold px-3 py-1 rounded-full mb-6">
+            100% Naturel
+          </span>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
             {/* Left column */}
-            <div className="flex flex-col justify-center">
-              <span className="inline-block bg-[#A2211E] text-white text-xs font-bold px-3 py-1 rounded-full mb-6">
-                100% Naturel
-              </span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#054A57] leading-tight">
-                {dict.home.hero.title}
-              </h1>
-              <p className="mt-5 text-lg text-[#712E2F]/70 leading-relaxed max-w-lg">
-                {dict.home.hero.subtitle}
-              </p>
+            <div className="flex flex-col justify-between">
+              <div>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#054A57] leading-tight">
+                  {dict.home.hero.title}
+                </h1>
+                <p className="mt-5 text-lg text-[#712E2F]/70 leading-relaxed max-w-lg">
+                  {dict.home.hero.subtitle}
+                </p>
+              </div>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
                 <Link
                   href={`/${locale}/plantes`}
@@ -123,8 +127,8 @@ export default async function HomePage({ params }: Props) {
                 </Link>
               </div>
             </div>
-            {/* Right column — image */}
-            <div className="relative rounded-2xl overflow-hidden">
+            {/* Right column — image: aligned top with h1, bottom with buttons */}
+            <div className="relative rounded-2xl overflow-hidden min-h-[350px]">
               <Image
                 src="https://images.unsplash.com/photo-1514733670139-4d87a1941d55?w=1200&q=85"
                 alt="Plantes médicinales et tisanes naturelles"
