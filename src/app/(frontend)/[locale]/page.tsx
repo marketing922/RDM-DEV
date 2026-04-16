@@ -248,7 +248,7 @@ export default async function HomePage({ params }: Props) {
                   <p className="text-lg font-semibold text-[#054A57]">
                     {plant.name}
                   </p>
-                  <p className="text-sm text-[#DCD8C7] italic">
+                  <p className="text-sm text-[#D0802C] italic">
                     {plant.latinName}
                   </p>
                   <p className="text-sm text-[#712E2F]/70 mt-2 line-clamp-2">
