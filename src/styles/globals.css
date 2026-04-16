@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --brand: #A2211E;
+    --brand-dark: #712E2F;
+    --page-bg: #FEF9E9;
+    --card-bg: #DCD8C7;
+    --radius: 8px;
+  }
+
+  html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+  body {
+    background-color: var(--page-bg);
+    color: #1F2937;
+    font-family: var(--font-lora), Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4, h5, h6 { font-family: var(--font-poppins), system-ui, sans-serif; }
+
+  /* iOS HIG: focus visible */
+  :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+  /* iOS HIG: touch targets */
+  button, a, input, select, textarea { min-height: 44px; }
+
+  /* Selection */
+  ::selection { background: rgba(162, 33, 30, 0.15); }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8;
+  }
+}

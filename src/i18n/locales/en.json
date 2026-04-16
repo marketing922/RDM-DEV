@@ -1,0 +1,265 @@
+{
+  "meta": {
+    "siteName": "Grandma's Remedies",
+    "siteDescription": "Natural plant-based dietary supplements. Herbal teas, powders and capsules made in France.",
+    "siteUrl": "https://remedes-mamie.com"
+  },
+  "nav": {
+    "home": "Home",
+    "shop": "Shop",
+    "wiki": "Plant Encyclopedia",
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "search": "Search",
+    "cart": "Cart",
+    "account": "My Account",
+    "favorites": "Favorites",
+    "login": "Log in",
+    "register": "Create an account",
+    "logout": "Log out"
+  },
+  "home": {
+    "hero": {
+      "title": "Grandma's Remedies",
+      "subtitle": "Natural remedies from ancestral wisdom",
+      "cta": "Discover our products",
+      "ctaSecondary": "Learn more"
+    },
+    "bestsellers": {
+      "title": "Our bestsellers",
+      "subtitle": "Our customers' favorite products",
+      "viewAll": "View all products"
+    },
+    "wiki": {
+      "title": "Plant Encyclopedia",
+      "subtitle": "Discover the benefits of medicinal plants",
+      "viewAll": "Explore the encyclopedia"
+    },
+    "blog": {
+      "title": "Our blog",
+      "subtitle": "Tips and news about natural remedies",
+      "viewAll": "All articles"
+    },
+    "testimonials": {
+      "title": "What our customers say",
+      "subtitle": "Authentic testimonials"
+    },
+    "newsletter": {
+      "title": "Stay informed",
+      "subtitle": "Receive our health tips and exclusive offers",
+      "placeholder": "Your email address",
+      "cta": "Subscribe",
+      "privacy": "By subscribing, you agree to our privacy policy."
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "viewAll": "All questions"
+    },
+    "certifications": {
+      "title": "Our quality commitments",
+      "bio": "Organic Farming",
+      "pharmacopee": "Pharmacopoeia",
+      "vegan": "Vegan",
+      "metaux": "Heavy Metal Free",
+      "france": "Made in France",
+      "naturel": "100% Natural"
+    }
+  },
+  "products": {
+    "catalog": {
+      "title": "Our products",
+      "subtitle": "Discover our range of natural dietary supplements",
+      "filters": "Filters",
+      "sort": "Sort by",
+      "noResults": "No products found",
+      "showMore": "Show more products"
+    },
+    "card": {
+      "addToCart": "Add to cart",
+      "outOfStock": "Out of stock",
+      "new": "New",
+      "promo": "Sale",
+      "bio": "Organic",
+      "reviews": "reviews"
+    },
+    "detail": {
+      "description": "Description",
+      "ingredients": "Ingredients",
+      "usage": "How to use",
+      "precautions": "Precautions",
+      "relatedProducts": "You may also like",
+      "addToCart": "Add to cart",
+      "quantity": "Quantity"
+    }
+  },
+  "wiki": {
+    "title": "Plant Encyclopedia",
+    "subtitle": "Everything about medicinal plants and their benefits",
+    "searchPlaceholder": "Search for a plant...",
+    "filters": {
+      "all": "All",
+      "digestive": "Digestive",
+      "apaisante": "Soothing",
+      "tonique": "Tonic",
+      "immunite": "Immunity"
+    },
+    "detail": {
+      "latinName": "Latin name",
+      "family": "Family",
+      "origin": "Origin",
+      "partsUsed": "Parts used",
+      "activeCompounds": "Active compounds",
+      "benefits": "Benefits",
+      "precautions": "Precautions for use",
+      "contraindications": "Contraindications",
+      "relatedProducts": "Related products",
+      "relatedPlants": "Related plants"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Tips, recipes and news about natural remedies",
+    "featured": "Featured article",
+    "readMore": "Read more",
+    "readingTime": "min read",
+    "byAuthor": "By",
+    "categories": {
+      "all": "All",
+      "conseils": "Tips",
+      "recettes": "Recipes",
+      "actualites": "News",
+      "bienfaits": "Benefits"
+    }
+  },
+  "benefits": {
+    "title": "Benefits",
+    "subtitle": "Discover how plants can help you in your daily life"
+  },
+  "about": {
+    "title": "About",
+    "subtitle": "Our story, our values, our commitment",
+    "values": {
+      "title": "Our values",
+      "natural": { "title": "100% Natural", "description": "Carefully selected ingredients, free from chemical additives." },
+      "france": { "title": "Made in France", "description": "All our products are designed and manufactured in France." },
+      "ancestral": { "title": "Ancestral knowledge", "description": "Recipes passed down from generation to generation." },
+      "quality": { "title": "Certified quality", "description": "Rigorous controls at every stage of production." }
+    },
+    "timeline": { "title": "Our story" },
+    "team": { "title": "Our team" },
+    "figures": { "title": "In numbers" }
+  },
+  "contact": {
+    "title": "Contact us",
+    "subtitle": "Have a question? Don't hesitate to write to us.",
+    "form": {
+      "name": "Full name",
+      "email": "Email address",
+      "subject": "Subject",
+      "message": "Your message",
+      "send": "Send message",
+      "sending": "Sending...",
+      "success": "Message sent successfully!",
+      "error": "An error occurred. Please try again."
+    },
+    "info": {
+      "address": "Address",
+      "phone": "Phone",
+      "email": "Email",
+      "hours": "Opening hours"
+    }
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "subtitle": "Find answers to the most commonly asked questions",
+    "searchPlaceholder": "Search for a question...",
+    "categories": {
+      "all": "All",
+      "produits": "Products",
+      "commande": "Orders",
+      "livraison": "Shipping",
+      "retour": "Returns"
+    }
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "What are you looking for?",
+    "noResults": "No results for",
+    "suggestions": "Suggestions:",
+    "tabs": {
+      "all": "All",
+      "products": "Products",
+      "plants": "Plants",
+      "articles": "Articles"
+    }
+  },
+  "footer": {
+    "description": "Natural remedies from ancestral wisdom, made in France with quality ingredients.",
+    "shop": {
+      "title": "Shop",
+      "tisanes": "Herbal teas",
+      "poudres": "Powders",
+      "gelules": "Capsules",
+      "promotions": "Sales"
+    },
+    "resources": {
+      "title": "Resources",
+      "wiki": "Plant Encyclopedia",
+      "blog": "Blog",
+      "bienfaits": "Benefits",
+      "faq": "FAQ"
+    },
+    "info": {
+      "title": "Information",
+      "about": "About",
+      "contact": "Contact",
+      "mentions": "Legal notice",
+      "cgv": "Terms & Conditions",
+      "confidentialite": "Privacy Policy",
+      "cookies": "Cookie Policy"
+    },
+    "contact": {
+      "title": "Contact"
+    },
+    "payments": "Secure payment",
+    "copyright": "All rights reserved.",
+    "company": "SAS CALEBASSE — RCS Paris B 415 228 311"
+  },
+  "legal": {
+    "disclaimer": {
+      "full": "The information provided on this website does not constitute medical advice. Dietary supplements do not replace a varied and balanced diet or a healthy lifestyle. Do not exceed the recommended dose. Keep out of reach of children. Consult a healthcare professional before use if you are pregnant, breastfeeding or undergoing medical treatment.",
+      "short": "Dietary supplement. Does not replace a varied and balanced diet. Do not exceed the recommended dose.",
+      "minimal": "This website offers dietary supplements, not medicines."
+    },
+    "emergency": {
+      "samu": "SAMU: 15",
+      "pompiers": "Fire brigade: 18",
+      "europe": "EU Emergency: 112",
+      "antipoison": "Poison control center"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "viewAll": "View all",
+    "learnMore": "Learn more",
+    "seeMore": "See more",
+    "readMore": "Read more",
+    "share": "Share",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "yes": "Yes",
+    "no": "No"
+  }
+}

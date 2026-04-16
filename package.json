@@ -1,0 +1,41 @@
+{
+  "name": "remedes-mamie",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generate:types": "payload generate:types",
+    "generate:graphql": "payload generate:graphQLSchema"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@payloadcms/db-postgres": "^3.83.0",
+    "@payloadcms/next": "^3.83.0",
+    "@payloadcms/plugin-seo": "^3.83.0",
+    "@payloadcms/richtext-lexical": "^3.83.0",
+    "@payloadcms/storage-vercel-blob": "^3.83.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.5.0",
+    "clsx": "^2.1.1",
+    "next": "^16.2.4",
+    "payload": "^3.83.0",
+    "postcss": "^8.5.10",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.2.2",
+    "tailwindcss-animate": "^1.0.7",
+    "typescript": "^6.0.2",
+    "zod": "^4.3.6"
+  }
+}

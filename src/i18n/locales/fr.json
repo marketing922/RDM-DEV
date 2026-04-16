@@ -1,0 +1,265 @@
+{
+  "meta": {
+    "siteName": "Les Remèdes de Mamie",
+    "siteDescription": "Compléments alimentaires naturels à base de plantes. Tisanes, poudres et gélules fabriquées en France.",
+    "siteUrl": "https://remedes-mamie.com"
+  },
+  "nav": {
+    "home": "Accueil",
+    "shop": "Boutique",
+    "wiki": "Encyclopédie des plantes",
+    "blog": "Blog",
+    "about": "À propos",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "search": "Rechercher",
+    "cart": "Panier",
+    "account": "Mon compte",
+    "favorites": "Favoris",
+    "login": "Connexion",
+    "register": "Créer un compte",
+    "logout": "Déconnexion"
+  },
+  "home": {
+    "hero": {
+      "title": "Les Remèdes de Mamie",
+      "subtitle": "Des remèdes naturels issus de la sagesse ancestrale",
+      "cta": "Découvrir nos produits",
+      "ctaSecondary": "En savoir plus"
+    },
+    "bestsellers": {
+      "title": "Nos best-sellers",
+      "subtitle": "Les produits préférés de nos clients",
+      "viewAll": "Voir tous les produits"
+    },
+    "wiki": {
+      "title": "Encyclopédie des plantes",
+      "subtitle": "Découvrez les bienfaits des plantes médicinales",
+      "viewAll": "Explorer l'encyclopédie"
+    },
+    "blog": {
+      "title": "Notre blog",
+      "subtitle": "Conseils et actualités sur les remèdes naturels",
+      "viewAll": "Tous les articles"
+    },
+    "testimonials": {
+      "title": "Ce que nos clients disent",
+      "subtitle": "Des témoignages authentiques"
+    },
+    "newsletter": {
+      "title": "Restez informé",
+      "subtitle": "Recevez nos conseils santé et nos offres exclusives",
+      "placeholder": "Votre adresse email",
+      "cta": "S'inscrire",
+      "privacy": "En vous inscrivant, vous acceptez notre politique de confidentialité."
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "viewAll": "Toutes les questions"
+    },
+    "certifications": {
+      "title": "Nos engagements qualité",
+      "bio": "Agriculture Bio",
+      "pharmacopee": "Pharmacopée",
+      "vegan": "Vegan",
+      "metaux": "Sans Métaux Lourds",
+      "france": "Fabriqué en France",
+      "naturel": "100% Naturel"
+    }
+  },
+  "products": {
+    "catalog": {
+      "title": "Nos produits",
+      "subtitle": "Découvrez notre gamme de compléments alimentaires naturels",
+      "filters": "Filtres",
+      "sort": "Trier par",
+      "noResults": "Aucun produit trouvé",
+      "showMore": "Voir plus de produits"
+    },
+    "card": {
+      "addToCart": "Ajouter au panier",
+      "outOfStock": "Rupture de stock",
+      "new": "Nouveau",
+      "promo": "Promo",
+      "bio": "Bio",
+      "reviews": "avis"
+    },
+    "detail": {
+      "description": "Description",
+      "ingredients": "Ingrédients",
+      "usage": "Mode d'emploi",
+      "precautions": "Précautions",
+      "relatedProducts": "Vous aimerez aussi",
+      "addToCart": "Ajouter au panier",
+      "quantity": "Quantité"
+    }
+  },
+  "wiki": {
+    "title": "Encyclopédie des plantes",
+    "subtitle": "Tout savoir sur les plantes médicinales et leurs bienfaits",
+    "searchPlaceholder": "Rechercher une plante...",
+    "filters": {
+      "all": "Toutes",
+      "digestive": "Digestive",
+      "apaisante": "Apaisante",
+      "tonique": "Tonique",
+      "immunite": "Immunité"
+    },
+    "detail": {
+      "latinName": "Nom latin",
+      "family": "Famille",
+      "origin": "Origine",
+      "partsUsed": "Parties utilisées",
+      "activeCompounds": "Principes actifs",
+      "benefits": "Bienfaits",
+      "precautions": "Précautions d'emploi",
+      "contraindications": "Contre-indications",
+      "relatedProducts": "Produits associés",
+      "relatedPlants": "Plantes associées"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Conseils, recettes et actualités sur les remèdes naturels",
+    "featured": "Article à la une",
+    "readMore": "Lire la suite",
+    "readingTime": "min de lecture",
+    "byAuthor": "Par",
+    "categories": {
+      "all": "Tous",
+      "conseils": "Conseils",
+      "recettes": "Recettes",
+      "actualites": "Actualités",
+      "bienfaits": "Bienfaits"
+    }
+  },
+  "benefits": {
+    "title": "Les bienfaits",
+    "subtitle": "Découvrez comment les plantes peuvent vous aider au quotidien"
+  },
+  "about": {
+    "title": "À propos",
+    "subtitle": "Notre histoire, nos valeurs, notre engagement",
+    "values": {
+      "title": "Nos valeurs",
+      "natural": { "title": "100% Naturel", "description": "Des ingrédients sélectionnés avec soin, sans additifs chimiques." },
+      "france": { "title": "Fabriqué en France", "description": "Tous nos produits sont conçus et fabriqués en France." },
+      "ancestral": { "title": "Savoir ancestral", "description": "Des recettes transmises de génération en génération." },
+      "quality": { "title": "Qualité certifiée", "description": "Des contrôles rigoureux à chaque étape de fabrication." }
+    },
+    "timeline": { "title": "Notre histoire" },
+    "team": { "title": "Notre équipe" },
+    "figures": { "title": "En chiffres" }
+  },
+  "contact": {
+    "title": "Nous contacter",
+    "subtitle": "Une question ? N'hésitez pas à nous écrire.",
+    "form": {
+      "name": "Nom complet",
+      "email": "Adresse email",
+      "subject": "Sujet",
+      "message": "Votre message",
+      "send": "Envoyer le message",
+      "sending": "Envoi en cours...",
+      "success": "Message envoyé avec succès !",
+      "error": "Une erreur est survenue. Veuillez réessayer."
+    },
+    "info": {
+      "address": "Adresse",
+      "phone": "Téléphone",
+      "email": "Email",
+      "hours": "Horaires"
+    }
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "subtitle": "Retrouvez les réponses aux questions les plus posées",
+    "searchPlaceholder": "Rechercher une question...",
+    "categories": {
+      "all": "Toutes",
+      "produits": "Produits",
+      "commande": "Commande",
+      "livraison": "Livraison",
+      "retour": "Retour"
+    }
+  },
+  "search": {
+    "title": "Recherche",
+    "placeholder": "Que recherchez-vous ?",
+    "noResults": "Aucun résultat pour",
+    "suggestions": "Suggestions :",
+    "tabs": {
+      "all": "Tout",
+      "products": "Produits",
+      "plants": "Plantes",
+      "articles": "Articles"
+    }
+  },
+  "footer": {
+    "description": "Des remèdes naturels issus de la sagesse ancestrale, fabriqués en France avec des ingrédients de qualité.",
+    "shop": {
+      "title": "Boutique",
+      "tisanes": "Tisanes",
+      "poudres": "Poudres",
+      "gelules": "Gélules",
+      "promotions": "Promotions"
+    },
+    "resources": {
+      "title": "Ressources",
+      "wiki": "Encyclopédie des plantes",
+      "blog": "Blog",
+      "bienfaits": "Les bienfaits",
+      "faq": "FAQ"
+    },
+    "info": {
+      "title": "Informations",
+      "about": "À propos",
+      "contact": "Contact",
+      "mentions": "Mentions légales",
+      "cgv": "CGV",
+      "confidentialite": "Politique de confidentialité",
+      "cookies": "Politique de cookies"
+    },
+    "contact": {
+      "title": "Contact"
+    },
+    "payments": "Paiement sécurisé",
+    "copyright": "Tous droits réservés.",
+    "company": "SAS CALEBASSE — RCS Paris B 415 228 311"
+  },
+  "legal": {
+    "disclaimer": {
+      "full": "Les informations fournies sur ce site ne constituent pas un avis médical. Les compléments alimentaires ne remplacent pas une alimentation variée et équilibrée ni un mode de vie sain. Ne pas dépasser les doses recommandées. Tenir hors de portée des enfants. Consulter un professionnel de santé avant utilisation en cas de grossesse, allaitement ou traitement médical.",
+      "short": "Complément alimentaire. Ne se substitue pas à une alimentation variée et équilibrée. Ne pas dépasser la dose recommandée.",
+      "minimal": "Ce site propose des compléments alimentaires, pas des médicaments."
+    },
+    "emergency": {
+      "samu": "SAMU : 15",
+      "pompiers": "Pompiers : 18",
+      "europe": "Urgence UE : 112",
+      "antipoison": "Centre antipoison"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "retry": "Réessayer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "viewAll": "Voir tout",
+    "learnMore": "En savoir plus",
+    "seeMore": "Voir plus",
+    "readMore": "Lire la suite",
+    "share": "Partager",
+    "copy": "Copier",
+    "copied": "Copié !",
+    "yes": "Oui",
+    "no": "Non"
+  }
+}
