@@ -7,6 +7,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { MobileNav } from '@/components/layout/MobileNav'
 import { Disclaimer } from '@/components/shared/Disclaimer'
+import { OrganizationJsonLd } from '@/components/seo'
 import '@/styles/globals.css'
 
 type Props = { children: React.ReactNode; params: Promise<{ locale: string }> }
@@ -33,6 +34,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={fontVariables}>
       <body className="bg-page text-neutral-600 font-body antialiased">
+        <OrganizationJsonLd />
         <Navbar dict={dict} locale={locale} />
         <main className="min-h-screen">{children}</main>
         <Disclaimer variant="minimal" dict={dict} />
