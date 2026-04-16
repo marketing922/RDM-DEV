@@ -2,6 +2,13 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // Redirect root "/" to default locale "/fr"
+  if (pathname === '/') {
+    return NextResponse.redirect(new URL('/fr', request.url))
+  }
+
   const response = NextResponse.next()
 
   // Security headers
