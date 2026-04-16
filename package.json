@@ -14,8 +14,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
+    "dependencies": {
     "@payloadcms/db-postgres": "^3.83.0",
     "@payloadcms/next": "^3.83.0",
     "@payloadcms/plugin-seo": "^3.83.0",
