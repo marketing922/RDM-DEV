@@ -126,7 +126,7 @@ export default async function HomePage({ params }: Props) {
             {/* Right column — image */}
             <div className="aspect-square relative rounded-2xl overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1515694346937-94d85e39d29c?w=800&q=80"
+                src="https://images.unsplash.com/photo-1471943311424-646960669fbc?w=800&q=80"
                 alt="Plantes médicinales et tisanes naturelles"
                 fill
                 className="object-cover"
