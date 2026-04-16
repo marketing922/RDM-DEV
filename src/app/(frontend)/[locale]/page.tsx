@@ -10,7 +10,7 @@ type Props = { params: Promise<{ locale: string }> }
 /* ─── Mock Data (fallback when DB is empty) ──────────────────────── */
 
 const mockPlants = [
-  { name: 'Camomille', latinName: 'Matricaria chamomilla', description: 'Apaisante et digestive, la camomille est utilisée depuis l\'Antiquité pour calmer les tensions et favoriser le sommeil.', image: 'https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=600&q=80', slug: 'camomille' },
+  { name: 'Camomille', latinName: 'Matricaria chamomilla', description: 'Apaisante et digestive, la camomille est utilisée depuis l\'Antiquité pour calmer les tensions et favoriser le sommeil.', image: 'https://images.unsplash.com/photo-1623171404303-5f3bd1949ca0?w=600&q=80', slug: 'camomille' },
   { name: 'Menthe Poivrée', latinName: 'Mentha x piperita', description: 'Rafraîchissante et tonique, la menthe poivrée soulage les maux de tête et facilite la digestion.', image: 'https://images.unsplash.com/photo-1628556270448-4d4e4148e1b1?w=600&q=80', slug: 'menthe-poivree' },
   { name: 'Lavande', latinName: 'Lavandula angustifolia', description: 'Reconnue pour ses vertus relaxantes, la lavande aide à réduire le stress et améliore la qualité du sommeil.', image: 'https://images.unsplash.com/photo-1499002238440-d264edd596ec?w=600&q=80', slug: 'lavande' },
 ]
