@@ -34,7 +34,7 @@ export default async function PlantDetailPage({ params }: Props) {
   const e = entry as any
 
   const tabs = [
-    { key: 'description', label: dict.products.detail.description },
+    { key: 'description', label: dict.wiki.detail.description || 'Description' },
     { key: 'activeCompounds', label: dict.wiki.detail.activeCompounds },
     { key: 'benefits', label: dict.wiki.detail.benefits },
     { key: 'precautions', label: dict.wiki.detail.precautions },
@@ -52,113 +52,88 @@ export default async function PlantDetailPage({ params }: Props) {
           ]}
         />
 
-        {/* 2-column layout */}
-        <div className="mt-lg flex flex-col lg:flex-row gap-xl">
-          {/* Main content (left 2/3) */}
-          <div className="w-full lg:w-2/3">
-            {/* Hero image */}
-            {e.images?.[0] ? (
-              <div className="relative h-64 rounded-xl overflow-hidden">
-                <img
-                  src={e.images[0].url}
-                  alt={e.images[0].alt || plantName}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ) : (
-              <div className="bg-card h-64 rounded-xl animate-pulse" />
-            )}
-
-            {/* Name */}
-            <div className="mt-lg">
-              <h1 className="font-heading text-heading-1 text-neutral-600">
-                {plantName}
-              </h1>
-              <p className="mt-xs text-body-lg text-neutral-300 italic">
-                {e.latinName || ''}
-              </p>
+        {/* Main content */}
+        <div className="mt-lg">
+          {/* Hero image */}
+          {e.images?.[0] ? (
+            <div className="relative h-64 rounded-xl overflow-hidden">
+              <img
+                src={e.images[0].url}
+                alt={e.images[0].alt || plantName}
+                className="w-full h-full object-cover"
+              />
             </div>
+          ) : (
+            <div className="bg-card h-64 rounded-xl animate-pulse" />
+          )}
 
-            {/* Info row */}
-            <div className="mt-md flex flex-wrap gap-lg text-body-sm text-neutral-400">
-              <div>
-                <span className="font-medium text-neutral-500">
-                  {dict.wiki.detail.family}:
-                </span>{' '}
-                {e.family || <span className="bg-card rounded px-xs py-[2px] animate-pulse inline-block w-24 h-4" />}
-              </div>
-              <div>
-                <span className="font-medium text-neutral-500">
-                  {dict.wiki.detail.origin}:
-                </span>{' '}
-                {e.origin || <span className="bg-card rounded px-xs py-[2px] animate-pulse inline-block w-24 h-4" />}
-              </div>
-              <div>
-                <span className="font-medium text-neutral-500">
-                  {dict.wiki.detail.partsUsed}:
-                </span>{' '}
-                {e.partsUsed || <span className="bg-card rounded px-xs py-[2px] animate-pulse inline-block w-24 h-4" />}
-              </div>
+          {/* Name */}
+          <div className="mt-lg">
+            <h1 className="font-heading text-heading-1 text-neutral-600">
+              {plantName}
+            </h1>
+            <p className="mt-xs text-body-lg text-neutral-300 italic">
+              {e.latinName || ''}
+            </p>
+          </div>
+
+          {/* Info row */}
+          <div className="mt-md flex flex-wrap gap-lg text-body-sm text-neutral-400">
+            <div>
+              <span className="font-medium text-neutral-500">
+                {dict.wiki.detail.family}:
+              </span>{' '}
+              {e.family || <span className="bg-card rounded px-xs py-[2px] animate-pulse inline-block w-24 h-4" />}
             </div>
-
-            {/* Tabs */}
-            <div className="mt-xl border-b border-neutral-100">
-              <div className="flex gap-md overflow-x-auto">
-                {tabs.map((tab, i) => (
-                  <button
-                    key={tab.key}
-                    className={`pb-sm px-xs text-body-sm font-ui font-medium whitespace-nowrap transition-colors duration-fast border-b-2 ${
-                      i === 0
-                        ? 'border-brand text-brand'
-                        : 'border-transparent text-neutral-300 hover:text-neutral-500'
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
+            <div>
+              <span className="font-medium text-neutral-500">
+                {dict.wiki.detail.origin}:
+              </span>{' '}
+              {e.origin || <span className="bg-card rounded px-xs py-[2px] animate-pulse inline-block w-24 h-4" />}
             </div>
-
-            {/* Tab content */}
-            <div className="mt-lg">
-              {e.description ? (
-                <div className="prose prose-neutral max-w-none text-body text-neutral-500" dangerouslySetInnerHTML={{ __html: e.description }} />
-              ) : (
-                <div className="space-y-md">
-                  <div className="bg-card rounded-lg h-4 w-full animate-pulse" />
-                  <div className="bg-card rounded-lg h-4 w-5/6 animate-pulse" />
-                  <div className="bg-card rounded-lg h-4 w-4/6 animate-pulse" />
-                  <div className="bg-card rounded-lg h-4 w-full animate-pulse" />
-                  <div className="bg-card rounded-lg h-4 w-3/4 animate-pulse" />
-                  <div className="bg-card rounded-lg h-4 w-5/6 animate-pulse" />
-                  <div className="bg-card rounded-lg h-4 w-2/3 animate-pulse" />
-                </div>
-              )}
+            <div>
+              <span className="font-medium text-neutral-500">
+                {dict.wiki.detail.partsUsed}:
+              </span>{' '}
+              {e.partsUsed || <span className="bg-card rounded px-xs py-[2px] animate-pulse inline-block w-24 h-4" />}
             </div>
           </div>
 
-          {/* Sidebar (right 1/3) */}
-          <aside className="w-full lg:w-1/3">
-            <div className="lg:sticky lg:top-[100px]">
-              <div className="bg-white rounded-xl shadow p-lg">
-                <h2 className="font-heading text-heading-4 text-neutral-600 mb-md">
-                  {dict.wiki.detail.relatedProducts}
-                </h2>
-
-                <div className="space-y-md">
-                  {Array.from({ length: 3 }).map((_, i) => (
-                    <div key={i} className="flex gap-sm">
-                      <div className="w-16 h-16 bg-card rounded-lg animate-pulse shrink-0" />
-                      <div className="flex-1 space-y-xs">
-                        <div className="bg-card rounded h-4 w-3/4 animate-pulse" />
-                        <div className="bg-card rounded h-4 w-1/2 animate-pulse" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          {/* Tabs */}
+          <div className="mt-xl border-b border-neutral-100">
+            <div className="flex gap-md overflow-x-auto">
+              {tabs.map((tab, i) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  className={`pb-sm px-xs text-body-sm font-ui font-medium whitespace-nowrap transition-colors duration-fast border-b-2 ${
+                    i === 0
+                      ? 'border-brand text-brand'
+                      : 'border-transparent text-neutral-300 hover:text-neutral-500'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
             </div>
-          </aside>
+          </div>
+
+          {/* Tab content */}
+          <div className="mt-lg mb-2xl">
+            {e.description ? (
+              <div className="prose prose-neutral max-w-none text-body text-neutral-500" dangerouslySetInnerHTML={{ __html: e.description }} />
+            ) : (
+              <div className="space-y-md">
+                <div className="bg-card rounded-lg h-4 w-full animate-pulse" />
+                <div className="bg-card rounded-lg h-4 w-5/6 animate-pulse" />
+                <div className="bg-card rounded-lg h-4 w-4/6 animate-pulse" />
+                <div className="bg-card rounded-lg h-4 w-full animate-pulse" />
+                <div className="bg-card rounded-lg h-4 w-3/4 animate-pulse" />
+                <div className="bg-card rounded-lg h-4 w-5/6 animate-pulse" />
+                <div className="bg-card rounded-lg h-4 w-2/3 animate-pulse" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </main>

@@ -99,12 +99,6 @@ export default async function PolitiqueCookiesPage({ params }: Props) {
                             <td className="py-sm">Essentiel</td>
                           </tr>
                           <tr>
-                            <td className="py-sm pr-md font-mono text-caption">cart</td>
-                            <td className="py-sm pr-md">Contenu du panier</td>
-                            <td className="py-sm pr-md">30 jours</td>
-                            <td className="py-sm">Essentiel</td>
-                          </tr>
-                          <tr>
                             <td className="py-sm pr-md font-mono text-caption">session</td>
                             <td className="py-sm pr-md">Authentification utilisateur</td>
                             <td className="py-sm pr-md">Session</td>

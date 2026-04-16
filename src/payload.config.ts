@@ -44,6 +44,7 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URI,
     },
+    push: process.env.PAYLOAD_PUSH !== 'false',
   }),
   localization: {
     locales: ['fr', 'en'],
@@ -51,13 +52,12 @@ export default buildConfig({
   },
   plugins: [
     seoPlugin({
-      collections: ['benefits', 'products', 'wikiEntries', 'blogPosts', 'pages'],
+      collections: ['benefits', 'wikiEntries', 'blogPosts', 'pages'],
       generateTitle: ({ doc }) => `${(doc as any)?.name || (doc as any)?.title || ''} | Les Remèdes de Mamie`,
       generateURL: ({ doc, collectionSlug }) => {
         const slug = (doc as any)?.slug || ''
         const prefixMap: Record<string, string> = {
-          products: '/produits',
-          wikiEntries: '/wiki',
+          wikiEntries: '/plantes',
           blogPosts: '/blog',
           benefits: '/bienfaits',
           pages: '',

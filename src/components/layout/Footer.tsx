@@ -9,7 +9,7 @@ export function Footer({ dict, locale }: FooterProps) {
     <footer className="bg-[#1F2937] text-white">
       {/* Main grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 
           {/* Brand */}
           <div className="lg:col-span-1">
@@ -32,17 +32,6 @@ export function Footer({ dict, locale }: FooterProps) {
                 </a>
               ))}
             </div>
-          </div>
-
-          {/* Boutique */}
-          <div>
-            <h4 className="text-sm font-semibold font-heading text-[#FEF9E9] mb-4">{dict.footer.shop.title}</h4>
-            <ul className="space-y-2.5">
-              <li><Link href={p('/boutique?cat=tisanes')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.shop.tisanes}</Link></li>
-              <li><Link href={p('/boutique?cat=poudres')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.shop.poudres}</Link></li>
-              <li><Link href={p('/boutique?cat=gelules')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.shop.gelules}</Link></li>
-              <li><Link href={p('/boutique?cat=promos')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.shop.promotions}</Link></li>
-            </ul>
           </div>
 
           {/* Ressources */}
@@ -104,16 +93,6 @@ export function Footer({ dict, locale }: FooterProps) {
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-400"><path d={cert.icon} /></svg>
                 <span className="text-xs font-medium text-gray-200">{cert.label}</span>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Payment */}
-        <div className="pb-6 flex flex-col items-center gap-3">
-          <p className="text-xs text-gray-400 uppercase tracking-wider font-medium">{dict.footer.payments}</p>
-          <div className="flex items-center gap-3">
-            {['Visa', 'Mastercard', 'CB', 'Stripe'].map((m) => (
-              <div key={m} className="px-3 py-1 bg-white/10 rounded text-xs font-medium text-gray-200">{m}</div>
             ))}
           </div>
         </div>

@@ -89,28 +89,6 @@ export default async function BienfaitDetailPage({ params }: Props) {
           </div>
         </section>
 
-        {/* Recommended products */}
-        <section className="mb-2xl">
-          <h2 className="font-heading text-heading-3 text-neutral-600 mb-lg">
-            {dict.benefits.detail.recommendedProducts}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-lg">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-xl shadow overflow-hidden"
-              >
-                <div className="aspect-square bg-card animate-pulse" />
-                <div className="p-md space-y-xs">
-                  <div className="bg-card rounded h-4 w-3/4 animate-pulse" />
-                  <div className="bg-card rounded h-4 w-1/2 animate-pulse" />
-                  <div className="bg-card rounded h-5 w-1/3 animate-pulse mt-sm" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* Related plants */}
         <section className="mb-2xl">
           <h2 className="font-heading text-heading-3 text-neutral-600 mb-lg">

@@ -1,4 +1,3 @@
-export * from './products'
 export * from './wiki'
 export * from './blog'
 export * from './benefits'

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { getProducts, getWikiEntries, getBlogPosts, getBenefits } from '@/lib/queries'
+import { getWikiEntries, getBlogPosts, getBenefits } from '@/lib/queries'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://remedes-mamie.com'
 
@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Static pages
   const staticPages = [
-    '', '/plantes', '/blog', '/bienfaits', '/boutique',
+    '', '/plantes', '/blog', '/bienfaits',
     '/contact', '/faq', '/a-propos', '/recherche',
     '/mentions-legales', '/cgv', '/politique-confidentialite',
     '/politique-cookies', '/avertissement-sante', '/accessibilite',
@@ -19,26 +19,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: `${siteUrl}/${locale}${page}`,
       lastModified: new Date(),
       changeFrequency: page === '' ? 'daily' as const : 'weekly' as const,
-      priority: page === '' ? 1.0 : page === '/boutique' ? 0.9 : 0.7,
+      priority: page === '' ? 1.0 : 0.7,
     }))
   )
 
   // Dynamic pages from Payload
-  const [products, wiki, blog, benefits] = await Promise.all([
-    getProducts({ limit: 500, locale: 'fr' }),
+  const [wiki, blog, benefits] = await Promise.all([
     getWikiEntries({ limit: 500, locale: 'fr' }),
     getBlogPosts({ limit: 500, locale: 'fr' }),
     getBenefits({ limit: 500, locale: 'fr' }),
   ])
-
-  const productEntries = locales.flatMap((locale) =>
-    products.docs.map((p: any) => ({
-      url: `${siteUrl}/${locale}/boutique/${p.slug}`,
-      lastModified: new Date(p.updatedAt || p.createdAt),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    }))
-  )
 
   const wikiEntries = locales.flatMap((locale) =>
     wiki.docs.map((w: any) => ({
@@ -69,7 +59,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticEntries,
-    ...productEntries,
     ...wikiEntries,
     ...blogEntries,
     ...benefitEntries,

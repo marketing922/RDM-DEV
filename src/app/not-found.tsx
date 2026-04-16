@@ -20,10 +20,10 @@ export default function NotFound() {
               Retour a l&apos;accueil
             </Link>
             <Link
-              href="/boutique"
+              href="/fr/plantes"
               className="inline-flex items-center justify-center font-ui font-medium rounded-xl transition-all duration-200 transform will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2 bg-transparent text-brand border-2 border-brand hover:bg-brand hover:text-white active:scale-[0.97] h-[44px] px-lg text-body"
             >
-              Voir la boutique
+              Explorer les plantes
             </Link>
           </div>
         </div>
