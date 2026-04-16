@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { getDictionary } from '@/i18n/server'
 import type { Locale } from '@/i18n/config'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
+import { getWikiEntries } from '@/lib/queries'
+import { WikiCard } from '@/components/shared/WikiCard'
 
 type Props = {
   params: Promise<{ locale: string }>
@@ -20,6 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PlantesPage({ params }: Props) {
   const { locale } = await params
   const dict = await getDictionary(locale as Locale)
+  const { docs: entries } = await getWikiEntries({ limit: 12, locale })
 
   const filterKeys = Object.keys(dict.wiki.filters) as Array<
     keyof typeof dict.wiki.filters
@@ -87,14 +90,20 @@ export default async function PlantesPage({ params }: Props) {
           ))}
         </div>
 
-        {/* Grid skeleton */}
+        {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={i}
-              className="bg-card rounded-2xl h-[320px] animate-pulse"
-            />
-          ))}
+          {entries.length > 0 ? (
+            entries.map((entry) => (
+              <WikiCard key={entry.id} entry={entry as any} locale={locale} />
+            ))
+          ) : (
+            Array.from({ length: 8 }).map((_, i) => (
+              <div
+                key={i}
+                className="bg-card rounded-2xl h-[320px] animate-pulse"
+              />
+            ))
+          )}
         </div>
 
         {/* Pagination placeholder */}

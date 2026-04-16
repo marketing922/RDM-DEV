@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { getDictionary } from '@/i18n/server'
 import type { Locale } from '@/i18n/config'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
+import { getBenefitBySlug } from '@/lib/queries'
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>
@@ -10,24 +12,26 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
   const dict = await getDictionary(locale as Locale)
+  const benefit = await getBenefitBySlug(slug, locale)
 
-  const benefitName = slug
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+  if (!benefit) {
+    return { title: `Not Found | ${dict.meta.siteName}` }
+  }
 
   return {
-    title: `${benefitName} | ${dict.benefits.title} | ${dict.meta.siteName}`,
-    description: `${dict.benefits.subtitle} - ${benefitName}`,
+    title: `${(benefit as any).name} | ${dict.benefits.title} | ${dict.meta.siteName}`,
+    description: (benefit as any).shortDescription || `${dict.benefits.subtitle}`,
   }
 }
 
 export default async function BienfaitDetailPage({ params }: Props) {
   const { locale, slug } = await params
   const dict = await getDictionary(locale as Locale)
+  const benefit = await getBenefitBySlug(slug, locale)
+  if (!benefit) notFound()
 
-  const benefitName = slug
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+  const b = benefit as any
+  const benefitName = b.name || slug.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
 
   return (
     <main className="bg-page min-h-screen">
@@ -45,6 +49,11 @@ export default async function BienfaitDetailPage({ params }: Props) {
           <h1 className="font-heading text-heading-1 text-neutral-600">
             {benefitName}
           </h1>
+          {b.shortDescription && (
+            <p className="mt-sm text-body-lg text-neutral-400">
+              {b.shortDescription}
+            </p>
+          )}
         </div>
 
         {/* Quick answer callout */}
@@ -68,11 +77,15 @@ export default async function BienfaitDetailPage({ params }: Props) {
               </svg>
               {dict.benefits.detail.quickAnswer}
             </h2>
-            <div className="space-y-xs">
-              <div className="bg-success-border/30 rounded h-4 w-full animate-pulse" />
-              <div className="bg-success-border/30 rounded h-4 w-5/6 animate-pulse" />
-              <div className="bg-success-border/30 rounded h-4 w-3/4 animate-pulse" />
-            </div>
+            {b.description ? (
+              <div className="prose prose-sm max-w-none text-success-text" dangerouslySetInnerHTML={{ __html: b.description }} />
+            ) : (
+              <div className="space-y-xs">
+                <div className="bg-success-border/30 rounded h-4 w-full animate-pulse" />
+                <div className="bg-success-border/30 rounded h-4 w-5/6 animate-pulse" />
+                <div className="bg-success-border/30 rounded h-4 w-3/4 animate-pulse" />
+              </div>
+            )}
           </div>
         </section>
 

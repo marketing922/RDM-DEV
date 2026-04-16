@@ -4,6 +4,8 @@ import type { Locale } from '@/i18n/config'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
+import { getProducts } from '@/lib/queries'
+import { ProductCard } from '@/components/shared/ProductCard'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -32,6 +34,7 @@ function ProductSkeleton() {
 export default async function BoutiquePage({ params }: Props) {
   const { locale } = await params
   const dict = await getDictionary(locale as Locale)
+  const { docs: products } = await getProducts({ limit: 12, locale })
 
   const filterCategories = dict.products.catalog.filterCategories as Record<string, string>
   const pagination = dict.products.catalog.pagination as Record<string, string>
@@ -82,9 +85,15 @@ export default async function BoutiquePage({ params }: Props) {
 
           {/* Product grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-lg">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <ProductSkeleton key={i} />
-            ))}
+            {products.length > 0 ? (
+              products.map((product) => (
+                <ProductCard key={product.id} product={product as any} locale={locale} />
+              ))
+            ) : (
+              Array.from({ length: 8 }).map((_, i) => (
+                <ProductSkeleton key={i} />
+              ))
+            )}
           </div>
 
           {/* Pagination */}

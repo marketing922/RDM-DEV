@@ -2,6 +2,10 @@ import { getDictionary } from '@/i18n/server'
 import type { Locale } from '@/i18n/config'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
+import { getFeaturedProducts, getWikiEntries, getBlogPosts } from '@/lib/queries'
+import { ProductCard } from '@/components/shared/ProductCard'
+import { WikiCard } from '@/components/shared/WikiCard'
+import { ArticleCard } from '@/components/shared/ArticleCard'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -34,6 +38,9 @@ function SkeletonArticle() {
 export default async function HomePage({ params }: Props) {
   const { locale } = await params
   const dict = await getDictionary(locale as Locale)
+  const { docs: featuredProducts } = await getFeaturedProducts(4, locale)
+  const { docs: wikiEntries } = await getWikiEntries({ limit: 4, locale })
+  const { docs: blogPosts } = await getBlogPosts({ limit: 3, locale })
 
   return (
     <>
@@ -69,9 +76,15 @@ export default async function HomePage({ params }: Props) {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-lg">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <SkeletonCard key={i} />
-            ))}
+            {featuredProducts.length > 0 ? (
+              featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product as any} locale={locale} />
+              ))
+            ) : (
+              Array.from({ length: 4 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))
+            )}
           </div>
           <div className="text-center mt-2xl">
             <Button variant="secondary">
@@ -93,16 +106,22 @@ export default async function HomePage({ params }: Props) {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-lg">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Card key={i}>
-                <div className="aspect-square bg-neutral-100 animate-pulse rounded-t-xl" />
-                <div className="p-md space-y-xs">
-                  <div className="h-4 bg-neutral-100 rounded animate-pulse w-2/3" />
-                  <div className="h-3 bg-neutral-100 rounded animate-pulse w-full" />
-                  <div className="h-3 bg-neutral-100 rounded animate-pulse w-4/5" />
-                </div>
-              </Card>
-            ))}
+            {wikiEntries.length > 0 ? (
+              wikiEntries.map((entry) => (
+                <WikiCard key={entry.id} entry={entry as any} locale={locale} />
+              ))
+            ) : (
+              Array.from({ length: 4 }).map((_, i) => (
+                <Card key={i}>
+                  <div className="aspect-square bg-neutral-100 animate-pulse rounded-t-xl" />
+                  <div className="p-md space-y-xs">
+                    <div className="h-4 bg-neutral-100 rounded animate-pulse w-2/3" />
+                    <div className="h-3 bg-neutral-100 rounded animate-pulse w-full" />
+                    <div className="h-3 bg-neutral-100 rounded animate-pulse w-4/5" />
+                  </div>
+                </Card>
+              ))
+            )}
           </div>
           <div className="text-center mt-2xl">
             <Button variant="secondary">
@@ -124,9 +143,15 @@ export default async function HomePage({ params }: Props) {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <SkeletonArticle key={i} />
-            ))}
+            {blogPosts.length > 0 ? (
+              blogPosts.map((post) => (
+                <ArticleCard key={post.id} post={post as any} locale={locale} />
+              ))
+            ) : (
+              Array.from({ length: 3 }).map((_, i) => (
+                <SkeletonArticle key={i} />
+              ))
+            )}
           </div>
           <div className="text-center mt-2xl">
             <Button variant="secondary">

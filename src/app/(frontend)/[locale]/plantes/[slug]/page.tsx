@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 import { getDictionary } from '@/i18n/server'
 import type { Locale } from '@/i18n/config'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
+import { getWikiEntryBySlug } from '@/lib/queries'
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>
@@ -10,24 +12,26 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
   const dict = await getDictionary(locale as Locale)
+  const entry = await getWikiEntryBySlug(slug, locale)
 
-  const plantName = slug
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+  if (!entry) {
+    return { title: `Not Found | ${dict.meta.siteName}` }
+  }
 
   return {
-    title: `${plantName} | ${dict.wiki.title} | ${dict.meta.siteName}`,
-    description: `${dict.wiki.detail.benefits} - ${plantName}`,
+    title: `${entry.name} | ${dict.wiki.title} | ${dict.meta.siteName}`,
+    description: (entry as any).shortDescription || `${dict.wiki.detail.benefits} - ${entry.name}`,
   }
 }
 
 export default async function PlantDetailPage({ params }: Props) {
   const { locale, slug } = await params
   const dict = await getDictionary(locale as Locale)
+  const entry = await getWikiEntryBySlug(slug, locale)
+  if (!entry) notFound()
 
-  const plantName = slug
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+  const plantName = entry.name || slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+  const e = entry as any
 
   const tabs = [
     { key: 'description', label: dict.products.detail.description },
@@ -52,8 +56,18 @@ export default async function PlantDetailPage({ params }: Props) {
         <div className="mt-lg flex flex-col lg:flex-row gap-xl">
           {/* Main content (left 2/3) */}
           <div className="w-full lg:w-2/3">
-            {/* Hero image placeholder */}
-            <div className="bg-card h-64 rounded-xl animate-pulse" />
+            {/* Hero image */}
+            {e.images?.[0] ? (
+              <div className="relative h-64 rounded-xl overflow-hidden">
+                <img
+                  src={e.images[0].url}
+                  alt={e.images[0].alt || plantName}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ) : (
+              <div className="bg-card h-64 rounded-xl animate-pulse" />
+            )}
 
             {/* Name */}
             <div className="mt-lg">
@@ -61,7 +75,7 @@ export default async function PlantDetailPage({ params }: Props) {
                 {plantName}
               </h1>
               <p className="mt-xs text-body-lg text-neutral-300 italic">
-                Plantus latinus placeholder
+                {e.latinName || ''}
               </p>
             </div>
 
@@ -71,19 +85,19 @@ export default async function PlantDetailPage({ params }: Props) {
                 <span className="font-medium text-neutral-500">
                   {dict.wiki.detail.family}:
                 </span>{' '}
-                <span className="bg-card rounded px-xs py-[2px] animate-pulse inline-block w-24 h-4" />
+                {e.family || <span className="bg-card rounded px-xs py-[2px] animate-pulse inline-block w-24 h-4" />}
               </div>
               <div>
                 <span className="font-medium text-neutral-500">
                   {dict.wiki.detail.origin}:
                 </span>{' '}
-                <span className="bg-card rounded px-xs py-[2px] animate-pulse inline-block w-24 h-4" />
+                {e.origin || <span className="bg-card rounded px-xs py-[2px] animate-pulse inline-block w-24 h-4" />}
               </div>
               <div>
                 <span className="font-medium text-neutral-500">
                   {dict.wiki.detail.partsUsed}:
                 </span>{' '}
-                <span className="bg-card rounded px-xs py-[2px] animate-pulse inline-block w-24 h-4" />
+                {e.partsUsed || <span className="bg-card rounded px-xs py-[2px] animate-pulse inline-block w-24 h-4" />}
               </div>
             </div>
 
@@ -105,15 +119,21 @@ export default async function PlantDetailPage({ params }: Props) {
               </div>
             </div>
 
-            {/* Tab content placeholder */}
-            <div className="mt-lg space-y-md">
-              <div className="bg-card rounded-lg h-4 w-full animate-pulse" />
-              <div className="bg-card rounded-lg h-4 w-5/6 animate-pulse" />
-              <div className="bg-card rounded-lg h-4 w-4/6 animate-pulse" />
-              <div className="bg-card rounded-lg h-4 w-full animate-pulse" />
-              <div className="bg-card rounded-lg h-4 w-3/4 animate-pulse" />
-              <div className="bg-card rounded-lg h-4 w-5/6 animate-pulse" />
-              <div className="bg-card rounded-lg h-4 w-2/3 animate-pulse" />
+            {/* Tab content */}
+            <div className="mt-lg">
+              {e.description ? (
+                <div className="prose prose-neutral max-w-none text-body text-neutral-500" dangerouslySetInnerHTML={{ __html: e.description }} />
+              ) : (
+                <div className="space-y-md">
+                  <div className="bg-card rounded-lg h-4 w-full animate-pulse" />
+                  <div className="bg-card rounded-lg h-4 w-5/6 animate-pulse" />
+                  <div className="bg-card rounded-lg h-4 w-4/6 animate-pulse" />
+                  <div className="bg-card rounded-lg h-4 w-full animate-pulse" />
+                  <div className="bg-card rounded-lg h-4 w-3/4 animate-pulse" />
+                  <div className="bg-card rounded-lg h-4 w-5/6 animate-pulse" />
+                  <div className="bg-card rounded-lg h-4 w-2/3 animate-pulse" />
+                </div>
+              )}
             </div>
           </div>
 
