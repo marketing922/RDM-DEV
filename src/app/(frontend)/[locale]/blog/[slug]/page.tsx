@@ -47,7 +47,7 @@ export default async function BlogDetailPage({ params }: Props) {
   ]
 
   return (
-    <main className="bg-page min-h-screen">
+    <main className="bg-[#FEF9E9] min-h-screen">
       <div className="mx-auto max-w-7xl px-md py-md">
         <Breadcrumb
           items={[
@@ -63,7 +63,7 @@ export default async function BlogDetailPage({ params }: Props) {
           {/* TOC sidebar (left) -- hidden on mobile */}
           <aside className="hidden lg:block lg:w-60 shrink-0">
             <div className="sticky top-[100px]">
-              <h2 className="font-heading text-heading-5 text-neutral-600 mb-md">
+              <h2 className="font-heading text-heading-5 text-[#054A57] mb-md">
                 {dict.blog.detail.tableOfContents}
               </h2>
               <nav>
@@ -72,7 +72,7 @@ export default async function BlogDetailPage({ params }: Props) {
                     <li key={item.id}>
                       <a
                         href={`#${item.id}`}
-                        className="block text-body-sm text-neutral-300 hover:text-brand transition-colors duration-fast py-xs"
+                        className="block text-body-sm text-[#712E2F]/60 hover:text-[#A2211E] transition-colors duration-fast py-xs"
                       >
                         {item.label}
                       </a>
@@ -87,26 +87,26 @@ export default async function BlogDetailPage({ params }: Props) {
           <article className="w-full min-w-0">
             {/* Category overline */}
             {p.category ? (
-              <p className="text-body-sm font-ui font-medium text-brand uppercase tracking-wide mb-sm">
+              <p className="text-body-sm font-ui font-medium text-[#D0802C] uppercase tracking-wide mb-sm">
                 {p.category.name}
               </p>
             ) : (
-              <p className="text-body-sm font-ui font-medium text-error-text uppercase tracking-wide mb-sm">
-                <span className="bg-card rounded animate-pulse inline-block w-20 h-3" />
+              <p className="text-body-sm font-ui font-medium text-[#D0802C] uppercase tracking-wide mb-sm">
+                <span className="bg-[#FFF5D5] rounded animate-pulse inline-block w-20 h-3" />
               </p>
             )}
 
             {/* Title */}
-            <h1 className="font-heading text-heading-1 text-neutral-600">
+            <h1 className="font-heading text-heading-1 text-[#054A57]">
               {articleTitle}
             </h1>
 
             {/* Meta line */}
-            <div className="mt-md flex flex-wrap items-center gap-sm text-body-sm text-neutral-300">
+            <div className="mt-md flex flex-wrap items-center gap-sm text-body-sm text-[#712E2F]/60">
               {/* Author avatar + name */}
               {p.author ? (
                 <div className="flex items-center gap-xs">
-                  <div className="w-8 h-8 rounded-full bg-card overflow-hidden">
+                  <div className="w-8 h-8 rounded-full bg-[#FFF5D5] overflow-hidden">
                     {p.author.avatar ? (
                       <Image src={p.author.avatar.url} alt={p.author.name} width={32} height={32} className="object-cover" />
                     ) : null}
@@ -117,20 +117,20 @@ export default async function BlogDetailPage({ params }: Props) {
                 </div>
               ) : (
                 <div className="flex items-center gap-xs">
-                  <div className="w-8 h-8 rounded-full bg-card animate-pulse" />
-                  <span className="bg-card rounded animate-pulse inline-block w-24 h-3" />
+                  <div className="w-8 h-8 rounded-full bg-[#FFF5D5] animate-pulse" />
+                  <span className="bg-[#FFF5D5] rounded animate-pulse inline-block w-24 h-3" />
                 </div>
               )}
-              <span className="text-neutral-200">|</span>
+              <span className="text-[#DCD8C7]">|</span>
               {/* Date */}
               {p.publishedAt ? (
                 <span>{new Date(p.publishedAt).toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
               ) : (
-                <span className="bg-card rounded animate-pulse inline-block w-28 h-3" />
+                <span className="bg-[#FFF5D5] rounded animate-pulse inline-block w-28 h-3" />
               )}
               {p.readingTime && (
                 <>
-                  <span className="text-neutral-200">|</span>
+                  <span className="text-[#DCD8C7]">|</span>
                   <span>{p.readingTime} {dict.blog.readingTime}</span>
                 </>
               )}
@@ -138,7 +138,7 @@ export default async function BlogDetailPage({ params }: Props) {
 
             {/* Hero image */}
             {p.featuredImage ? (
-              <div className="mt-lg aspect-video bg-card rounded-xl overflow-hidden relative">
+              <div className="mt-lg aspect-video bg-[#FFF5D5] rounded-xl overflow-hidden relative">
                 <Image
                   src={p.featuredImage.url}
                   alt={p.featuredImage.alt || articleTitle}
@@ -148,7 +148,7 @@ export default async function BlogDetailPage({ params }: Props) {
                 />
               </div>
             ) : (
-              <div className="mt-lg aspect-video bg-card rounded-xl animate-pulse" />
+              <div className="mt-lg aspect-video bg-[#FFF5D5] rounded-xl animate-pulse" />
             )}
 
             {/* Prose content */}
@@ -157,17 +157,17 @@ export default async function BlogDetailPage({ params }: Props) {
             ) : (
               <div className="mt-xl prose prose-lg max-w-none">
                 <div className="space-y-md">
-                  <div className="bg-card rounded h-4 w-full animate-pulse" />
-                  <div className="bg-card rounded h-4 w-5/6 animate-pulse" />
-                  <div className="bg-card rounded h-4 w-full animate-pulse" />
-                  <div className="bg-card rounded h-4 w-3/4 animate-pulse" />
+                  <div className="bg-[#FFF5D5] rounded h-4 w-full animate-pulse" />
+                  <div className="bg-[#FFF5D5] rounded h-4 w-5/6 animate-pulse" />
+                  <div className="bg-[#FFF5D5] rounded h-4 w-full animate-pulse" />
+                  <div className="bg-[#FFF5D5] rounded h-4 w-3/4 animate-pulse" />
                 </div>
               </div>
             )}
 
             {/* Similar articles */}
-            <section className="mt-3xl pt-xl border-t border-neutral-100">
-              <h2 className="font-heading text-heading-3 text-neutral-600 mb-lg">
+            <section className="mt-3xl pt-xl border-t border-[#DCD8C7]">
+              <h2 className="font-heading text-heading-3 text-[#054A57] mb-lg">
                 {dict.blog.detail.similarArticles}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-lg">
@@ -181,14 +181,14 @@ export default async function BlogDetailPage({ params }: Props) {
                       key={i}
                       className="bg-white rounded-xl shadow overflow-hidden"
                     >
-                      <div className="aspect-video bg-card animate-pulse" />
+                      <div className="aspect-video bg-[#FFF5D5] animate-pulse" />
                       <div className="p-md">
-                        <div className="bg-card rounded h-3 w-16 animate-pulse mb-sm" />
-                        <div className="bg-card rounded h-5 w-full animate-pulse mb-xs" />
-                        <div className="bg-card rounded h-5 w-2/3 animate-pulse mb-md" />
+                        <div className="bg-[#FFF5D5] rounded h-3 w-16 animate-pulse mb-sm" />
+                        <div className="bg-[#FFF5D5] rounded h-5 w-full animate-pulse mb-xs" />
+                        <div className="bg-[#FFF5D5] rounded h-5 w-2/3 animate-pulse mb-md" />
                         <div className="flex items-center gap-sm">
-                          <div className="w-6 h-6 rounded-full bg-card animate-pulse" />
-                          <div className="bg-card rounded h-3 w-20 animate-pulse" />
+                          <div className="w-6 h-6 rounded-full bg-[#FFF5D5] animate-pulse" />
+                          <div className="bg-[#FFF5D5] rounded h-3 w-20 animate-pulse" />
                         </div>
                       </div>
                     </div>

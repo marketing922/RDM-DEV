@@ -36,8 +36,8 @@ export default async function BienfaitsPage({ params }: Props) {
   const { docs: benefits } = await getBenefits({ locale })
 
   return (
-    <main className="bg-page min-h-screen">
-      <div className="mx-auto max-w-7xl px-md py-md">
+    <main className="bg-[#FEF9E9] min-h-screen">
+      <div className="mx-auto max-w-7xl px-6 py-6">
         <Breadcrumb
           items={[
             { label: dict.nav.home, href: `/${locale}` },
@@ -46,17 +46,17 @@ export default async function BienfaitsPage({ params }: Props) {
         />
 
         {/* Header */}
-        <div className="mt-lg mb-xl text-center">
-          <h1 className="font-heading text-heading-1 text-neutral-600">
+        <div className="mt-8 mb-12 text-center">
+          <h1 className="font-heading text-4xl font-bold text-[#054A57]">
             {dict.benefits.title}
           </h1>
-          <p className="mt-sm text-body-lg text-neutral-400 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-[#712E2F]/70 max-w-2xl mx-auto">
             {dict.benefits.subtitle}
           </p>
         </div>
 
         {/* Benefits grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-lg">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {benefits.length > 0 ? (
             benefits.map((benefit: any) => (
               <BenefitCard key={benefit.id} benefit={benefit} locale={locale} />
@@ -66,13 +66,13 @@ export default async function BienfaitsPage({ params }: Props) {
               <a
                 key={benefit.key}
                 href={`/${locale}/bienfaits/${benefit.key}`}
-                className="bg-white rounded-xl p-lg text-center shadow hover:shadow-lg transition-all duration-slow hover:-translate-y-1 group"
+                className="bg-[#FEF9E9] border border-[#DCD8C7] rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 group"
               >
-                <div className="text-[40px] mb-md">{benefit.emoji}</div>
-                <div className="bg-card rounded h-5 w-3/4 mx-auto animate-pulse mb-sm" />
-                <div className="space-y-xs">
-                  <div className="bg-card rounded h-3 w-full animate-pulse" />
-                  <div className="bg-card rounded h-3 w-5/6 mx-auto animate-pulse" />
+                <div className="text-[40px] mb-4">{benefit.emoji}</div>
+                <div className="bg-[#FFF5D5] rounded h-5 w-3/4 mx-auto animate-pulse mb-3" />
+                <div className="space-y-2">
+                  <div className="bg-[#FFF5D5] rounded h-3 w-full animate-pulse" />
+                  <div className="bg-[#FFF5D5] rounded h-3 w-5/6 mx-auto animate-pulse" />
                 </div>
               </a>
             ))

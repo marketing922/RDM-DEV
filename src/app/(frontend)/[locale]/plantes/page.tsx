@@ -29,7 +29,7 @@ export default async function PlantesPage({ params }: Props) {
   >
 
   return (
-    <main className="bg-page min-h-screen">
+    <main className="bg-[#FEF9E9] min-h-screen">
       <div className="mx-auto max-w-7xl px-md py-md">
         <Breadcrumb
           items={[
@@ -40,10 +40,10 @@ export default async function PlantesPage({ params }: Props) {
 
         {/* Header */}
         <div className="mt-lg mb-xl text-center">
-          <h1 className="font-heading text-heading-1 text-neutral-600">
+          <h1 className="font-heading text-heading-1 text-[#054A57]">
             {dict.wiki.title}
           </h1>
-          <p className="mt-sm text-body-lg text-neutral-400 max-w-2xl mx-auto">
+          <p className="mt-sm text-body-lg text-[#712E2F]/70 max-w-2xl mx-auto">
             {dict.wiki.subtitle}
           </p>
         </div>
@@ -61,7 +61,7 @@ export default async function PlantesPage({ params }: Props) {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="absolute left-md top-1/2 -translate-y-1/2 text-neutral-300"
+              className="absolute left-md top-1/2 -translate-y-1/2 text-[#DCD8C7]"
             >
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -69,7 +69,7 @@ export default async function PlantesPage({ params }: Props) {
             <input
               type="search"
               placeholder={dict.wiki.searchPlaceholder}
-              className="w-full h-[48px] pl-[48px] pr-lg bg-white rounded-pill border border-neutral-100 text-body text-neutral-600 placeholder:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand transition-all duration-fast"
+              className="w-full h-[48px] pl-[48px] pr-lg bg-white rounded-pill border border-[#DCD8C7] text-body text-[#054A57] placeholder:text-[#DCD8C7] focus:outline-none focus:ring-2 focus:ring-[#A2211E]/30 focus:border-[#A2211E] transition-all duration-fast"
             />
           </div>
         </div>
@@ -81,8 +81,8 @@ export default async function PlantesPage({ params }: Props) {
               key={String(key)}
               className={`inline-flex items-center h-[36px] px-lg rounded-pill text-body-sm font-ui font-medium transition-all duration-fast ${
                 key === 'all'
-                  ? 'bg-brand text-white shadow-sm'
-                  : 'bg-white text-neutral-400 border border-neutral-100 hover:bg-brand-light hover:text-brand hover:border-brand'
+                  ? 'bg-[#A2211E] text-white shadow-sm'
+                  : 'bg-white text-[#712E2F] border border-[#DCD8C7] hover:bg-[#FFF5D5] hover:text-[#A2211E] hover:border-[#A2211E]'
               }`}
             >
               {dict.wiki.filters[key]}
@@ -100,7 +100,7 @@ export default async function PlantesPage({ params }: Props) {
             Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                className="bg-card rounded-2xl h-[320px] animate-pulse"
+                className="bg-white border border-[#DCD8C7] rounded-2xl h-[320px] animate-pulse"
               />
             ))
           )}
@@ -108,13 +108,13 @@ export default async function PlantesPage({ params }: Props) {
 
         {/* Pagination placeholder */}
         <div className="mt-2xl flex items-center justify-center gap-sm">
-          <div className="w-[36px] h-[36px] rounded-xl bg-card animate-pulse" />
-          <div className="w-[36px] h-[36px] rounded-xl bg-brand text-white flex items-center justify-center text-body-sm font-medium">
+          <div className="w-[36px] h-[36px] rounded-xl bg-white border border-[#DCD8C7] animate-pulse" />
+          <div className="w-[36px] h-[36px] rounded-xl bg-[#A2211E] text-white flex items-center justify-center text-body-sm font-medium">
             1
           </div>
-          <div className="w-[36px] h-[36px] rounded-xl bg-card animate-pulse" />
-          <div className="w-[36px] h-[36px] rounded-xl bg-card animate-pulse" />
-          <div className="w-[36px] h-[36px] rounded-xl bg-card animate-pulse" />
+          <div className="w-[36px] h-[36px] rounded-xl bg-white border border-[#DCD8C7] animate-pulse" />
+          <div className="w-[36px] h-[36px] rounded-xl bg-white border border-[#DCD8C7] animate-pulse" />
+          <div className="w-[36px] h-[36px] rounded-xl bg-white border border-[#DCD8C7] animate-pulse" />
         </div>
       </div>
     </main>

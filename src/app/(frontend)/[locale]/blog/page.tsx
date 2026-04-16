@@ -32,7 +32,7 @@ export default async function BlogPage({ params }: Props) {
   >
 
   return (
-    <main className="bg-page min-h-screen">
+    <main className="bg-[#FEF9E9] min-h-screen">
       <div className="mx-auto max-w-7xl px-md py-md">
         <Breadcrumb
           items={[
@@ -43,23 +43,23 @@ export default async function BlogPage({ params }: Props) {
 
         {/* Header */}
         <div className="mt-lg mb-xl text-center">
-          <h1 className="font-heading text-heading-1 text-neutral-600">
+          <h1 className="font-heading text-heading-1 text-[#054A57]">
             {dict.blog.title}
           </h1>
-          <p className="mt-sm text-body-lg text-neutral-400 max-w-2xl mx-auto">
+          <p className="mt-sm text-body-lg text-[#712E2F]/70 max-w-2xl mx-auto">
             {dict.blog.subtitle}
           </p>
         </div>
 
         {/* Featured article */}
         <div className="mb-2xl">
-          <p className="text-body-sm font-ui font-medium text-brand mb-sm uppercase tracking-wide">
+          <p className="text-body-sm font-ui font-medium text-[#A2211E] mb-sm uppercase tracking-wide">
             {dict.blog.featured}
           </p>
           {featuredPost ? (
             <Link href={`/${locale}/blog/${(featuredPost as any).slug}`} className="block bg-white rounded-xl shadow overflow-hidden flex flex-col md:flex-row hover:shadow-lg transition-shadow duration-slow">
               {/* Image left 3/5 */}
-              <div className="w-full md:w-3/5 aspect-video md:aspect-auto md:min-h-[320px] bg-card relative overflow-hidden">
+              <div className="w-full md:w-3/5 aspect-video md:aspect-auto md:min-h-[320px] bg-[#FFF5D5] relative overflow-hidden">
                 {(featuredPost as any).featuredImage ? (
                   <Image
                     src={(featuredPost as any).featuredImage.url}
@@ -69,28 +69,28 @@ export default async function BlogPage({ params }: Props) {
                     className="object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-card animate-pulse" />
+                  <div className="w-full h-full bg-[#FFF5D5] animate-pulse" />
                 )}
               </div>
               {/* Content right 2/5 */}
               <div className="w-full md:w-2/5 p-lg flex flex-col justify-center">
                 {(featuredPost as any).category && (
-                  <span className="text-body-sm font-ui font-medium text-brand mb-sm">
+                  <span className="text-body-sm font-ui font-medium text-[#D0802C] mb-sm">
                     {(featuredPost as any).category.name}
                   </span>
                 )}
-                <h2 className="font-heading text-heading-3 text-neutral-600 mb-md">
+                <h2 className="font-heading text-heading-3 text-[#054A57] mb-md">
                   {(featuredPost as any).title}
                 </h2>
                 {(featuredPost as any).excerpt && (
-                  <p className="text-body text-neutral-400 line-clamp-3 mb-lg">
+                  <p className="text-body text-[#712E2F]/70 line-clamp-3 mb-lg">
                     {(featuredPost as any).excerpt}
                   </p>
                 )}
-                <div className="flex items-center gap-sm text-body-sm text-neutral-300">
+                <div className="flex items-center gap-sm text-body-sm text-[#712E2F]/60">
                   {(featuredPost as any).author && (
                     <div className="flex items-center gap-xs">
-                      <div className="w-8 h-8 rounded-full bg-card overflow-hidden">
+                      <div className="w-8 h-8 rounded-full bg-[#FFF5D5] overflow-hidden">
                         {(featuredPost as any).author.avatar ? (
                           <Image
                             src={(featuredPost as any).author.avatar.url}
@@ -114,20 +114,20 @@ export default async function BlogPage({ params }: Props) {
             </Link>
           ) : (
             <div className="bg-white rounded-xl shadow overflow-hidden flex flex-col md:flex-row">
-              <div className="w-full md:w-3/5 aspect-video md:aspect-auto md:min-h-[320px] bg-card animate-pulse" />
+              <div className="w-full md:w-3/5 aspect-video md:aspect-auto md:min-h-[320px] bg-[#FFF5D5] animate-pulse" />
               <div className="w-full md:w-2/5 p-lg flex flex-col justify-center">
-                <div className="bg-card rounded h-3 w-20 animate-pulse mb-sm" />
-                <div className="bg-card rounded h-6 w-full animate-pulse mb-sm" />
-                <div className="bg-card rounded h-6 w-3/4 animate-pulse mb-md" />
+                <div className="bg-[#FFF5D5] rounded h-3 w-20 animate-pulse mb-sm" />
+                <div className="bg-[#FFF5D5] rounded h-6 w-full animate-pulse mb-sm" />
+                <div className="bg-[#FFF5D5] rounded h-6 w-3/4 animate-pulse mb-md" />
                 <div className="space-y-xs mb-lg">
-                  <div className="bg-card rounded h-4 w-full animate-pulse" />
-                  <div className="bg-card rounded h-4 w-5/6 animate-pulse" />
-                  <div className="bg-card rounded h-4 w-2/3 animate-pulse" />
+                  <div className="bg-[#FFF5D5] rounded h-4 w-full animate-pulse" />
+                  <div className="bg-[#FFF5D5] rounded h-4 w-5/6 animate-pulse" />
+                  <div className="bg-[#FFF5D5] rounded h-4 w-2/3 animate-pulse" />
                 </div>
                 <div className="flex items-center gap-sm">
-                  <div className="w-8 h-8 rounded-full bg-card animate-pulse" />
-                  <div className="bg-card rounded h-3 w-24 animate-pulse" />
-                  <div className="bg-card rounded h-3 w-16 animate-pulse ml-auto" />
+                  <div className="w-8 h-8 rounded-full bg-[#FFF5D5] animate-pulse" />
+                  <div className="bg-[#FFF5D5] rounded h-3 w-24 animate-pulse" />
+                  <div className="bg-[#FFF5D5] rounded h-3 w-16 animate-pulse ml-auto" />
                 </div>
               </div>
             </div>
@@ -141,8 +141,8 @@ export default async function BlogPage({ params }: Props) {
               key={String(key)}
               className={`inline-flex items-center h-[36px] px-lg rounded-pill text-body-sm font-ui font-medium transition-all duration-fast ${
                 key === 'all'
-                  ? 'bg-brand text-white shadow-sm'
-                  : 'bg-white text-neutral-400 border border-neutral-100 hover:bg-brand-light hover:text-brand hover:border-brand'
+                  ? 'bg-[#A2211E] text-white shadow-sm'
+                  : 'bg-white text-[#712E2F] border border-[#DCD8C7] hover:bg-[#FFF5D5] hover:text-[#A2211E] hover:border-[#A2211E]'
               }`}
             >
               {dict.blog.categories[key]}
@@ -162,19 +162,19 @@ export default async function BlogPage({ params }: Props) {
                 key={i}
                 className="bg-white rounded-xl shadow overflow-hidden"
               >
-                <div className="aspect-video bg-card animate-pulse" />
+                <div className="aspect-video bg-[#FFF5D5] animate-pulse" />
                 <div className="p-md">
-                  <div className="bg-card rounded h-3 w-16 animate-pulse mb-sm" />
-                  <div className="bg-card rounded h-5 w-full animate-pulse mb-xs" />
-                  <div className="bg-card rounded h-5 w-2/3 animate-pulse mb-md" />
+                  <div className="bg-[#FFF5D5] rounded h-3 w-16 animate-pulse mb-sm" />
+                  <div className="bg-[#FFF5D5] rounded h-5 w-full animate-pulse mb-xs" />
+                  <div className="bg-[#FFF5D5] rounded h-5 w-2/3 animate-pulse mb-md" />
                   <div className="space-y-xs mb-md">
-                    <div className="bg-card rounded h-3 w-full animate-pulse" />
-                    <div className="bg-card rounded h-3 w-5/6 animate-pulse" />
+                    <div className="bg-[#FFF5D5] rounded h-3 w-full animate-pulse" />
+                    <div className="bg-[#FFF5D5] rounded h-3 w-5/6 animate-pulse" />
                   </div>
-                  <div className="flex items-center gap-sm pt-sm border-t border-neutral-50">
-                    <div className="w-6 h-6 rounded-full bg-card animate-pulse" />
-                    <div className="bg-card rounded h-3 w-20 animate-pulse" />
-                    <div className="bg-card rounded h-3 w-16 animate-pulse ml-auto" />
+                  <div className="flex items-center gap-sm pt-sm border-t border-[#DCD8C7]">
+                    <div className="w-6 h-6 rounded-full bg-[#FFF5D5] animate-pulse" />
+                    <div className="bg-[#FFF5D5] rounded h-3 w-20 animate-pulse" />
+                    <div className="bg-[#FFF5D5] rounded h-3 w-16 animate-pulse ml-auto" />
                   </div>
                 </div>
               </div>

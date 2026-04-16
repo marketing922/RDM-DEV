@@ -34,8 +34,8 @@ export default async function BienfaitDetailPage({ params }: Props) {
   const benefitName = b.name || slug.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
 
   return (
-    <main className="bg-page min-h-screen">
-      <div className="mx-auto max-w-7xl px-md py-md">
+    <main className="bg-[#FEF9E9] min-h-screen">
+      <div className="mx-auto max-w-7xl px-6 py-6">
         <Breadcrumb
           items={[
             { label: dict.nav.home, href: `/${locale}` },
@@ -45,28 +45,28 @@ export default async function BienfaitDetailPage({ params }: Props) {
         />
 
         {/* Header */}
-        <div className="mt-lg mb-xl">
-          <h1 className="font-heading text-heading-1 text-neutral-600">
+        <div className="mt-8 mb-12">
+          <h1 className="font-heading text-4xl font-bold text-[#054A57]">
             {benefitName}
           </h1>
           {b.shortDescription && (
-            <p className="mt-sm text-body-lg text-neutral-400">
+            <p className="mt-4 text-lg text-[#712E2F]/70">
               {b.shortDescription}
             </p>
           )}
         </div>
 
         {/* Quick answer callout */}
-        <section className="mb-2xl">
-          <div className="bg-success-bg border border-success-border rounded-xl p-lg">
-            <h2 className="font-heading text-heading-4 text-success-text mb-sm flex items-center gap-sm">
+        <section className="mb-16">
+          <div className="bg-[#FFF5D5] border border-[#DCD8C7] rounded-xl p-6">
+            <h2 className="font-heading text-xl font-semibold text-[#054A57] mb-3 flex items-center gap-3">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
                 height="20"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="currentColor"
+                stroke="#D0802C"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -78,25 +78,25 @@ export default async function BienfaitDetailPage({ params }: Props) {
               {dict.benefits.detail.quickAnswer}
             </h2>
             {b.description ? (
-              <div className="prose prose-sm max-w-none text-success-text" dangerouslySetInnerHTML={{ __html: b.description }} />
+              <div className="prose prose-sm max-w-none text-[#712E2F]" dangerouslySetInnerHTML={{ __html: b.description }} />
             ) : (
-              <div className="space-y-xs">
-                <div className="bg-success-border/30 rounded h-4 w-full animate-pulse" />
-                <div className="bg-success-border/30 rounded h-4 w-5/6 animate-pulse" />
-                <div className="bg-success-border/30 rounded h-4 w-3/4 animate-pulse" />
+              <div className="space-y-2">
+                <div className="bg-[#DCD8C7]/30 rounded h-4 w-full animate-pulse" />
+                <div className="bg-[#DCD8C7]/30 rounded h-4 w-5/6 animate-pulse" />
+                <div className="bg-[#DCD8C7]/30 rounded h-4 w-3/4 animate-pulse" />
               </div>
             )}
           </div>
         </section>
 
         {/* Related plants */}
-        <section className="mb-2xl">
-          <h2 className="font-heading text-heading-3 text-neutral-600 mb-lg">
+        <section className="mb-16">
+          <h2 className="font-heading text-2xl font-semibold text-[#054A57] mb-6">
             {dict.benefits.detail.relatedPlants}
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-lg">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-card rounded-2xl h-[280px] animate-pulse" />
+              <div key={i} className="bg-[#FFF5D5] border border-[#DCD8C7] rounded-2xl h-[280px] animate-pulse" />
             ))}
           </div>
         </section>

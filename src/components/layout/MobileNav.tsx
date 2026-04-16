@@ -40,16 +40,6 @@ export function MobileNav({ dict, locale }: MobileNavProps) {
       ),
     },
     {
-      label: dict.nav.search,
-      href: `/${locale}/recherche`,
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-          <circle cx="11" cy="11" r="8" />
-          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </svg>
-      ),
-    },
-    {
       label: dict.nav.contact || 'Contact',
       href: `/${locale}/contact`,
       icon: (
@@ -82,6 +72,21 @@ export function MobileNav({ dict, locale }: MobileNavProps) {
             </Link>
           )
         })}
+
+        {/* Search button — opens mobile search overlay via custom event */}
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new CustomEvent('open-mobile-search'))}
+          className="flex flex-col items-center gap-0.5 text-[#DCD8C7]"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <span className="text-[10px] font-medium">
+            {dict.nav.search}
+          </span>
+        </button>
       </div>
     </nav>
   )

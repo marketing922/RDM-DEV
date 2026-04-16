@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "generate:types": "payload generate:types",
-    "generate:graphql": "payload generate:graphQLSchema"
+    "generate:graphql": "payload generate:graphQLSchema",
+    "seed": "npx tsx seed.mjs"
   },
   "keywords": [],
   "author": "",

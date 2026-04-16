@@ -10,13 +10,15 @@ export function SearchClient({ dict }: SearchClientProps) {
   const [query, setQuery] = useState('')
   const [activeTab, setActiveTab] = useState('all')
 
-  const tabs = dict.search.tabs as Record<string, string>
+  const allTabs = dict.search.tabs as Record<string, string>
+  // Phase 1: exclude product-related tabs
+  const { products, ...tabs } = allTabs
 
   return (
-    <section className="py-4xl">
-      <div className="max-w-3xl mx-auto px-lg">
-        <div className="text-center mb-2xl">
-          <h1 className="font-heading text-display text-neutral-600 mb-lg">
+    <section className="py-16 bg-[#FFF5D5]">
+      <div className="max-w-3xl mx-auto px-6">
+        <div className="text-center mb-10">
+          <h1 className="font-heading text-4xl font-bold text-[#054A57] mb-6">
             {dict.search.title}
           </h1>
 
@@ -32,7 +34,7 @@ export function SearchClient({ dict }: SearchClientProps) {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="absolute left-5 top-1/2 -translate-y-1/2 text-neutral-300"
+              className="absolute left-5 top-1/2 -translate-y-1/2 text-[#DCD8C7]"
             >
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -42,24 +44,24 @@ export function SearchClient({ dict }: SearchClientProps) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={dict.search.placeholder}
-              className="w-full h-14 pl-14 pr-5 text-lg bg-white border-2 border-neutral-200 rounded-full font-body text-neutral-600 placeholder:text-neutral-300 focus:outline-none focus:border-brand focus:ring-0 transition-colors duration-200"
+              className="w-full h-14 pl-14 pr-5 text-lg bg-[#FEF9E9] border-2 border-[#DCD8C7] rounded-full font-body text-[#054A57] placeholder:text-[#DCD8C7] focus:outline-none focus:border-[#A2211E] focus:ring-2 focus:ring-[#A2211E]/20 transition-colors duration-200"
             />
           </div>
         </div>
 
         {/* Tabs */}
-        <div className="flex justify-center gap-sm mb-2xl">
+        <div className="flex justify-center gap-3 mb-10">
           {Object.entries(tabs).map(([key, label]) => (
             <button
               key={String(key)}
               onClick={() => setActiveTab(key)}
               className={`
-                px-lg py-sm rounded-full font-ui text-body-sm font-medium
+                px-5 py-2 rounded-full text-sm font-medium
                 transition-all duration-200
                 ${
                   activeTab === key
-                    ? 'bg-brand text-white'
-                    : 'bg-white text-neutral-400 border border-neutral-200 hover:border-brand hover:text-brand'
+                    ? 'bg-[#A2211E] text-white'
+                    : 'bg-[#FEF9E9] text-[#054A57] border border-[#DCD8C7] hover:border-[#A2211E] hover:text-[#A2211E]'
                 }
               `}
             >
@@ -69,9 +71,9 @@ export function SearchClient({ dict }: SearchClientProps) {
         </div>
 
         {/* Results area */}
-        <div className="text-center py-3xl">
+        <div className="text-center py-12">
           {query.trim() === '' ? (
-            <div className="space-y-md">
+            <div className="space-y-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="48"
@@ -82,17 +84,17 @@ export function SearchClient({ dict }: SearchClientProps) {
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="text-neutral-200 mx-auto"
+                className="text-[#DCD8C7] mx-auto"
               >
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
-              <p className="font-body text-body text-neutral-300">
+              <p className="font-body text-base text-[#712E2F]">
                 {dict.search.placeholder}
               </p>
             </div>
           ) : (
-            <div className="space-y-md">
+            <div className="space-y-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="48"
@@ -103,16 +105,16 @@ export function SearchClient({ dict }: SearchClientProps) {
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="text-neutral-200 mx-auto"
+                className="text-[#DCD8C7] mx-auto"
               >
                 <circle cx="12" cy="12" r="10" />
                 <line x1="8" y1="15" x2="16" y2="15" />
                 <line x1="9" y1="9" x2="9.01" y2="9" />
                 <line x1="15" y1="9" x2="15.01" y2="9" />
               </svg>
-              <p className="font-body text-body text-neutral-400">
+              <p className="font-body text-base text-[#712E2F]">
                 {dict.search.noResults}{' '}
-                <span className="font-medium text-neutral-600">&ldquo;{query}&rdquo;</span>
+                <span className="font-medium text-[#054A57]">&ldquo;{query}&rdquo;</span>
               </p>
             </div>
           )}
