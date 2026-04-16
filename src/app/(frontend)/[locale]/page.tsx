@@ -124,12 +124,13 @@ export default async function HomePage({ params }: Props) {
               </div>
             </div>
             {/* Right column — image */}
-            <div className="aspect-square relative rounded-2xl overflow-hidden bg-[#DCD8C7] min-h-[320px]">
+            <div className="flex items-center justify-center">
               <Image
                 src="https://images.unsplash.com/photo-1514733670139-4d87a1941d55?w=800&q=80"
                 alt="Plantes médicinales et tisanes naturelles"
-                fill
-                className="object-cover"
+                width={800}
+                height={600}
+                className="rounded-2xl w-full h-auto"
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
