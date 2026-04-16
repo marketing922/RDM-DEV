@@ -126,10 +126,10 @@ export default async function HomePage({ params }: Props) {
             {/* Right column — image */}
             <div className="flex items-center justify-center">
               <Image
-                src="https://images.unsplash.com/photo-1514733670139-4d87a1941d55?w=800&q=80"
+                src="https://images.unsplash.com/photo-1514733670139-4d87a1941d55?w=960&q=85"
                 alt="Plantes médicinales et tisanes naturelles"
-                width={800}
-                height={600}
+                width={960}
+                height={720}
                 className="rounded-2xl w-full h-auto"
                 priority
                 sizes="(max-width: 768px) 100vw, 50vw"
