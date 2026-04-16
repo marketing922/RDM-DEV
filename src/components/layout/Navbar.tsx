@@ -19,14 +19,14 @@ export function Navbar({ dict, locale }: NavbarProps) {
     <>
       {/* ── Desktop Navbar ── */}
       <header className="sticky top-0 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] z-40 hidden lg:block">
-        <nav className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Logo */}
-          <Link href={`/${locale}`} className="text-base font-bold text-[#A2211E] font-heading">
+        <nav className="max-w-7xl mx-auto px-6 h-16 grid grid-cols-[1fr_auto_1fr] items-center">
+          {/* Logo — left */}
+          <Link href={`/${locale}`} className="text-base font-bold text-[#A2211E] font-heading justify-self-start">
             {dict.meta.siteName}
           </Link>
 
           {/* Center Links */}
-          <div className="flex gap-8">
+          <div className="flex gap-8 justify-self-center">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -38,8 +38,8 @@ export function Navbar({ dict, locale }: NavbarProps) {
             ))}
           </div>
 
-          {/* Right: Search bar */}
-          <div className="flex items-center">
+          {/* Search bar — right */}
+          <div className="justify-self-end">
             <div className="relative">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]">
                 <circle cx="11" cy="11" r="8" />
@@ -48,8 +48,8 @@ export function Navbar({ dict, locale }: NavbarProps) {
               <input
                 type="text"
                 placeholder="Rechercher une plante..."
-                className="h-9 w-56 pl-9 pr-3 rounded-full border border-[#E5E7EB] bg-[#FEF9E9] text-sm text-[#1F2937] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#A2211E] focus:ring-2 focus:ring-[#A2211E]/20 transition-colors"
-                onFocus={(e) => {
+                className="h-9 w-52 pl-9 pr-3 rounded-full border border-[#E5E7EB] bg-[#FEF9E9] text-sm text-[#1F2937] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#A2211E] focus:ring-2 focus:ring-[#A2211E]/20 transition-colors"
+                onFocus={() => {
                   window.location.href = `/${locale}/recherche`
                 }}
                 readOnly
