@@ -9,6 +9,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/fr', request.url))
   }
 
+  // Skip security headers for Payload admin (it has its own CSP)
+  if (pathname.startsWith('/admin')) {
+    return NextResponse.next()
+  }
+
   const response = NextResponse.next()
 
   // Security headers
