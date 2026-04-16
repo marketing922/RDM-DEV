@@ -182,7 +182,7 @@ export default async function HomePage({ params }: Props) {
               </div>
               <div>
                 <p className="font-semibold text-[#1F2937]">Sources vérifiées</p>
-                <p className="text-sm text-[#6B7280]">Conformes à la pharmacopée européenne</p>
+                <p className="text-sm text-[#6B7280]">Conformes à la pharmacopée chinoise</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
