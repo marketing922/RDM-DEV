@@ -1,4 +1,6 @@
 import type { Config } from 'tailwindcss'
+import tailwindcssAnimate from 'tailwindcss-animate'
+import tailwindcssTypography from '@tailwindcss/typography'
 
 const config: Config = {
   content: ['./src/**/*.{ts,tsx}'],
@@ -51,6 +53,6 @@ const config: Config = {
       zIndex: { dropdown: '30', sticky: '40', overlay: '50', modal: '60', toast: '70' },
     },
   },
-  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
+  plugins: [tailwindcssAnimate, tailwindcssTypography],
 }
 export default config

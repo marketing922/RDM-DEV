@@ -1,20 +1,17 @@
-/* eslint-disable */
-// @ts-nocheck — Payload v3 generates this file; types depend on internal API
-import { RenderServerComponent } from '@payloadcms/next/utilities'
-import { importMap } from '../importMap'
+import { RootPage, generatePageMetadata } from '@payloadcms/next/views'
+import type { Metadata } from 'next'
 import configPromise from '@/payload.config'
-
-export { generatePageMetadata as generateMetadata } from '@payloadcms/next/utilities'
+import { importMap } from '../importMap'
 
 type Args = {
   params: Promise<{ segments: string[] }>
   searchParams: Promise<Record<string, string | string[]>>
 }
 
-const Page = async ({ params, searchParams }: Args) => {
-  const config = await configPromise
-  const { AdminPage } = await import('@payloadcms/next/views')
-  return AdminPage({ config, params, searchParams, importMap })
-}
+export const generateMetadata = ({ params, searchParams }: Args): Promise<Metadata> =>
+  generatePageMetadata({ config: configPromise, params, searchParams })
+
+const Page = ({ params, searchParams }: Args) =>
+  RootPage({ config: configPromise, params, searchParams, importMap })
 
 export default Page
