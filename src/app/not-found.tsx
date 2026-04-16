@@ -1,29 +1,92 @@
 import Link from 'next/link'
+import '@/styles/globals.css'
 
 export default function NotFound() {
   return (
     <html lang="fr">
-      <body className="bg-[#FEF9E9] text-gray-600 antialiased">
-        <div className="min-h-screen flex flex-col items-center justify-center px-6">
-          <p className="text-[8rem] sm:text-[10rem] font-extrabold leading-none text-[#A2211E] mb-4">
+      <body style={{ backgroundColor: '#FEF9E9', margin: 0 }}>
+        <div
+          style={{
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '24px',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+          }}
+        >
+          <p
+            style={{
+              fontSize: 'clamp(6rem, 15vw, 10rem)',
+              fontWeight: 800,
+              lineHeight: 1,
+              color: '#A2211E',
+              margin: '0 0 16px 0',
+            }}
+          >
             404
           </p>
-          <h1 className="text-2xl font-bold text-gray-800 mb-2 text-center">
+          <h1
+            style={{
+              fontSize: '1.75rem',
+              fontWeight: 700,
+              color: '#1f2937',
+              margin: '0 0 8px 0',
+              textAlign: 'center',
+            }}
+          >
             Page introuvable
           </h1>
-          <p className="text-base text-gray-500 mb-10 text-center max-w-md">
-            La page que vous cherchez n&apos;existe pas ou a &eacute;t&eacute; d&eacute;plac&eacute;e.
+          <p
+            style={{
+              fontSize: '1rem',
+              color: '#6b7280',
+              margin: '0 0 40px 0',
+              textAlign: 'center',
+              maxWidth: '28rem',
+            }}
+          >
+            La page que vous cherchez n&apos;existe pas ou a &eacute;t&eacute;
+            d&eacute;plac&eacute;e.
           </p>
           <Link
             href="/"
-            className="inline-flex items-center justify-center font-medium rounded-full transition-all duration-200 bg-[#A2211E] text-white hover:bg-[#712E2F] active:scale-[0.97] shadow-sm hover:shadow-md h-[48px] px-8 text-base w-full sm:w-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A2211E]/50 focus-visible:ring-offset-2"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 500,
+              borderRadius: '9999px',
+              backgroundColor: '#A2211E',
+              color: '#ffffff',
+              height: '48px',
+              padding: '0 32px',
+              fontSize: '1rem',
+              textDecoration: 'none',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+              transition: 'background-color 0.2s',
+            }}
           >
             Retour &agrave; l&apos;accueil
           </Link>
         </div>
-        <footer className="absolute bottom-0 w-full py-6 text-center text-sm text-gray-400">
-          <p className="font-semibold text-gray-500">Les Rem&egrave;des de Mamie</p>
-          <p>&copy; 2026</p>
+        <footer
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            padding: '24px',
+            textAlign: 'center',
+            fontSize: '0.875rem',
+            color: '#9ca3af',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+          }}
+        >
+          <p style={{ fontWeight: 600, color: '#6b7280', margin: '0 0 4px 0' }}>
+            Les Rem&egrave;des de Mamie
+          </p>
+          <p style={{ margin: 0 }}>&copy; 2026</p>
         </footer>
       </body>
     </html>

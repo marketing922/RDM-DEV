@@ -1,29 +1,38 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+const MAINTENANCE_MODE = true
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Redirect root "/" to default locale "/fr"
-  if (pathname === '/') {
-    return NextResponse.redirect(new URL('/fr', request.url))
+  // Allow Payload admin and API routes through even in maintenance
+  if (pathname.startsWith('/admin') || pathname.startsWith('/api/')) {
+    if (pathname.startsWith('/admin')) {
+      return NextResponse.next()
+    }
+    return NextResponse.next()
   }
 
-  // Redirect /{locale}/admin to /admin (Payload admin has no locale prefix)
+  // Redirect /{locale}/admin to /admin
   const localeAdminMatch = pathname.match(/^\/(fr|en)\/admin(\/.*)?$/)
   if (localeAdminMatch) {
     const rest = localeAdminMatch[2] || ''
     return NextResponse.redirect(new URL(`/admin${rest}`, request.url))
   }
 
-  // Skip security headers for Payload admin (it has its own CSP)
-  if (pathname.startsWith('/admin')) {
-    return NextResponse.next()
+  // Maintenance mode: redirect everything else to /maintenance
+  if (MAINTENANCE_MODE && pathname !== '/maintenance') {
+    return NextResponse.rewrite(new URL('/maintenance', request.url))
+  }
+
+  // Normal mode below (when MAINTENANCE_MODE = false)
+  if (pathname === '/') {
+    return NextResponse.redirect(new URL('/fr', request.url))
   }
 
   const response = NextResponse.next()
 
-  // Security headers
   response.headers.set('X-Frame-Options', 'DENY')
   response.headers.set('X-Content-Type-Options', 'nosniff')
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
@@ -39,6 +48,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|api/).*)',
+    '/((?!_next/static|_next/image|favicon\\.ico|favicon\\.png|favicon\\.svg|apple-touch-icon\\.png|site\\.webmanifest|robots\\.txt|sitemap\\.xml).*)',
   ],
 }
