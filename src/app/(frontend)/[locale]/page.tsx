@@ -124,7 +124,7 @@ export default async function HomePage({ params }: Props) {
               </div>
             </div>
             {/* Right column — image */}
-            <div className="aspect-square relative rounded-2xl overflow-hidden">
+            <div className="aspect-square relative rounded-2xl overflow-hidden bg-[#DCD8C7] min-h-[320px]">
               <Image
                 src="https://images.unsplash.com/photo-1514733670139-4d87a1941d55?w=800&q=80"
                 alt="Plantes médicinales et tisanes naturelles"
@@ -230,19 +230,17 @@ export default async function HomePage({ params }: Props) {
               <Link
                 key={plant.slug}
                 href={`/${locale}/plantes/${plant.slug}`}
-                className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300"
+                className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden group hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300"
               >
-                {/* Illustration zone */}
-                <div className="bg-[#FEF9E9] flex items-center justify-center h-40">
-                  <div className="w-24 h-24 rounded-full overflow-hidden relative">
-                    <Image
-                      src={plant.image}
-                      alt={plant.name}
-                      fill
-                      className="w-24 h-24 rounded-full bg-[#DCD8C7] object-cover"
-                      sizes="96px"
-                    />
-                  </div>
+                {/* Image zone */}
+                <div className="relative h-48 bg-[#DCD8C7] overflow-hidden">
+                  <Image
+                    src={plant.image}
+                    alt={plant.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
                 </div>
                 {/* Content */}
                 <div>
