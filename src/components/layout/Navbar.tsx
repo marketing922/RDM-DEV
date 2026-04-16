@@ -38,31 +38,23 @@ export function Navbar({ dict, locale }: NavbarProps) {
             ))}
           </div>
 
-          {/* Right: Search + Contact */}
-          <div className="flex items-center gap-2">
-            {/* Search */}
-            <Link
-              href={`/${locale}/recherche`}
-              aria-label={dict.nav.search}
-              className="p-2 hover:bg-[#FEF2F2] rounded-full transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#1F2937]">
+          {/* Right: Search bar */}
+          <div className="flex items-center">
+            <div className="relative">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]">
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
-            </Link>
-
-            {/* Contact */}
-            <Link
-              href={`/${locale}/contact`}
-              aria-label={dict.nav.contact || 'Contact'}
-              className="p-2 hover:bg-[#FEF2F2] rounded-full transition-colors"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#1F2937]">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                <polyline points="22,6 12,13 2,6" />
-              </svg>
-            </Link>
+              <input
+                type="text"
+                placeholder="Rechercher une plante..."
+                className="h-9 w-56 pl-9 pr-3 rounded-full border border-[#E5E7EB] bg-[#FEF9E9] text-sm text-[#1F2937] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#A2211E] focus:ring-2 focus:ring-[#A2211E]/20 transition-colors"
+                onFocus={(e) => {
+                  window.location.href = `/${locale}/recherche`
+                }}
+                readOnly
+              />
+            </div>
           </div>
         </nav>
       </header>
