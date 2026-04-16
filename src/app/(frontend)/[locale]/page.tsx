@@ -10,9 +10,9 @@ type Props = { params: Promise<{ locale: string }> }
 /* ─── Mock Data (fallback when DB is empty) ──────────────────────── */
 
 const mockPlants = [
-  { name: 'Camomille', latinName: 'Matricaria chamomilla', image: 'https://images.unsplash.com/photo-1601761707463-c9d47c48bb1f?w=600&q=80', slug: 'camomille' },
-  { name: 'Menthe Poivrée', latinName: 'Mentha x piperita', image: 'https://images.unsplash.com/photo-1648036933917-762235e009c7?w=600&q=80', slug: 'menthe-poivree' },
-  { name: 'Lavande', latinName: 'Lavandula angustifolia', image: 'https://images.unsplash.com/photo-1657631700320-bf0649100658?w=600&q=80', slug: 'lavande' },
+  { name: 'Camomille', latinName: 'Matricaria chamomilla', description: 'Apaisante et digestive, la camomille est utilisée depuis l\'Antiquité pour calmer les tensions et favoriser le sommeil.', image: 'https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=600&q=80', slug: 'camomille' },
+  { name: 'Menthe Poivrée', latinName: 'Mentha x piperita', description: 'Rafraîchissante et tonique, la menthe poivrée soulage les maux de tête et facilite la digestion.', image: 'https://images.unsplash.com/photo-1628556270448-4d4e4148e1b1?w=600&q=80', slug: 'menthe-poivree' },
+  { name: 'Lavande', latinName: 'Lavandula angustifolia', description: 'Reconnue pour ses vertus relaxantes, la lavande aide à réduire le stress et améliore la qualité du sommeil.', image: 'https://images.unsplash.com/photo-1499002238440-d264edd596ec?w=600&q=80', slug: 'lavande' },
 ]
 
 const mockBlogPosts = [
@@ -244,14 +244,17 @@ export default async function HomePage({ params }: Props) {
                   />
                 </div>
                 {/* Content */}
-                <div>
-                  <p className="text-lg font-semibold text-[#1F2937] px-5 pt-4">
+                <div className="p-5">
+                  <p className="text-lg font-semibold text-[#1F2937]">
                     {plant.name}
                   </p>
-                  <p className="text-sm text-[#6B7280] italic px-5">
+                  <p className="text-sm text-[#6B7280] italic">
                     {plant.latinName}
                   </p>
-                  <p className="text-sm font-semibold text-[#A2211E] px-5 pb-4 mt-2 hover:underline">
+                  <p className="text-sm text-[#6B7280] mt-2 line-clamp-2">
+                    {plant.description}
+                  </p>
+                  <p className="text-sm font-semibold text-[#A2211E] mt-3 hover:underline">
                     {dict.common.learnMore} &rarr;
                   </p>
                 </div>
