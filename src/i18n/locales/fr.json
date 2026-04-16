@@ -74,7 +74,18 @@
       "filters": "Filtres",
       "sort": "Trier par",
       "noResults": "Aucun produit trouvé",
-      "showMore": "Voir plus de produits"
+      "showMore": "Voir plus de produits",
+      "filterCategories": {
+        "all": "Toutes",
+        "tisanes": "Tisanes",
+        "poudres": "Poudres",
+        "gelules": "Gélules"
+      },
+      "pagination": {
+        "previous": "Précédent",
+        "next": "Suivant",
+        "page": "Page"
+      }
     },
     "card": {
       "addToCart": "Ajouter au panier",
@@ -131,11 +142,22 @@
       "recettes": "Recettes",
       "actualites": "Actualités",
       "bienfaits": "Bienfaits"
+    },
+    "detail": {
+      "tableOfContents": "Sommaire",
+      "similarArticles": "Articles similaires",
+      "publishedOn": "Publié le",
+      "updatedOn": "Mis à jour le"
     }
   },
   "benefits": {
     "title": "Les bienfaits",
-    "subtitle": "Découvrez comment les plantes peuvent vous aider au quotidien"
+    "subtitle": "Découvrez comment les plantes peuvent vous aider au quotidien",
+    "detail": {
+      "quickAnswer": "En bref",
+      "recommendedProducts": "Produits recommandés",
+      "relatedPlants": "Plantes associées"
+    }
   },
   "about": {
     "title": "À propos",
@@ -147,9 +169,32 @@
       "ancestral": { "title": "Savoir ancestral", "description": "Des recettes transmises de génération en génération." },
       "quality": { "title": "Qualité certifiée", "description": "Des contrôles rigoureux à chaque étape de fabrication." }
     },
-    "timeline": { "title": "Notre histoire" },
-    "team": { "title": "Notre équipe" },
-    "figures": { "title": "En chiffres" }
+    "timeline": {
+      "title": "Notre histoire",
+      "items": [
+        { "year": "2018", "title": "La naissance d'une idée", "description": "Inspirés par les recettes de nos grands-mères, nous décidons de créer une gamme de compléments alimentaires naturels." },
+        { "year": "2019", "title": "Premier atelier", "description": "Ouverture de notre premier atelier de fabrication en France, avec une équipe passionnée de 5 personnes." },
+        { "year": "2021", "title": "Certification Bio", "description": "Obtention de la certification agriculture biologique pour l'ensemble de notre gamme de tisanes." },
+        { "year": "2024", "title": "Aujourd'hui", "description": "Plus de 50 références, une communauté de milliers de clients fidèles et toujours la même exigence de qualité." }
+      ]
+    },
+    "team": {
+      "title": "Notre équipe",
+      "members": [
+        { "name": "Marie Dupont", "role": "Fondatrice & Herboriste" },
+        { "name": "Thomas Martin", "role": "Responsable Qualité" },
+        { "name": "Sophie Lefèvre", "role": "Naturopathe & Conseils" }
+      ]
+    },
+    "figures": {
+      "title": "En chiffres",
+      "items": [
+        { "value": "1000+", "label": "Clients satisfaits" },
+        { "value": "50+", "label": "Produits naturels" },
+        { "value": "100%", "label": "Fabriqué en France" },
+        { "value": "6", "label": "Années d'expérience" }
+      ]
+    }
   },
   "contact": {
     "title": "Nous contacter",
@@ -181,7 +226,15 @@
       "commande": "Commande",
       "livraison": "Livraison",
       "retour": "Retour"
-    }
+    },
+    "items": [
+      { "question": "Comment sont fabriqués vos produits ?", "answer": "Tous nos produits sont fabriqués en France dans notre atelier, à partir d'ingrédients naturels rigoureusement sélectionnés. Chaque lot est contrôlé pour garantir une qualité optimale.", "category": "produits" },
+      { "question": "Quels sont les délais de livraison ?", "answer": "Les commandes sont expédiées sous 24 à 48h ouvrées. La livraison standard prend ensuite 2 à 4 jours ouvrés en France métropolitaine.", "category": "livraison" },
+      { "question": "Puis-je retourner un produit ?", "answer": "Oui, vous disposez d'un délai de 14 jours après réception pour retourner un produit non ouvert. Contactez notre service client pour initier le retour.", "category": "retour" },
+      { "question": "Vos produits sont-ils bio ?", "answer": "La majorité de nos ingrédients sont issus de l'agriculture biologique certifiée. Chaque fiche produit précise les certifications applicables.", "category": "produits" },
+      { "question": "Comment passer commande ?", "answer": "Ajoutez simplement les produits souhaités à votre panier, puis suivez les étapes de paiement sécurisé. Vous recevrez une confirmation par email.", "category": "commande" },
+      { "question": "Les compléments alimentaires remplacent-ils un traitement médical ?", "answer": "Non. Nos compléments alimentaires ne sont pas des médicaments et ne remplacent pas un traitement médical. Consultez toujours un professionnel de santé.", "category": "produits" }
+    ]
   },
   "search": {
     "title": "Recherche",

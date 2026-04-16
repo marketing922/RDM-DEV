@@ -74,7 +74,18 @@
       "filters": "Filters",
       "sort": "Sort by",
       "noResults": "No products found",
-      "showMore": "Show more products"
+      "showMore": "Show more products",
+      "filterCategories": {
+        "all": "All",
+        "tisanes": "Herbal teas",
+        "poudres": "Powders",
+        "gelules": "Capsules"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "page": "Page"
+      }
     },
     "card": {
       "addToCart": "Add to cart",
@@ -131,11 +142,22 @@
       "recettes": "Recipes",
       "actualites": "News",
       "bienfaits": "Benefits"
+    },
+    "detail": {
+      "tableOfContents": "Table of contents",
+      "similarArticles": "Similar articles",
+      "publishedOn": "Published on",
+      "updatedOn": "Updated on"
     }
   },
   "benefits": {
     "title": "Benefits",
-    "subtitle": "Discover how plants can help you in your daily life"
+    "subtitle": "Discover how plants can help you in your daily life",
+    "detail": {
+      "quickAnswer": "Quick answer",
+      "recommendedProducts": "Recommended products",
+      "relatedPlants": "Related plants"
+    }
   },
   "about": {
     "title": "About",
@@ -147,9 +169,32 @@
       "ancestral": { "title": "Ancestral knowledge", "description": "Recipes passed down from generation to generation." },
       "quality": { "title": "Certified quality", "description": "Rigorous controls at every stage of production." }
     },
-    "timeline": { "title": "Our story" },
-    "team": { "title": "Our team" },
-    "figures": { "title": "In numbers" }
+    "timeline": {
+      "title": "Our story",
+      "items": [
+        { "year": "2018", "title": "The birth of an idea", "description": "Inspired by our grandmothers' recipes, we decided to create a range of natural dietary supplements." },
+        { "year": "2019", "title": "First workshop", "description": "Opening of our first manufacturing workshop in France, with a passionate team of 5 people." },
+        { "year": "2021", "title": "Organic certification", "description": "Obtaining organic farming certification for our entire range of herbal teas." },
+        { "year": "2024", "title": "Today", "description": "Over 50 products, a community of thousands of loyal customers and the same commitment to quality." }
+      ]
+    },
+    "team": {
+      "title": "Our team",
+      "members": [
+        { "name": "Marie Dupont", "role": "Founder & Herbalist" },
+        { "name": "Thomas Martin", "role": "Quality Manager" },
+        { "name": "Sophie Lefèvre", "role": "Naturopath & Advisor" }
+      ]
+    },
+    "figures": {
+      "title": "In numbers",
+      "items": [
+        { "value": "1000+", "label": "Satisfied customers" },
+        { "value": "50+", "label": "Natural products" },
+        { "value": "100%", "label": "Made in France" },
+        { "value": "6", "label": "Years of experience" }
+      ]
+    }
   },
   "contact": {
     "title": "Contact us",
@@ -181,7 +226,15 @@
       "commande": "Orders",
       "livraison": "Shipping",
       "retour": "Returns"
-    }
+    },
+    "items": [
+      { "question": "How are your products made?", "answer": "All our products are made in France in our workshop, using rigorously selected natural ingredients. Every batch is tested to ensure optimal quality.", "category": "produits" },
+      { "question": "What are the delivery times?", "answer": "Orders are shipped within 24 to 48 business hours. Standard delivery then takes 2 to 4 business days in mainland France.", "category": "livraison" },
+      { "question": "Can I return a product?", "answer": "Yes, you have 14 days after receipt to return an unopened product. Contact our customer service to initiate the return.", "category": "retour" },
+      { "question": "Are your products organic?", "answer": "Most of our ingredients come from certified organic farming. Each product page specifies the applicable certifications.", "category": "produits" },
+      { "question": "How do I place an order?", "answer": "Simply add the desired products to your cart, then follow the secure payment steps. You will receive a confirmation email.", "category": "commande" },
+      { "question": "Do dietary supplements replace medical treatment?", "answer": "No. Our dietary supplements are not medicines and do not replace medical treatment. Always consult a healthcare professional.", "category": "produits" }
+    ]
   },
   "search": {
     "title": "Search",
