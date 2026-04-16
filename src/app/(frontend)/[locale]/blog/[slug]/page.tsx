@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getDictionary } from '@/i18n/server'
 import type { Locale } from '@/i18n/config'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
+import { ArticleJsonLd } from '@/components/seo'
 import { getBlogPostBySlug, getBlogPosts } from '@/lib/queries'
 import { ArticleCard } from '@/components/shared/ArticleCard'
 import Image from 'next/image'
@@ -55,6 +56,8 @@ export default async function BlogDetailPage({ params }: Props) {
             { label: articleTitle },
           ]}
         />
+
+        <ArticleJsonLd article={post as any} locale={locale} />
 
         <div className="mt-lg flex flex-col lg:flex-row gap-xl">
           {/* TOC sidebar (left) -- hidden on mobile */}

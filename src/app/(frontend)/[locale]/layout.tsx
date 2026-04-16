@@ -19,10 +19,28 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   const dict = await getDictionary(locale as Locale)
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://remedes-mamie.com'
+
   return {
     title: { template: `%s | ${dict.meta.siteName}`, default: dict.meta.siteName },
     description: dict.meta.siteDescription,
-    metadataBase: new URL(dict.meta.siteUrl),
+    metadataBase: new URL(siteUrl),
+    openGraph: {
+      type: 'website',
+      siteName: dict.meta.siteName,
+      locale: locale === 'fr' ? 'fr_FR' : 'en_US',
+      images: [{ url: '/images/og-default.jpg', width: 1200, height: 630, alt: dict.meta.siteName }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+    },
+    alternates: {
+      canonical: `${siteUrl}/${locale}`,
+      languages: {
+        'fr': `${siteUrl}/fr`,
+        'en': `${siteUrl}/en`,
+      },
+    },
   }
 }
 
@@ -34,9 +52,12 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <html lang={locale} className={fontVariables}>
       <body className="bg-page text-neutral-600 font-body antialiased">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:text-brand font-ui">
+          Aller au contenu principal
+        </a>
         <OrganizationJsonLd />
         <Navbar dict={dict} locale={locale} />
-        <main className="min-h-screen">{children}</main>
+        <main id="main-content" className="min-h-screen">{children}</main>
         <Disclaimer variant="minimal" dict={dict} />
         <Footer dict={dict} />
         <MobileNav dict={dict} locale={locale} />

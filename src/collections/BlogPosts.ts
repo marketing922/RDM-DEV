@@ -1,9 +1,23 @@
 import type { CollectionConfig } from 'payload'
+import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
+import { scanForbiddenClaims, gatePublishCompliance, createAuditLog } from '@/hooks'
+import { backupAfterChange } from '@/hooks/backupAfterChange'
 
 export const BlogPosts: CollectionConfig = {
   slug: 'blogPosts',
   versions: {
     drafts: true,
+  },
+  access: {
+    create: isAdminOrEditor,
+    update: isAdminOrEditor,
+    read: isPublishedOrAdmin,
+    delete: isAdmin,
+  },
+  hooks: {
+    beforeValidate: [scanForbiddenClaims],
+    beforeChange: [gatePublishCompliance],
+    afterChange: [createAuditLog, backupAfterChange],
   },
   fields: [
     {

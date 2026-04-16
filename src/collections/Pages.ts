@@ -1,9 +1,20 @@
 import type { CollectionConfig } from 'payload'
+import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
+import { createAuditLog } from '@/hooks'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
   versions: {
     drafts: true,
+  },
+  access: {
+    create: isAdminOrEditor,
+    update: isAdminOrEditor,
+    read: isPublishedOrAdmin,
+    delete: isAdmin,
+  },
+  hooks: {
+    afterChange: [createAuditLog],
   },
   fields: [
     {
