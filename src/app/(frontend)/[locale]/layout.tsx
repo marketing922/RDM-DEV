@@ -59,7 +59,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <Navbar dict={dict} locale={locale} />
         <main id="main-content" className="min-h-screen">{children}</main>
         <Disclaimer variant="minimal" dict={dict} />
-        <Footer dict={dict} />
+        <Footer dict={dict} locale={locale} />
         <MobileNav dict={dict} locale={locale} />
       </body>
     </html>
