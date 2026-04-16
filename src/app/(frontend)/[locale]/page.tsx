@@ -16,9 +16,9 @@ const mockPlants = [
 ]
 
 const mockBlogPosts = [
-  { title: '5 tisanes pour mieux dormir naturellement', excerpt: 'Découvrez les plantes les plus efficaces pour retrouver un sommeil réparateur sans recourir aux somnifères.', image: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=800&q=80', slug: '5-tisanes-pour-mieux-dormir', category: 'Conseils', readingTime: 5, date: '12 avril 2026' },
-  { title: 'Les bienfaits du curcuma', excerpt: 'Anti-inflammatoire naturel, le curcuma est un allié précieux pour votre santé.', image: 'https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=600&q=80', slug: 'bienfaits-curcuma', category: 'Bienfaits', readingTime: 4, date: '8 avril 2026' },
-  { title: 'Recette : infusion détox maison', excerpt: 'Préparez votre propre infusion détox avec des ingrédients simples et naturels.', image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80', slug: 'recette-infusion-detox', category: 'Recettes', readingTime: 3, date: '3 avril 2026' },
+  { title: '5 tisanes pour mieux dormir naturellement', excerpt: 'Camomille, tilleul, valériane, passiflore et mélisse : découvrez les plantes les plus efficaces pour retrouver un sommeil réparateur. Nos conseils de préparation et les dosages recommandés pour chaque infusion du soir.', image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=800&q=80', slug: '5-tisanes-pour-mieux-dormir', category: 'Conseils', readingTime: 5, date: '12 avril 2026' },
+  { title: 'Le curcuma : racine dorée aux mille vertus', excerpt: 'Utilisé depuis des millénaires en médecine ayurvédique, le curcuma est reconnu pour ses propriétés anti-inflammatoires naturelles. Apprenez à l\'associer au poivre noir pour maximiser l\'absorption de la curcumine.', image: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&q=80', slug: 'bienfaits-curcuma', category: 'Bienfaits', readingTime: 4, date: '8 avril 2026' },
+  { title: 'Préparez votre infusion détox maison', excerpt: 'Romarin, citron, gingembre et menthe : une recette simple et efficace pour soutenir votre organisme au quotidien. Suivez notre guide pas à pas pour une infusion détox savoureuse et bienfaisante.', image: 'https://images.unsplash.com/photo-1489648022186-8f49310909a0?w=600&q=80', slug: 'recette-infusion-detox', category: 'Recettes', readingTime: 3, date: '3 avril 2026' },
 ]
 
 const mockFaqItems = [
