@@ -52,7 +52,6 @@ export function Footer({ dict, locale }: FooterProps) {
               <li><Link href={p('/a-propos')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.info.about}</Link></li>
               <li><Link href={p('/contact')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.info.contact}</Link></li>
               <li><Link href={p('/mentions-legales')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.info.mentions}</Link></li>
-              <li><Link href={p('/cgv')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.info.cgv}</Link></li>
               <li><Link href={p('/politique-confidentialite')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.info.confidentialite}</Link></li>
               <li><Link href={p('/politique-cookies')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.info.cookies}</Link></li>
             </ul>

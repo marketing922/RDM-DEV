@@ -6,7 +6,7 @@ import { getDictionary } from '@/i18n/server'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { MobileNav } from '@/components/layout/MobileNav'
-import { Disclaimer } from '@/components/shared/Disclaimer'
+
 import { OrganizationJsonLd } from '@/components/seo'
 import '@/styles/globals.css'
 
@@ -58,7 +58,6 @@ export default async function LocaleLayout({ children, params }: Props) {
         <OrganizationJsonLd />
         <Navbar dict={dict} locale={locale} />
         <main id="main-content" className="min-h-screen">{children}</main>
-        <Disclaimer variant="minimal" dict={dict} />
         <Footer dict={dict} locale={locale} />
         <MobileNav dict={dict} locale={locale} />
       </body>
