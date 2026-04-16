@@ -31,7 +31,7 @@ export function Navbar({ dict, locale }: NavbarProps) {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-medium text-[#1F2937] hover:text-[#A2211E] transition-colors"
+                className="text-sm font-medium text-[#054A57] hover:text-[#A2211E] transition-colors"
               >
                 {link.label}
               </Link>
@@ -48,7 +48,7 @@ export function Navbar({ dict, locale }: NavbarProps) {
               <input
                 type="text"
                 placeholder="Rechercher une plante..."
-                className="h-9 w-52 pl-9 pr-3 rounded-full border border-[#E5E7EB] bg-[#FEF9E9] text-sm text-[#1F2937] placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#A2211E] focus:ring-2 focus:ring-[#A2211E]/20 transition-colors"
+                className="h-9 w-52 pl-9 pr-3 rounded-full border border-[#DCD8C7] bg-[#FEF9E9] text-sm text-[#054A57] placeholder:text-[#DCD8C7] focus:outline-none focus:border-[#A2211E] focus:ring-2 focus:ring-[#A2211E]/20 transition-colors"
                 onFocus={() => {
                   window.location.href = `/${locale}/recherche`
                 }}
@@ -70,12 +70,12 @@ export function Navbar({ dict, locale }: NavbarProps) {
             className="p-2 rounded-md"
           >
             {mobileMenuOpen ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#1F2937]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#054A57]">
                 <line x1="18" y1="6" x2="6" y2="18" />
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#1F2937]">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#054A57]">
                 <line x1="3" y1="12" x2="21" y2="12" />
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <line x1="3" y1="18" x2="21" y2="18" />
@@ -94,7 +94,7 @@ export function Navbar({ dict, locale }: NavbarProps) {
             aria-label={dict.nav.search}
             className="p-2 hover:bg-[#FEF2F2] rounded-full transition-colors"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#1F2937]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#054A57]">
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
@@ -111,23 +111,23 @@ export function Navbar({ dict, locale }: NavbarProps) {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-base font-medium text-[#1F2937] hover:text-[#A2211E] py-3 px-4 rounded-lg hover:bg-[#FEF2F2] transition-colors"
+                className="text-base font-medium text-[#054A57] hover:text-[#A2211E] py-3 px-4 rounded-lg hover:bg-[#FEF2F2] transition-colors"
               >
                 {link.label}
               </Link>
             ))}
-            <hr className="my-3 border-[#E5E7EB]" />
+            <hr className="my-3 border-[#DCD8C7]" />
             <Link
               href={`/${locale}/contact`}
               onClick={() => setMobileMenuOpen(false)}
-              className="text-base font-medium text-[#1F2937] hover:text-[#A2211E] py-3 px-4 rounded-lg hover:bg-[#FEF2F2] transition-colors"
+              className="text-base font-medium text-[#054A57] hover:text-[#A2211E] py-3 px-4 rounded-lg hover:bg-[#FEF2F2] transition-colors"
             >
               {dict.nav.contact || 'Contact'}
             </Link>
             <Link
               href={`/${locale}/faq`}
               onClick={() => setMobileMenuOpen(false)}
-              className="text-base font-medium text-[#1F2937] hover:text-[#A2211E] py-3 px-4 rounded-lg hover:bg-[#FEF2F2] transition-colors"
+              className="text-base font-medium text-[#054A57] hover:text-[#A2211E] py-3 px-4 rounded-lg hover:bg-[#FEF2F2] transition-colors"
             >
               FAQ
             </Link>

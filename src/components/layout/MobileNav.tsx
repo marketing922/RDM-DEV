@@ -62,7 +62,7 @@ export function MobileNav({ dict, locale }: MobileNavProps) {
   ]
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#E5E7EB] z-40">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[#DCD8C7] z-40">
       <div className="h-14 flex items-center justify-around">
         {items.map((item) => {
           const isActive = pathname === item.href || (item.href !== `/${locale}` && pathname.startsWith(item.href))
@@ -72,7 +72,7 @@ export function MobileNav({ dict, locale }: MobileNavProps) {
               key={item.href}
               href={item.href}
               className={`flex flex-col items-center gap-0.5 ${
-                isActive ? 'text-[#A2211E]' : 'text-[#6B7280]'
+                isActive ? 'text-[#A2211E]' : 'text-[#DCD8C7]'
               }`}
             >
               {item.icon}

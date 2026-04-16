@@ -99,13 +99,13 @@ export default async function HomePage({ params }: Props) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
             {/* Left column */}
             <div>
-              <span className="inline-block bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-6">
+              <span className="inline-block bg-[#A2211E] text-white text-xs font-bold px-3 py-1 rounded-full mb-6">
                 100% Naturel
               </span>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#1F2937] leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#054A57] leading-tight">
                 {dict.home.hero.title}
               </h1>
-              <p className="mt-5 text-lg text-[#6B7280] leading-relaxed max-w-lg">
+              <p className="mt-5 text-lg text-[#712E2F]/70 leading-relaxed max-w-lg">
                 {dict.home.hero.subtitle}
               </p>
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
@@ -117,7 +117,7 @@ export default async function HomePage({ params }: Props) {
                 </Link>
                 <Link
                   href={`/${locale}/a-propos`}
-                  className="inline-flex items-center justify-center border-2 border-[#1F2937] text-[#1F2937] hover:bg-[#1F2937] hover:text-white font-semibold py-3.5 px-8 rounded-lg transition-colors text-base"
+                  className="inline-flex items-center justify-center border-2 border-[#A2211E] text-[#A2211E] hover:bg-[#A2211E] hover:text-white font-semibold py-3.5 px-8 rounded-lg transition-colors text-base"
                 >
                   {dict.home.hero.ctaSecondary}
                 </Link>
@@ -159,7 +159,7 @@ export default async function HomePage({ params }: Props) {
                   className="flex flex-col items-center gap-2 text-center"
                 >
                   <CertIcon type={cert.type} />
-                  <span className="text-sm text-[#374151] font-medium leading-snug">
+                  <span className="text-sm text-[#054A57] font-medium leading-snug">
                     {dict.home.certifications[cert.key]}
                   </span>
                 </div>
@@ -170,44 +170,44 @@ export default async function HomePage({ params }: Props) {
       </section>
 
       {/* ═══════════════ 3. ENGAGEMENTS ═══════════════ */}
-      <section className="bg-[#ECFDF5] py-10">
+      <section className="bg-[#FFF5D5] py-10">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="flex items-center gap-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-green-600">
+              <div className="flex-shrink-0 w-12 h-12 bg-[#FEF9E9] rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[#A2211E]">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                   <path d="M9 12l2 2 4-4" />
                 </svg>
               </div>
               <div>
-                <p className="font-semibold text-[#1F2937]">Sources vérifiées</p>
-                <p className="text-sm text-[#6B7280]">Conformes à la pharmacopée chinoise</p>
+                <p className="font-semibold text-[#054A57]">Sources vérifiées</p>
+                <p className="text-sm text-[#712E2F]/70">Conformes à la pharmacopée chinoise</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-green-600">
+              <div className="flex-shrink-0 w-12 h-12 bg-[#FEF9E9] rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[#A2211E]">
                   <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
                   <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
                 </svg>
               </div>
               <div>
-                <p className="font-semibold text-[#1F2937]">Encyclopédie complète</p>
-                <p className="text-sm text-[#6B7280]">Fiches plantes détaillées et illustrées</p>
+                <p className="font-semibold text-[#054A57]">Encyclopédie complète</p>
+                <p className="text-sm text-[#712E2F]/70">Fiches plantes détaillées et illustrées</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-green-600">
+              <div className="flex-shrink-0 w-12 h-12 bg-[#FEF9E9] rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[#A2211E]">
                   <circle cx="12" cy="12" r="10" />
                   <line x1="12" y1="16" x2="12" y2="12" />
                   <line x1="12" y1="8" x2="12.01" y2="8" />
                 </svg>
               </div>
               <div>
-                <p className="font-semibold text-[#1F2937]">Contenu accessible</p>
-                <p className="text-sm text-[#6B7280]">Informations claires pour tous</p>
+                <p className="font-semibold text-[#054A57]">Contenu accessible</p>
+                <p className="text-sm text-[#712E2F]/70">Informations claires pour tous</p>
               </div>
             </div>
           </div>
@@ -218,10 +218,10 @@ export default async function HomePage({ params }: Props) {
       <section className="py-16 md:py-24 bg-[#FEF9E9]">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1F2937]">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#054A57]">
               {dict.home.wiki.title}
             </h2>
-            <p className="mt-3 text-lg text-[#6B7280] max-w-xl mx-auto">
+            <p className="mt-3 text-lg text-[#712E2F]/70 max-w-xl mx-auto">
               {dict.home.wiki.subtitle}
             </p>
           </div>
@@ -245,13 +245,13 @@ export default async function HomePage({ params }: Props) {
                 </div>
                 {/* Content */}
                 <div className="p-5">
-                  <p className="text-lg font-semibold text-[#1F2937]">
+                  <p className="text-lg font-semibold text-[#054A57]">
                     {plant.name}
                   </p>
-                  <p className="text-sm text-[#6B7280] italic">
+                  <p className="text-sm text-[#DCD8C7] italic">
                     {plant.latinName}
                   </p>
-                  <p className="text-sm text-[#6B7280] mt-2 line-clamp-2">
+                  <p className="text-sm text-[#712E2F]/70 mt-2 line-clamp-2">
                     {plant.description}
                   </p>
                   <p className="text-sm font-semibold text-[#A2211E] mt-3 hover:underline">
@@ -265,7 +265,7 @@ export default async function HomePage({ params }: Props) {
           <div className="text-center mt-12">
             <Link
               href={`/${locale}/plantes`}
-              className="inline-flex items-center justify-center border-2 border-[#1F2937] text-[#1F2937] hover:bg-[#1F2937] hover:text-white font-semibold py-3 px-8 rounded-lg transition-colors"
+              className="inline-flex items-center justify-center border-2 border-[#A2211E] text-[#A2211E] hover:bg-[#A2211E] hover:text-white font-semibold py-3 px-8 rounded-lg transition-colors"
             >
               {dict.home.wiki.viewAll}
             </Link>
@@ -277,10 +277,10 @@ export default async function HomePage({ params }: Props) {
       <section className="py-16 md:py-24 bg-white">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#1F2937]">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#054A57]">
               {dict.home.blog.title}
             </h2>
-            <p className="mt-3 text-lg text-[#6B7280] max-w-xl mx-auto">
+            <p className="mt-3 text-lg text-[#712E2F]/70 max-w-xl mx-auto">
               {dict.home.blog.subtitle}
             </p>
           </div>
@@ -299,20 +299,20 @@ export default async function HomePage({ params }: Props) {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 1024px) 100vw, 66vw"
                 />
-                <span className="absolute top-4 left-4 bg-[#A2211E] text-white text-xs font-bold px-3 py-1 rounded-full">
+                <span className="absolute top-4 left-4 bg-[#D0802C] text-white text-xs font-bold px-3 py-1 rounded-full">
                   {mockBlogPosts[0].category}
                 </span>
               </div>
               <div className="p-6">
-                <div className="flex items-center gap-3 text-sm text-[#9CA3AF] mb-2">
+                <div className="flex items-center gap-3 text-sm text-[#DCD8C7] mb-2">
                   <span>{mockBlogPosts[0].date}</span>
                   <span>&middot;</span>
                   <span>{mockBlogPosts[0].readingTime} {dict.blog.readingTime}</span>
                 </div>
-                <h3 className="text-xl font-bold text-[#1F2937] group-hover:text-[#A2211E] transition-colors">
+                <h3 className="text-xl font-bold text-[#054A57] group-hover:text-[#A2211E] transition-colors">
                   {mockBlogPosts[0].title}
                 </h3>
-                <p className="mt-2 text-[#6B7280] line-clamp-2">
+                <p className="mt-2 text-[#712E2F]/70 line-clamp-2">
                   {mockBlogPosts[0].excerpt}
                 </p>
               </div>
@@ -334,17 +334,17 @@ export default async function HomePage({ params }: Props) {
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                       sizes="(max-width: 1024px) 100vw, 33vw"
                     />
-                    <span className="absolute top-3 left-3 bg-[#A2211E] text-white text-xs font-bold px-3 py-1 rounded-full">
+                    <span className="absolute top-3 left-3 bg-[#D0802C] text-white text-xs font-bold px-3 py-1 rounded-full">
                       {post.category}
                     </span>
                   </div>
                   <div className="p-4">
-                    <div className="flex items-center gap-2 text-xs text-[#9CA3AF] mb-1">
+                    <div className="flex items-center gap-2 text-xs text-[#DCD8C7] mb-1">
                       <span>{post.date}</span>
                       <span>&middot;</span>
                       <span>{post.readingTime} {dict.blog.readingTime}</span>
                     </div>
-                    <h3 className="text-base font-bold text-[#1F2937] group-hover:text-[#A2211E] transition-colors line-clamp-2">
+                    <h3 className="text-base font-bold text-[#054A57] group-hover:text-[#A2211E] transition-colors line-clamp-2">
                       {post.title}
                     </h3>
                   </div>
@@ -356,7 +356,7 @@ export default async function HomePage({ params }: Props) {
           <div className="text-center mt-12">
             <Link
               href={`/${locale}/blog`}
-              className="inline-flex items-center justify-center border-2 border-[#1F2937] text-[#1F2937] hover:bg-[#1F2937] hover:text-white font-semibold py-3 px-8 rounded-lg transition-colors"
+              className="inline-flex items-center justify-center border-2 border-[#A2211E] text-[#A2211E] hover:bg-[#A2211E] hover:text-white font-semibold py-3 px-8 rounded-lg transition-colors"
             >
               {dict.home.blog.viewAll}
             </Link>
@@ -378,11 +378,11 @@ export default async function HomePage({ params }: Props) {
             <input
               type="email"
               placeholder={dict.home.newsletter.placeholder}
-              className="flex-1 h-12 px-5 rounded-lg text-base text-[#1F2937] bg-white border-0 focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-[#9CA3AF]"
+              className="flex-1 h-12 px-5 rounded-lg text-base text-[#054A57] bg-white border-0 focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-[#DCD8C7]"
             />
             <button
               type="submit"
-              className="h-12 px-8 bg-[#1F2937] hover:bg-black text-white font-semibold rounded-lg transition-colors"
+              className="h-12 px-8 bg-[#054A57] hover:bg-[#054A57]/90 text-white font-semibold rounded-lg transition-colors"
             >
               {dict.home.newsletter.cta}
             </button>
@@ -397,7 +397,7 @@ export default async function HomePage({ params }: Props) {
       {/* ═══════════════ 7. FAQ PREVIEW ═══════════════ */}
       <section className="py-16 md:py-24 bg-white">
         <div className="mx-auto max-w-3xl px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#1F2937] text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#054A57] text-center mb-12">
             {dict.home.faq.title}
           </h2>
 
@@ -408,7 +408,7 @@ export default async function HomePage({ params }: Props) {
                 className="bg-[#FEF9E9] rounded-2xl overflow-hidden group"
               >
                 <summary className="flex w-full items-center justify-between gap-4 p-6 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                  <span className="font-semibold text-[#1F2937] text-left">
+                  <span className="font-semibold text-[#054A57] text-left">
                     {faq.question}
                   </span>
                   <svg
@@ -421,12 +421,12 @@ export default async function HomePage({ params }: Props) {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="text-[#9CA3AF] flex-shrink-0 transition-transform duration-300 group-open:rotate-180"
+                    className="text-[#DCD8C7] flex-shrink-0 transition-transform duration-300 group-open:rotate-180"
                   >
                     <polyline points="6 9 12 15 18 9" />
                   </svg>
                 </summary>
-                <div className="px-6 pb-6 text-[#6B7280] text-sm leading-relaxed">
+                <div className="px-6 pb-6 text-[#712E2F]/70 text-sm leading-relaxed">
                   {faq.answer}
                 </div>
               </details>
