@@ -17,6 +17,9 @@ export const BlogPosts: CollectionConfig = {
     description: 'R\u00e9diger et g\u00e9rer les articles du blog',
     components: {
       beforeList: ['@/components/admin/ListHero.tsx#default'],
+      edit: {
+        beforeDocumentControls: ['@/components/admin/DocHeaderChip.tsx#default'],
+      },
     },
   },
   versions: {

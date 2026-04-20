@@ -17,6 +17,9 @@ export const Benefits: CollectionConfig = {
     description: 'G\u00e9rer les bienfaits sant\u00e9 associ\u00e9s aux plantes',
     components: {
       beforeList: ['@/components/admin/ListHero.tsx#default'],
+      edit: {
+        beforeDocumentControls: ['@/components/admin/DocHeaderChip.tsx#default'],
+      },
     },
   },
   versions: {

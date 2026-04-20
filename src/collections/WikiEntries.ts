@@ -17,6 +17,9 @@ export const WikiEntries: CollectionConfig = {
     description: 'G\u00e9rer les fiches plantes de l\u2019encyclop\u00e9die des rem\u00e8des naturels',
     components: {
       beforeList: ['@/components/admin/ListHero.tsx#default'],
+      edit: {
+        beforeDocumentControls: ['@/components/admin/DocHeaderChip.tsx#default'],
+      },
     },
   },
   versions: {

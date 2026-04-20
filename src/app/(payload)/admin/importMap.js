@@ -26,6 +26,7 @@ import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c08
 import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { default as default_5405457290e3c6d61f6f1db0ffb552be } from '@/components/admin/ListHero.tsx'
+import { default as default_b12ac741b6d9ee62052c6c1e6d36fb01 } from '@/components/admin/DocHeaderChip.tsx'
 import { default as default_4e1e699efd22461324c9d216a74648ef } from '@/components/admin/Nav.tsx'
 import { default as default_f9bbae075ff7661688b05c4ed7480007 } from '@/components/admin/Icon.tsx'
 import { default as default_29cf8bd0dcc024aa26cbdb3a51d5d381 } from '@/components/admin/Logo.tsx'
@@ -64,6 +65,7 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@/components/admin/ListHero.tsx#default": default_5405457290e3c6d61f6f1db0ffb552be,
+  "@/components/admin/DocHeaderChip.tsx#default": default_b12ac741b6d9ee62052c6c1e6d36fb01,
   "@/components/admin/Nav.tsx#default": default_4e1e699efd22461324c9d216a74648ef,
   "@/components/admin/Icon.tsx#default": default_f9bbae075ff7661688b05c4ed7480007,
   "@/components/admin/Logo.tsx#default": default_29cf8bd0dcc024aa26cbdb3a51d5d381,
