@@ -96,6 +96,13 @@ export default async function PlantDetailPage({ params }: Props) {
 
   const relatedPlants = allPlants.filter((p: any) => p.slug !== slug).slice(0, 4)
 
+  const detailedText =
+    e.longDescription || (e.description ? richTextToPlain(e.description) : '')
+  const precautionsText =
+    e.precautionsText ||
+    (e.contraindications ? richTextToPlain(e.contraindications) : '') ||
+    (e.precautions ? richTextToPlain(e.precautions) : '')
+
   return (
     <main className="min-h-screen bg-[#FEF9E9]">
       <GeoStructuredData
@@ -118,215 +125,218 @@ export default async function PlantDetailPage({ params }: Props) {
           lastFactCheckedAt: e.lastFactCheckedAt,
         }}
       />
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-        {/* Breadcrumb */}
-        <Breadcrumb
-          items={[
-            { label: dict.nav.home, href: `/${locale}` },
-            { label: dict.wiki.title, href: `/${locale}/plantes` },
-            { label: plantName },
-          ]}
-        />
 
-        {/* Hero: Image left + Info right */}
-        <div className="mt-8 bg-white rounded-2xl border border-[#DCD8C7] p-6 sm:p-8">
-          <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 items-center sm:items-start">
-            {/* Circular image */}
-            <div className="relative w-36 h-36 sm:w-44 sm:h-44 flex-shrink-0 rounded-full overflow-hidden border-4 border-[#FEF9E9] shadow-[0_4px_16px_rgba(0,0,0,0.1)]">
-              <Image
-                src={heroSrc}
-                alt={plantName}
-                fill
-                sizes="176px"
-                className="object-cover"
-              />
-            </div>
+      {/* ═══════════════ HERO ═══════════════ */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#FFF5D5] via-[#FEF9E9] to-[#FEF9E9] pb-12 lg:pb-20">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-10 -right-10 opacity-[0.07] rotate-[-20deg]"
+        >
+          <svg width="420" height="420" viewBox="0 0 24 24" fill="none" stroke="#054A57" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19.2 2.96a1 1 0 0 1 1.5.5c.87 2.58.58 5.04-.27 7.2-.79 2-2.03 3.76-3.64 4.82a9 9 0 0 1-5.79 4.52z" />
+            <path d="M2 21c0-3 1.85-5.36 5.08-6" />
+          </svg>
+        </div>
 
-            {/* Name, latin, tags, description */}
-            <div className="flex-1 text-center sm:text-left">
-              <h1 className="text-3xl sm:text-4xl font-bold text-[#054A57]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6">
+          <Breadcrumb
+            items={[
+              { label: dict.nav.home, href: `/${locale}` },
+              { label: dict.wiki.title, href: `/${locale}/plantes` },
+              { label: plantName },
+            ]}
+          />
+        </div>
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6 lg:mt-10">
+          <div className="grid lg:grid-cols-[1fr_420px] gap-8 lg:gap-12 items-center">
+            {/* Left — title block */}
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#D0802C]">
+                {dict.wiki.title}
+              </p>
+              <h1 className="mt-3 text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] text-[#054A57]">
                 {plantName}
               </h1>
               {e.latinName && (
-                <p className="mt-1 text-lg italic text-[#D0802C]">{e.latinName}</p>
+                <p className="mt-3 text-xl lg:text-2xl italic text-[#D0802C]">
+                  {e.latinName}
+                </p>
               )}
-
-              {/* Tags from benefits — now clickable links */}
               {benefits.length > 0 && (
-                <div className="mt-4 flex flex-wrap justify-center sm:justify-start gap-2">
-                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[#054A57] text-white">
-                    Plante
-                  </span>
+                <div className="mt-6 flex flex-wrap gap-2">
                   {benefits.map((b) => (
                     <Link
                       key={b.slug}
                       href={`/${locale}/bienfaits/${b.slug}`}
-                      className="px-3 py-1 rounded-full text-xs font-semibold bg-[#054A57]/80 text-white hover:bg-[#A2211E] transition-colors"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-white border border-[#DCD8C7] px-3.5 py-1.5 text-sm font-medium text-[#054A57] hover:border-[#A2211E] hover:text-[#A2211E] transition-colors"
                     >
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#A2211E]" />
                       {b.name}
                     </Link>
                   ))}
                 </div>
               )}
-
-              {/* Short description */}
               {e.activeCompounds && (
-                <p className="mt-4 text-sm text-[#712E2F]/70 leading-relaxed">
-                  {typeof e.activeCompounds === 'string' ? e.activeCompounds : richTextToPlain(e.activeCompounds)}
+                <p className="mt-6 max-w-xl text-base lg:text-lg leading-relaxed text-[#374151]">
+                  {typeof e.activeCompounds === 'string'
+                    ? e.activeCompounds
+                    : richTextToPlain(e.activeCompounds)}
                 </p>
               )}
             </div>
+
+            {/* Right — image */}
+            <div className="relative aspect-square max-w-[420px] mx-auto lg:mx-0 w-full rounded-[32px] overflow-hidden shadow-[0_20px_48px_rgba(5,74,87,0.12),0_6px_16px_rgba(162,33,30,0.08)] border-4 border-white">
+              <Image
+                src={heroSrc}
+                alt={plantName}
+                fill
+                sizes="(max-width: 1024px) 100vw, 420px"
+                className="object-cover"
+                priority
+              />
+            </div>
           </div>
         </div>
+      </section>
 
-        <DirectAnswerBox text={e.directAnswer} />
+      {/* ═══════════════ MAIN + SIDEBAR ═══════════════ */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div className="grid lg:grid-cols-[1fr_340px] gap-10 lg:gap-14">
+          {/* MAIN CONTENT */}
+          <div className="min-w-0">
+            <DirectAnswerBox text={e.directAnswer} />
 
-        {/* Two columns: Bienfaits + Infos clés */}
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* LEFT — Bienfaits principaux — now clickable links */}
-          <div className="bg-white rounded-2xl border border-[#DCD8C7] p-6">
-            <h2 className="text-xl font-bold mb-5 text-[#054A57]">
-              Bienfaits principaux
-            </h2>
-            {benefits.length > 0 ? (
-              <ul className="space-y-3">
-                {benefits.map((b) => (
-                  <li key={b.slug} className="flex items-start gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#054A57" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    <Link
-                      href={`/${locale}/bienfaits/${b.slug}`}
-                      className="text-[#712E2F] hover:text-[#A2211E] hover:underline transition-colors"
-                    >
-                      {b.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm text-[#712E2F]/50 italic">
-                Aucune information disponible.
-              </p>
-            )}
-          </div>
-
-          {/* RIGHT — Informations clés */}
-          <div className="bg-white rounded-2xl border border-[#DCD8C7] p-6">
-            <h2 className="text-xl font-bold mb-5 text-[#054A57]">
-              Informations clés
-            </h2>
-            {infoRows.length > 0 ? (
-              <table className="w-full text-sm">
-                <tbody>
-                  {infoRows.map((row, i) => (
-                    <tr key={i} className="border-b border-[#DCD8C7]/50 last:border-0">
-                      <td className="py-3 pr-4 font-medium text-[#712E2F]/60 whitespace-nowrap">
-                        {row.label}
-                      </td>
-                      <td className="py-3 font-semibold text-[#054A57]">
-                        {row.value}
-                      </td>
-                    </tr>
+            {detailedText && (
+              <section className="mt-8">
+                <h2 className="text-2xl lg:text-3xl font-bold text-[#054A57] mb-5">
+                  À propos de {plantName.toLowerCase()}
+                </h2>
+                <div className="space-y-4 text-[17px] leading-[1.8] text-[#374151]">
+                  {detailedText.split('\n\n').map((paragraph: string, i: number) => (
+                    <p key={i}>{paragraph}</p>
                   ))}
-                </tbody>
-              </table>
-            ) : (
-              <p className="text-sm text-[#712E2F]/50 italic">
-                Aucune information disponible.
-              </p>
+                </div>
+              </section>
             )}
+
+            <KeyTakeawaysBox items={e.keyTakeaways} />
+            <FaqAccordion items={e.faq} />
+            <SourcesList items={e.sources} />
           </div>
-        </div>
 
-        {/* Description détaillée */}
-        {(e.longDescription || (e.description && richTextToPlain(e.description))) && (
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold mb-4 text-[#054A57]">
-              Description détaillée
-            </h2>
-            <div className="bg-white rounded-2xl border border-[#DCD8C7] p-6 text-[#712E2F] leading-relaxed">
-              {(e.longDescription || richTextToPlain(e.description)).split('\n\n').map((paragraph: string, i: number) => (
-                <p key={i} className={i > 0 ? 'mt-4' : ''}>
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <KeyTakeawaysBox items={e.keyTakeaways} />
-
-        <FaqAccordion items={e.faq} />
-
-        <SourcesList items={e.sources} />
-
-        {/* Contre-indications */}
-        {(e.precautionsText || e.contraindications || e.precautions) && (
-          <div className="mt-8 rounded-2xl p-6 bg-[#FFF5D5] border-2 border-[#D0802C]">
-            <div className="flex items-start gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D0802C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 mt-0.5">
-                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
-                <line x1="12" y1="9" x2="12" y2="13" />
-                <line x1="12" y1="17" x2="12.01" y2="17" />
-              </svg>
-              <div className="flex-1">
-                <h3 className="text-lg font-bold mb-2 text-[#A2211E]">
-                  Contre-indications &amp; Précautions
-                </h3>
-                <p className="text-sm text-[#712E2F]">
-                  {e.precautionsText || richTextToPlain(e.contraindications) || richTextToPlain(e.precautions)}
-                </p>
+          {/* SIDEBAR */}
+          <aside className="lg:sticky lg:top-8 lg:self-start lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto space-y-4 lg:pb-8">
+            {infoRows.length > 0 && (
+              <div className="bg-white rounded-2xl border border-[#DCD8C7] overflow-hidden">
+                <div className="px-5 py-3 bg-[#FFF5D5] border-b border-[#DCD8C7]">
+                  <h3 className="text-xs font-bold uppercase tracking-[0.1em] text-[#054A57]">
+                    Fiche technique
+                  </h3>
+                </div>
+                <dl className="divide-y divide-[#DCD8C7]/60 text-sm">
+                  {infoRows.map((row, i) => (
+                    <div key={i} className="flex px-5 py-3">
+                      <dt className="w-1/2 text-[#6B7280] font-medium">{row.label}</dt>
+                      <dd className="w-1/2 text-[#054A57] font-semibold text-right">
+                        {row.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
               </div>
-            </div>
-          </div>
-        )}
+            )}
 
-        {/* Disclaimer médical */}
-        <div className="mt-8 rounded-2xl p-5 bg-[#FFF5D5] border border-[#D0802C]/30">
-          <div className="flex items-center gap-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D0802C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="16" x2="12" y2="12" />
-              <line x1="12" y1="8" x2="12.01" y2="8" />
-            </svg>
-            <p className="text-sm text-[#712E2F]">
-              <strong>Consultez votre médecin avant utilisation.</strong> Les informations présentes sur ce site sont à titre informatif et ne remplacent pas un avis médical.{' '}
-              <Link href={`/${locale}/avertissement-sante`} className="text-[#A2211E] hover:underline font-medium">
-                En savoir plus
+            {precautionsText && (
+              <div className="rounded-2xl border-2 border-[#D0802C] bg-[#FFF5D5] p-5">
+                <div className="flex items-start gap-3">
+                  <span
+                    aria-hidden
+                    className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[#D0802C] text-white"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                      <line x1="12" y1="9" x2="12" y2="13" />
+                      <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                  </span>
+                  <div className="flex-1">
+                    <h3 className="text-sm font-bold text-[#A2211E]">
+                      Précautions
+                    </h3>
+                    <p className="mt-1.5 text-[13px] leading-relaxed text-[#1F2937]">
+                      {precautionsText}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="rounded-2xl border border-[#DCD8C7] bg-white p-5">
+              <p className="text-[13px] leading-relaxed text-[#374151]">
+                <strong className="text-[#054A57]">
+                  Consultez votre médecin avant utilisation.
+                </strong>{' '}
+                Ces informations sont à titre informatif et ne remplacent pas un avis
+                médical.
+              </p>
+              <Link
+                href={`/${locale}/avertissement-sante`}
+                className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-[#A2211E] hover:underline"
+              >
+                Avertissement santé
+                <span>→</span>
               </Link>
-            </p>
-          </div>
+            </div>
+          </aside>
         </div>
+      </section>
 
-        {/* Plantes associées */}
-        {relatedPlants.length > 0 && (
-          <div className="mt-12 mb-8">
-            <h2 className="text-2xl font-bold mb-6 text-[#054A57]">
-              {dict.wiki.detail.relatedPlants || 'Plantes associées'}
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      {/* ═══════════════ PLANTES ASSOCIÉES ═══════════════ */}
+      {relatedPlants.length > 0 && (
+        <section className="border-t border-[#DCD8C7] bg-white py-14 lg:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="flex items-baseline justify-between mb-8">
+              <h2 className="text-2xl lg:text-3xl font-bold text-[#054A57]">
+                {dict.wiki.detail.relatedPlants || 'Plantes associées'}
+              </h2>
+              <Link
+                href={`/${locale}/plantes`}
+                className="text-sm font-semibold text-[#A2211E] hover:underline"
+              >
+                Voir toutes les plantes →
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
               {relatedPlants.map((plant: any) => {
-                const imgSrc = plant.heroImage?.url || (plant.images?.[0] as any)?.image?.url || DEFAULT_PLANT_IMAGE
+                const imgSrc =
+                  plant.heroImage?.url ||
+                  (plant.images?.[0] as any)?.image?.url ||
+                  DEFAULT_PLANT_IMAGE
                 return (
                   <Link
                     key={plant.slug}
                     href={`/${locale}/plantes/${plant.slug}`}
-                    className="group bg-white rounded-xl border border-[#DCD8C7] overflow-hidden hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+                    className="group overflow-hidden rounded-2xl border border-[#DCD8C7] bg-white transition-all hover:-translate-y-1 hover:shadow-[0_12px_24px_rgba(5,74,87,0.08)]"
                   >
-                    <div className="relative aspect-[4/3] overflow-hidden">
+                    <div className="relative aspect-[4/3] overflow-hidden bg-[#FFF5D5]">
                       <Image
                         src={imgSrc}
                         alt={plant.name}
                         fill
-                        sizes="(max-width: 640px) 50vw, 25vw"
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </div>
-                    <div className="p-3 text-center">
-                      <p className="font-bold text-sm text-[#054A57]">{plant.name}</p>
+                    <div className="p-4">
+                      <p className="font-bold text-[#054A57] group-hover:text-[#A2211E] transition-colors">
+                        {plant.name}
+                      </p>
                       {plant.latinName && (
-                        <p className="text-xs italic text-[#D0802C] mt-0.5">{plant.latinName}</p>
+                        <p className="mt-0.5 text-xs italic text-[#D0802C]">
+                          {plant.latinName}
+                        </p>
                       )}
                     </div>
                   </Link>
@@ -334,8 +344,8 @@ export default async function PlantDetailPage({ params }: Props) {
               })}
             </div>
           </div>
-        )}
-      </div>
+        </section>
+      )}
     </main>
   )
 }
