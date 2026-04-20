@@ -1,6 +1,12 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionConfig, Field } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
 import { createAuditLog } from '@/hooks'
+
+const adminOnlyField: Field['access'] = {
+  create: ({ req }) => req.user?.role === 'admin',
+  update: ({ req }) => req.user?.role === 'admin',
+  read: () => true,
+}
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -261,6 +267,62 @@ export const Pages: CollectionConfig = {
               type: 'text',
               localized: true,
               label: 'L\u00e9gende',
+            },
+          ],
+        },
+        {
+          slug: 'customCode',
+          labels: {
+            singular: 'Code personnalis\u00e9 (HTML/CSS/JS)',
+            plural: 'Blocs code personnalis\u00e9',
+          },
+          admin: {
+            // @ts-expect-error custom description for editors
+            description:
+              '\u26a0 Bloc avanc\u00e9 admin uniquement. Le HTML/CSS/JS est injecte tel quel dans la page. Scope CSS automatique via un wrapper unique. Risque XSS: n\u2019injecter que du code que vous avez \u00e9crit.',
+          },
+          fields: [
+            {
+              name: 'label',
+              type: 'text',
+              label: 'Nom interne (non affich\u00e9)',
+              admin: {
+                placeholder: 'Ex : Widget calculateur',
+                description: 'Utile pour s\u2019y retrouver dans le builder',
+              },
+            },
+            {
+              name: 'html',
+              type: 'code',
+              access: adminOnlyField,
+              label: 'HTML (body)',
+              admin: {
+                language: 'html',
+                description:
+                  'HTML du bloc (sans balises <html>/<body>). Auto-wrapp\u00e9 dans un <div> avec classe de scope.',
+              },
+            },
+            {
+              name: 'css',
+              type: 'code',
+              access: adminOnlyField,
+              label: 'CSS',
+              admin: {
+                language: 'css',
+                description:
+                  'Auto-scop\u00e9 au bloc via un pr\u00e9fixe de classe unique. Vous pouvez \u00e9crire des s\u00e9lecteurs normaux (h1, .btn, etc.).',
+              },
+            },
+            {
+              name: 'js',
+              type: 'code',
+              access: adminOnlyField,
+              label: 'JavaScript',
+              admin: {
+                language: 'javascript',
+                description:
+                  'S\u2019ex\u00e9cute une fois au chargement, dans une IIFE, avec `root` = \u00e9l\u00e9ment racine du bloc.',
+              },
             },
           ],
         },
