@@ -24,7 +24,7 @@ export const geoTab: Tab = {
         placeholder:
           'Ex : La camomille romaine est une plante médicinale aux propriétés calmantes, digestives et anti-inflammatoires, traditionnellement utilisée en infusion pour apaiser les troubles du sommeil et les tensions digestives.',
         description:
-          'Paragraphe standalone répondant à la requête principale. C\u2019est la portion que les IA extraient pour leurs réponses (Google AI Overviews, ChatGPT). Idéal : 40-60 mots.',
+          '⚡ Commencez par la réponse, pas par du contexte. Ce paragraphe est extrait verbatim par les IA (Google AI Overviews, ChatGPT, Perplexity) et sert aussi de meta description SEO. Règle : 40-60 mots, factuel, auto-portant. Évitez "Dans cet article, nous allons voir…".',
         rows: 4,
       },
     },
@@ -37,7 +37,7 @@ export const geoTab: Tab = {
         placeholder:
           'Ex : La camomille romaine (Chamaemelum nobile) est une plante vivace de la famille des Astéracées, utilisée depuis l\u2019Antiquité pour ses propriétés apaisantes et digestives.',
         description:
-          'Définition auto-portante commençant par le terme. Utilisée par les IA pour les requêtes "Qu\u2019est-ce que X ?". 25-50 mots.',
+          '📖 Format strict : "[Terme] est/sont une/un …". Commencez toujours par le mot défini. Utilisée par les IA pour les requêtes "Qu\u2019est-ce que X ?" et "Définition de X". 25-50 mots.',
         rows: 3,
       },
     },
@@ -51,7 +51,7 @@ export const geoTab: Tab = {
       labels: { singular: 'Point-clé', plural: 'Points-clés' },
       admin: {
         description:
-          'Bloc "À retenir" : 3 à 5 faits essentiels, chacun auto-portant. Premier choix pour les résumés IA.',
+          '💡 Chaque point doit être AUTO-PORTANT (compréhensible sans les autres). Un fait par point. Évitez "il", "cette plante" — répétez le nom. C\u2019est le bloc le plus cité dans les résumés IA.',
       },
       fields: [
         {
@@ -72,7 +72,7 @@ export const geoTab: Tab = {
       labels: { singular: 'Déclaration', plural: 'Déclarations' },
       admin: {
         description:
-          'Phrases factuelles courtes et vérifiables avec source. Conçues pour être citées verbatim par les IA.',
+          '💬 Phrases courtes (≤25 mots), vérifiables, avec source. Une stat ou un fait précis par déclaration. Les IA citent ces phrases verbatim, source incluse — elles deviennent des "citations d\u2019autorité".',
       },
       fields: [
         {
@@ -105,7 +105,7 @@ export const geoTab: Tab = {
       labels: { singular: 'Donnée', plural: 'Données' },
       admin: {
         description:
-          'Faits chiffrés précis (métrique, valeur, unité, source). ≥5 points de données augmentent significativement la citabilité IA.',
+          '📊 Unités SI de préférence (mg, ml, %, minutes). ≥5 data points → citabilité IA +156%. Chaque ligne devient un bloc structuré PropertyValue dans le JSON-LD.',
       },
       fields: [
         {
@@ -153,7 +153,7 @@ export const geoTab: Tab = {
       labels: { singular: 'Q/R', plural: 'Questions/Réponses' },
       admin: {
         description:
-          'Paires Q/R alignées avec les requêtes de suivi posées aux IA. Génèrent le schema FAQPage JSON-LD côté frontend.',
+          '❓ Posez les questions comme un utilisateur les poserait à ChatGPT ou Google. Réponse auto-portante (2-4 phrases). Affiché visiblement + FAQPage JSON-LD (obligatoire Google pour indexation).',
       },
       fields: [
         {
@@ -223,7 +223,7 @@ export const geoTab: Tab = {
       labels: { singular: 'Source', plural: 'Sources' },
       admin: {
         description:
-          'Sources primaires vérifiables. Cible : ≥1 citation par 500 mots. Les IA préfèrent les sources autoritatives.',
+          '🔬 Sources primaires vérifiables (EMA/HMPC, études indexées PubMed, monographies officielles). Cible : ≥1 citation par 500 mots. Rendues visibles en bas de page + bloc citation JSON-LD.',
       },
       fields: [
         {

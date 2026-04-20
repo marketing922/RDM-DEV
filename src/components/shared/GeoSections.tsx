@@ -2,11 +2,18 @@ import React from 'react'
 
 type FaqItem = { question?: string; answer?: string }
 type Takeaway = { takeaway?: string }
+type Source = {
+  title?: string
+  publisher?: string
+  year?: number
+  url?: string
+}
 
 type GeoSectionsProps = {
   directAnswer?: string
   keyTakeaways?: Takeaway[]
   faq?: FaqItem[]
+  sources?: Source[]
 }
 
 export function DirectAnswerBox({ text }: { text?: string }) {
@@ -156,16 +163,77 @@ export function FaqAccordion({ items }: { items?: FaqItem[] }) {
   )
 }
 
+export function SourcesList({ items }: { items?: Source[] }) {
+  const list = (items ?? []).filter((s) => s?.title || s?.url) as Source[]
+  if (list.length === 0) return null
+  return (
+    <section
+      className="mt-10 rounded-2xl border border-[#DCD8C7] bg-[#FEF9E9] p-6 sm:p-7"
+      aria-label="Sources citées"
+    >
+      <div className="mb-4 flex items-center gap-3">
+        <span
+          aria-hidden
+          className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#6B7280]/10 text-[#054A57]"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-4 w-4"
+          >
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          </svg>
+        </span>
+        <h2 className="text-base font-bold uppercase tracking-wider text-[#054A57]">
+          Sources
+        </h2>
+      </div>
+      <ol className="space-y-2 text-sm text-[#374151]">
+        {list.map((s, i) => {
+          const label = [s.title, s.publisher && `— ${s.publisher}`, s.year && `(${s.year})`]
+            .filter(Boolean)
+            .join(' ')
+          return (
+            <li key={i} className="flex gap-3">
+              <span className="flex-shrink-0 font-semibold text-[#A2211E]">[{i + 1}]</span>
+              {s.url ? (
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="text-[#054A57] underline decoration-[#DCD8C7] underline-offset-2 hover:text-[#A2211E] hover:decoration-[#A2211E]"
+                >
+                  {label || s.url}
+                </a>
+              ) : (
+                <span>{label}</span>
+              )}
+            </li>
+          )
+        })}
+      </ol>
+    </section>
+  )
+}
+
 export default function GeoSections({
   directAnswer,
   keyTakeaways,
   faq,
+  sources,
 }: GeoSectionsProps) {
   return (
     <>
       <DirectAnswerBox text={directAnswer} />
       <KeyTakeawaysBox items={keyTakeaways} />
       <FaqAccordion items={faq} />
+      <SourcesList items={sources} />
     </>
   )
 }

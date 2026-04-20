@@ -9,6 +9,7 @@ import {
   DirectAnswerBox,
   KeyTakeawaysBox,
   FaqAccordion,
+  SourcesList,
 } from '@/components/shared/GeoSections'
 import { getBlogPostBySlug, getBlogPosts } from '@/lib/queries'
 import { ArticleCard } from '@/components/shared/ArticleCard'
@@ -53,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${p.title} | ${dict.blog.title} | ${dict.meta.siteName}`,
-    description: p.excerpt || `${dict.blog.subtitle}`,
+    description: p.directAnswer || p.excerpt || `${dict.blog.subtitle}`,
     openGraph: {
       ...(p.featuredImage?.url ? { images: [{ url: p.featuredImage.url, width: 1200, height: 630, alt: p.title }] } : {}),
     },
@@ -252,6 +253,8 @@ export default async function BlogDetailPage({ params }: Props) {
             <KeyTakeawaysBox items={p.keyTakeaways} />
 
             <FaqAccordion items={p.faq} />
+
+            <SourcesList items={p.sources} />
 
             {/* Share buttons */}
             <div className="mt-8 flex flex-wrap items-center gap-3">

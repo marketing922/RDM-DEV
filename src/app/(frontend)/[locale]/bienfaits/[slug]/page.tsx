@@ -10,6 +10,7 @@ import {
   DirectAnswerBox,
   KeyTakeawaysBox,
   FaqAccordion,
+  SourcesList,
 } from '@/components/shared/GeoSections'
 import { getBenefitBySlug, getBenefits } from '@/lib/queries'
 
@@ -49,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${(benefit as any).name} | ${dict.benefits.title} | ${dict.meta.siteName}`,
-    description: (benefit as any).shortDescription || `${dict.benefits.subtitle}`,
+    description: (benefit as any).directAnswer || (benefit as any).shortDescription || `${dict.benefits.subtitle}`,
     alternates: {
       canonical: `${siteUrl}/${locale}/bienfaits/${slug}`,
       languages: {
@@ -173,6 +174,8 @@ export default async function BienfaitDetailPage({ params }: Props) {
         )}
 
         <FaqAccordion items={b.faq} />
+
+        <SourcesList items={b.sources} />
 
         {/* NO "Produits recommandés" section - Phase 1 */}
       </div>

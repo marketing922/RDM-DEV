@@ -11,6 +11,7 @@ import {
   DirectAnswerBox,
   KeyTakeawaysBox,
   FaqAccordion,
+  SourcesList,
 } from '@/components/shared/GeoSections'
 import { getWikiEntryBySlug, getWikiEntries } from '@/lib/queries'
 
@@ -51,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `${entry.name} | ${dict.wiki.title} | ${dict.meta.siteName}`,
-    description: e.shortDescription || `${entry.name} - ${e.latinName || ''}`,
+    description: e.directAnswer || e.shortDescription || `${entry.name} - ${e.latinName || ''}`,
     openGraph: {
       images: [{ url: imageUrl, width: 800, height: 600, alt: entry.name }],
     },
@@ -257,6 +258,8 @@ export default async function PlantDetailPage({ params }: Props) {
         <KeyTakeawaysBox items={e.keyTakeaways} />
 
         <FaqAccordion items={e.faq} />
+
+        <SourcesList items={e.sources} />
 
         {/* Contre-indications */}
         {(e.precautionsText || e.contraindications || e.precautions) && (
