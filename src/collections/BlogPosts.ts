@@ -15,6 +15,9 @@ export const BlogPosts: CollectionConfig = {
     defaultColumns: ['title', 'author', 'status', 'publishedAt', 'updatedAt'],
     group: 'Contenu',
     description: 'R\u00e9diger et g\u00e9rer les articles du blog',
+    components: {
+      beforeList: ['@/components/admin/ListHero.tsx#default'],
+    },
   },
   versions: {
     drafts: true,

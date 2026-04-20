@@ -15,6 +15,9 @@ export const Benefits: CollectionConfig = {
     defaultColumns: ['name', 'status', 'complianceStatus', 'updatedAt'],
     group: 'Contenu',
     description: 'G\u00e9rer les bienfaits sant\u00e9 associ\u00e9s aux plantes',
+    components: {
+      beforeList: ['@/components/admin/ListHero.tsx#default'],
+    },
   },
   versions: {
     drafts: true,

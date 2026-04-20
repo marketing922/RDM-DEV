@@ -25,11 +25,13 @@ import { OverviewComponent as OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860
 import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
+import { default as default_5405457290e3c6d61f6f1db0ffb552be } from '@/components/admin/ListHero.tsx'
 import { default as default_4e1e699efd22461324c9d216a74648ef } from '@/components/admin/Nav.tsx'
 import { default as default_f9bbae075ff7661688b05c4ed7480007 } from '@/components/admin/Icon.tsx'
 import { default as default_29cf8bd0dcc024aa26cbdb3a51d5d381 } from '@/components/admin/Logo.tsx'
 import { default as default_e736e0cf166dc4df2c39aa5544a2a5a3 } from '@/components/admin/BeforeLogin.tsx'
 import { default as default_8f28fbabed88008478002706780c491f } from '@/components/admin/Dashboard.tsx'
+import { default as default_06234670eecad279a4302dc99d1fe38f } from '@/components/admin/Account.tsx'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -61,10 +63,12 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaTitleComponent": MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
+  "@/components/admin/ListHero.tsx#default": default_5405457290e3c6d61f6f1db0ffb552be,
   "@/components/admin/Nav.tsx#default": default_4e1e699efd22461324c9d216a74648ef,
   "@/components/admin/Icon.tsx#default": default_f9bbae075ff7661688b05c4ed7480007,
   "@/components/admin/Logo.tsx#default": default_29cf8bd0dcc024aa26cbdb3a51d5d381,
   "@/components/admin/BeforeLogin.tsx#default": default_e736e0cf166dc4df2c39aa5544a2a5a3,
   "@/components/admin/Dashboard.tsx#default": default_8f28fbabed88008478002706780c491f,
+  "@/components/admin/Account.tsx#default": default_06234670eecad279a4302dc99d1fe38f,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

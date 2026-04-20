@@ -50,6 +50,9 @@ export default buildConfig({
         dashboard: {
           Component: '@/components/admin/Dashboard.tsx#default',
         },
+        account: {
+          Component: '@/components/admin/Account.tsx#default',
+        },
       },
     },
   },

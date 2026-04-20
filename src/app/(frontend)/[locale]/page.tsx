@@ -3,7 +3,7 @@ import { getDictionary } from '@/i18n/server'
 import type { Locale } from '@/i18n/config'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getWikiEntries, getBlogPosts } from '@/lib/queries'
+import { getWikiEntries, getBlogPosts, getBenefits } from '@/lib/queries'
 import { richTextToPlain } from '@/lib/utils'
 
 const DEFAULT_PLANT_IMAGE = 'https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1761295312/Chat_GPT_Image_Oct_24_2025_10_38_36_AM_1_a78649daf4.png'
@@ -91,15 +91,18 @@ export default async function HomePage({ params }: Props) {
   const dict = await getDictionary(locale as Locale)
 
   // Fetch CMS data in parallel
-  const [wikiResult, blogResult] = await Promise.all([
+  const [wikiResult, blogResult, benefitsResult] = await Promise.all([
     getWikiEntries({ limit: 3, locale }),
     getBlogPosts({ limit: 3, locale }),
+    getBenefits({ limit: 6, locale }),
   ])
   const dbWikiEntries = wikiResult.docs
   const dbBlogPosts = blogResult.docs
+  const dbBenefits = benefitsResult.docs
 
   const wikiEntries = dbWikiEntries.length > 0 ? dbWikiEntries : null
   const blogPosts = dbBlogPosts.length > 0 ? dbBlogPosts : null
+  const benefits = dbBenefits.length > 0 ? dbBenefits : null
 
   return (
     <>
@@ -289,6 +292,71 @@ export default async function HomePage({ params }: Props) {
           </div>
         </div>
       </section>
+
+      {/* ═══════════════ 4.5 BENEFITS ═══════════════ */}
+      {benefits && (
+        <section className="py-16 md:py-24 bg-[#FFF5D5]">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#054A57]">
+                {dict.benefits.title}
+              </h2>
+              <p className="mt-3 text-lg text-[#712E2F]/70 max-w-xl mx-auto">
+                {dict.benefits.subtitle}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {benefits.map((b: any) => {
+                const desc =
+                  typeof b.shortDescription === 'string'
+                    ? b.shortDescription
+                    : b.directAnswer ||
+                      (b.description && richTextToPlain(b.description))
+                return (
+                  <Link
+                    key={b.slug}
+                    href={`/${locale}/bienfaits/${b.slug}`}
+                    className="group bg-white rounded-2xl p-5 border border-[#DCD8C7] hover:border-[#A2211E] hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(162,33,30,0.08)] transition-all duration-300 flex flex-col"
+                  >
+                    <div className="w-12 h-12 rounded-xl bg-[#FEF9E9] flex items-center justify-center mb-3 group-hover:bg-[#A2211E] transition-colors">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="w-6 h-6 text-[#A2211E] group-hover:text-white transition-colors"
+                      >
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                      </svg>
+                    </div>
+                    <p className="font-semibold text-[#054A57] text-sm leading-snug group-hover:text-[#A2211E] transition-colors">
+                      {b.name}
+                    </p>
+                    {desc && (
+                      <p className="mt-2 text-xs text-[#712E2F]/70 line-clamp-2">
+                        {desc}
+                      </p>
+                    )}
+                  </Link>
+                )
+              })}
+            </div>
+
+            <div className="text-center mt-12">
+              <Link
+                href={`/${locale}/bienfaits`}
+                className="inline-flex items-center justify-center border-2 border-[#A2211E] text-[#A2211E] hover:bg-[#A2211E] hover:text-white font-semibold py-3 px-8 rounded-lg transition-colors"
+              >
+                Voir tous les bienfaits
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ═══════════════ 5. BLOG ═══════════════ */}
       <section className="py-16 md:py-24 bg-white">

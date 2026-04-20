@@ -288,6 +288,70 @@ export default async function BlogDetailPage({ params }: Props) {
             </div>
           )}
         </section>
+
+        {/* Cross-link: Plantes & Bienfaits */}
+        <section className="mt-16 pb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Link
+              href={`/${locale}/plantes`}
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#054A57] to-[#0B7B88] p-8 text-white transition-transform hover:-translate-y-1"
+            >
+              <div className="relative z-10">
+                <p className="text-xs font-bold uppercase tracking-wider text-white/70 mb-2">
+                  Encyclopédie
+                </p>
+                <h3 className="text-2xl font-bold mb-2">Explorer les plantes</h3>
+                <p className="text-sm text-white/85 mb-4 max-w-md">
+                  Fiches détaillées, propriétés, usages traditionnels et précautions d&rsquo;emploi.
+                </p>
+                <span className="inline-flex items-center gap-2 text-sm font-semibold">
+                  Voir l&rsquo;encyclopédie
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
+                </span>
+              </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className="absolute -bottom-4 -right-4 h-40 w-40 text-white/10"
+              >
+                <path d="M7 20.5C7 17 9 12 17 4" />
+                <path d="M17 4c-4 0-8 1-10.5 5.5C4 14 7 17 7 20.5" />
+                <path d="M17 4c0 4-1 8-5.5 10.5" />
+              </svg>
+            </Link>
+            <Link
+              href={`/${locale}/bienfaits`}
+              className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#A2211E] to-[#712E2F] p-8 text-white transition-transform hover:-translate-y-1"
+            >
+              <div className="relative z-10">
+                <p className="text-xs font-bold uppercase tracking-wider text-white/70 mb-2">
+                  Par besoin
+                </p>
+                <h3 className="text-2xl font-bold mb-2">Découvrir les bienfaits</h3>
+                <p className="text-sm text-white/85 mb-4 max-w-md">
+                  Sommeil, digestion, stress, immunité… Trouvez la plante qui répond à votre besoin.
+                </p>
+                <span className="inline-flex items-center gap-2 text-sm font-semibold">
+                  Voir tous les bienfaits
+                  <span className="transition-transform group-hover:translate-x-1">→</span>
+                </span>
+              </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className="absolute -bottom-4 -right-4 h-40 w-40 text-white/10"
+              >
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+              </svg>
+            </Link>
+          </div>
+        </section>
       </div>
 
       {/* Scoped styles for blog prose content */}

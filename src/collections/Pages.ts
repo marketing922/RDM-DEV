@@ -13,6 +13,9 @@ export const Pages: CollectionConfig = {
     defaultColumns: ['title', 'slug', 'updatedAt'],
     group: 'Contenu',
     description: 'G\u00e9rer les pages statiques du site (accueil, \u00e0 propos, etc.)',
+    components: {
+      beforeList: ['@/components/admin/ListHero.tsx#default'],
+    },
   },
   versions: {
     drafts: true,
