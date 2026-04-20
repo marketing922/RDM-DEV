@@ -277,7 +277,6 @@ export const Pages: CollectionConfig = {
             plural: 'Blocs code personnalis\u00e9',
           },
           admin: {
-            // @ts-expect-error custom description for editors
             description:
               '\u26a0 Bloc avanc\u00e9 admin uniquement. Le HTML/CSS/JS est injecte tel quel dans la page. Scope CSS automatique via un wrapper unique. Risque XSS: n\u2019injecter que du code que vous avez \u00e9crit.',
           },
