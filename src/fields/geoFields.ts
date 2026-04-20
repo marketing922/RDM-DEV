@@ -26,6 +26,9 @@ export const geoTab: Tab = {
         description:
           '⚡ Commencez par la réponse, pas par du contexte. Ce paragraphe est extrait verbatim par les IA (Google AI Overviews, ChatGPT, Perplexity) et sert aussi de meta description SEO. Règle : 40-60 mots, factuel, auto-portant. Évitez "Dans cet article, nous allons voir…".',
         rows: 4,
+        components: {
+          Description: '@/components/admin/GeoGenerateButton.tsx#default',
+        },
       },
     },
     {
@@ -39,6 +42,9 @@ export const geoTab: Tab = {
         description:
           '📖 Format strict : "[Terme] est/sont une/un …". Commencez toujours par le mot défini. Utilisée par les IA pour les requêtes "Qu\u2019est-ce que X ?" et "Définition de X". 25-50 mots.',
         rows: 3,
+        components: {
+          Description: '@/components/admin/GeoGenerateButton.tsx#default',
+        },
       },
     },
     {
@@ -52,6 +58,9 @@ export const geoTab: Tab = {
       admin: {
         description:
           '💡 Chaque point doit être AUTO-PORTANT (compréhensible sans les autres). Un fait par point. Évitez "il", "cette plante" — répétez le nom. C\u2019est le bloc le plus cité dans les résumés IA.',
+        components: {
+          Description: '@/components/admin/GeoGenerateButton.tsx#default',
+        },
       },
       fields: [
         {
@@ -154,6 +163,9 @@ export const geoTab: Tab = {
       admin: {
         description:
           '❓ Posez les questions comme un utilisateur les poserait à ChatGPT ou Google. Réponse auto-portante (2-4 phrases). Affiché visiblement + FAQPage JSON-LD (obligatoire Google pour indexation).',
+        components: {
+          Description: '@/components/admin/GeoGenerateButton.tsx#default',
+        },
       },
       fields: [
         {
