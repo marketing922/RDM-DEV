@@ -7,6 +7,8 @@ import { ArticleCard } from '@/components/shared/ArticleCard'
 import Image from 'next/image'
 import Link from 'next/link'
 
+export const revalidate = 60
+
 type Props = {
   params: Promise<{ locale: string }>
   searchParams: Promise<{ page?: string; category?: string }>

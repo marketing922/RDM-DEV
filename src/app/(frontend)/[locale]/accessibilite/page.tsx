@@ -9,8 +9,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   const dict = await getDictionary(locale as Locale)
   return {
-    title: "Declaration d'accessibilite",
-    description: `Declaration d'accessibilite du site ${dict.meta.siteName} — Engagement RGAA 4.1 niveau AA`,
+    title: "Déclaration d'accessibilité",
+    description: `Déclaration d'accessibilité du site ${dict.meta.siteName} — Engagement RGAA 4.1 niveau AA`,
   }
 }
 
@@ -19,70 +19,70 @@ export default async function AccessibilitePage({ params }: Props) {
   const dict = await getDictionary(locale as Locale)
 
   return (
-    <section className="py-2xl">
-      <div className="max-w-7xl mx-auto px-lg">
+    <section className="py-12">
+      <div className="max-w-7xl mx-auto px-6">
         <Breadcrumb
           items={[
             { label: dict.nav.home, href: `/${locale}` },
-            { label: "Declaration d'accessibilite" },
+            { label: "Déclaration d'accessibilité" },
           ]}
         />
 
-        <div className="mt-xl">
-          <div className="bg-white rounded-xl p-2xl shadow-sm max-w-3xl">
-            <h1 className="font-heading text-h1 text-neutral-600 mb-md">
-              Declaration d&apos;accessibilite
+        <div className="mt-8">
+          <div className="bg-white rounded-xl p-8 shadow-sm max-w-3xl">
+            <h1 className="font-sans text-4xl font-bold text-gray-700 mb-4">
+              Déclaration d&apos;accessibilité
             </h1>
-            <p className="font-body text-body-sm text-neutral-300 mb-2xl">
-              Date de declaration : 16 avril 2026
+            <p className="text-sm text-gray-400 mb-12">
+              Date de déclaration : 16 avril 2026
             </p>
 
-            <div className="space-y-2xl">
+            <div className="space-y-12">
               <article>
-                <h2 className="font-heading text-h2 text-neutral-600 mb-md">
+                <h2 className="font-sans text-2xl font-bold text-gray-700 mb-4">
                   Engagement
                 </h2>
-                <div className="font-body text-body-sm text-neutral-400 space-y-xs">
-                  <p>SAS CALEBASSE s&apos;engage a rendre le site remedes-mamie.com accessible conformement a l&apos;article 47 de la loi n°2005-102 du 11 fevrier 2005.</p>
-                  <p>Nous visons la conformite au <strong className="text-neutral-500">Referentiel General d&apos;Amelioration de l&apos;Accessibilite (RGAA) version 4.1</strong>, niveau AA, conformement aux Web Content Accessibility Guidelines (WCAG) 2.1.</p>
+                <div className="text-sm text-gray-500 space-y-2">
+                  <p>SAS CALEBASSE s&apos;engage à rendre le site remedes-mamie.com accessible conformément à l&apos;article 47 de la loi n°2005-102 du 11 février 2005.</p>
+                  <p>Nous visons la conformité au <strong className="text-gray-600">Référentiel Général d&apos;Amélioration de l&apos;Accessibilité (RGAA) version 4.1</strong>, niveau AA, conformément aux Web Content Accessibility Guidelines (WCAG) 2.1.</p>
                 </div>
               </article>
 
               <article>
-                <h2 className="font-heading text-h2 text-neutral-600 mb-md">
-                  Etat de conformite
+                <h2 className="font-sans text-2xl font-bold text-gray-700 mb-4">
+                  État de conformité
                 </h2>
-                <div className="font-body text-body-sm text-neutral-400 space-y-xs">
-                  <p>Le site remedes-mamie.com est en <strong className="text-neutral-500">conformite partielle</strong> avec le RGAA 4.1. Un audit complet d&apos;accessibilite est prevu pour ameliorer continuellement l&apos;experience de tous les utilisateurs.</p>
+                <div className="text-sm text-gray-500 space-y-2">
+                  <p>Le site remedes-mamie.com est en <strong className="text-gray-600">conformité partielle</strong> avec le RGAA 4.1. Un audit complet d&apos;accessibilité est prévu pour améliorer continuellement l&apos;expérience de tous les utilisateurs.</p>
                 </div>
               </article>
 
               <article>
-                <h2 className="font-heading text-h2 text-neutral-600 mb-md">
+                <h2 className="font-sans text-2xl font-bold text-gray-700 mb-4">
                   Mesures prises
                 </h2>
-                <div className="font-body text-body-sm text-neutral-400 space-y-xs">
-                  <p>Nous mettons en oeuvre les mesures suivantes pour assurer l&apos;accessibilite du site :</p>
-                  <ul className="list-disc list-inside space-y-xs ml-md">
-                    <li>Utilisation de balises semantiques HTML5</li>
+                <div className="text-sm text-gray-500 space-y-2">
+                  <p>Nous mettons en œuvre les mesures suivantes pour assurer l&apos;accessibilité du site :</p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>Utilisation de balises sémantiques HTML5</li>
                     <li>Navigation au clavier fonctionnelle</li>
                     <li>Contrastes de couleurs conformes au niveau AA</li>
                     <li>Textes alternatifs sur les images</li>
                     <li>Formulaires accessibles avec labels et messages d&apos;erreur explicites</li>
-                    <li>Design responsive adapte a toutes les tailles d&apos;ecran</li>
+                    <li>Design responsive adapté à toutes les tailles d&apos;écran</li>
                   </ul>
                 </div>
               </article>
 
               <article>
-                <h2 className="font-heading text-h2 text-neutral-600 mb-md">
+                <h2 className="font-sans text-2xl font-bold text-gray-700 mb-4">
                   Contact
                 </h2>
-                <div className="font-body text-body-sm text-neutral-400 space-y-xs">
-                  <p>Si vous rencontrez un defaut d&apos;accessibilite vous empechant d&apos;acceder a un contenu ou une fonctionnalite du site, n&apos;hesitez pas a nous contacter :</p>
-                  <p>Email : <a href="mailto:contact@remedes-mamie.com" className="text-brand hover:underline">contact@remedes-mamie.com</a></p>
+                <div className="text-sm text-gray-500 space-y-2">
+                  <p>Si vous rencontrez un défaut d&apos;accessibilité vous empêchant d&apos;accéder à un contenu ou une fonctionnalité du site, n&apos;hésitez pas à nous contacter :</p>
+                  <p>Email : <a href="mailto:contact@remedes-mamie.com" className="text-[#A2211E] hover:underline">contact@remedes-mamie.com</a></p>
                   <p>Adresse : SAS CALEBASSE, 15 rue de la Vistule, 75013 Paris, France</p>
-                  <p className="mt-md">Si vous n&apos;obtenez pas de reponse satisfaisante, vous pouvez contacter le Defenseur des droits : <a href="https://www.defenseurdesdroits.fr" target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">www.defenseurdesdroits.fr</a></p>
+                  <p className="mt-4">Si vous n&apos;obtenez pas de réponse satisfaisante, vous pouvez contacter le Défenseur des droits : <a href="https://www.defenseurdesdroits.fr" target="_blank" rel="noopener noreferrer" className="text-[#A2211E] hover:underline">www.defenseurdesdroits.fr</a></p>
                 </div>
               </article>
             </div>

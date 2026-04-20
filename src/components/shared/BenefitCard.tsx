@@ -35,7 +35,7 @@ export function BenefitCard({ benefit, locale }: BenefitCardProps) {
 
         {/* Link */}
         <span className="mt-4 text-sm font-medium text-[#A2211E] group-hover:underline">
-          D&eacute;couvrir &rarr;
+          {"Découvrir \u2192"}
         </span>
       </div>
     </Link>

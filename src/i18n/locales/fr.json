@@ -222,18 +222,22 @@
     "searchPlaceholder": "Rechercher une question...",
     "categories": {
       "all": "Toutes",
-      "produits": "Produits",
-      "commande": "Commande",
-      "livraison": "Livraison",
-      "retour": "Retour"
+      "plantes": "Plantes",
+      "utilisation": "Utilisation",
+      "site": "Le site",
+      "sante": "Santé"
     },
     "items": [
-      { "question": "Comment sont fabriqués vos produits ?", "answer": "Tous nos produits sont fabriqués en France dans notre atelier, à partir d'ingrédients naturels rigoureusement sélectionnés. Chaque lot est contrôlé pour garantir une qualité optimale.", "category": "produits" },
-      { "question": "Quels sont les délais de livraison ?", "answer": "Les commandes sont expédiées sous 24 à 48h ouvrées. La livraison standard prend ensuite 2 à 4 jours ouvrés en France métropolitaine.", "category": "livraison" },
-      { "question": "Puis-je retourner un produit ?", "answer": "Oui, vous disposez d'un délai de 14 jours après réception pour retourner un produit non ouvert. Contactez notre service client pour initier le retour.", "category": "retour" },
-      { "question": "Vos produits sont-ils bio ?", "answer": "La majorité de nos ingrédients sont issus de l'agriculture biologique certifiée. Chaque fiche produit précise les certifications applicables.", "category": "produits" },
-      { "question": "Comment passer commande ?", "answer": "Ajoutez simplement les produits souhaités à votre panier, puis suivez les étapes de paiement sécurisé. Vous recevrez une confirmation par email.", "category": "commande" },
-      { "question": "Les compléments alimentaires remplacent-ils un traitement médical ?", "answer": "Non. Nos compléments alimentaires ne sont pas des médicaments et ne remplacent pas un traitement médical. Consultez toujours un professionnel de santé.", "category": "produits" }
+      { "question": "Vos informations sur les plantes sont-elles fiables ?", "answer": "Toutes nos fiches plantes sont rédigées en s'appuyant sur des sources scientifiques reconnues : pharmacopée européenne, études cliniques publiées et recommandations de l'EFSA. Chaque contenu est vérifié par notre équipe d'herboristes diplômés.", "category": "plantes" },
+      { "question": "Comment sont sélectionnées les plantes présentées ?", "answer": "Nous sélectionnons les plantes selon leur présence dans la pharmacopée française et européenne, leur usage traditionnel documenté et l'existence d'études scientifiques confirmant leurs propriétés. Nous privilégions les plantes accessibles et couramment utilisées en phytothérapie.", "category": "plantes" },
+      { "question": "Comment utiliser l'encyclopédie des plantes ?", "answer": "Parcourez nos fiches plantes par nom ou par bienfait. Chaque fiche détaille les propriétés, les principes actifs, les usages traditionnels, les précautions d'emploi et les contre-indications de la plante. Utilisez la barre de recherche ou les filtres pour trouver rapidement ce que vous cherchez.", "category": "utilisation" },
+      { "question": "Comment préparer une tisane ou une infusion ?", "answer": "Pour une infusion classique, faites chauffer de l'eau à 80-90°C (ne pas faire bouillir), versez sur 1 à 2 cuillères à café de plantes séchées par tasse, couvrez et laissez infuser 5 à 10 minutes selon la plante. Filtrez et dégustez. Les temps et températures précis sont indiqués sur chaque fiche plante.", "category": "utilisation" },
+      { "question": "Les plantes médicinales remplacent-elles un traitement médical ?", "answer": "Non. Les informations présentes sur notre site sont à visée informative et éducative uniquement. Elles ne constituent pas un avis médical et ne remplacent en aucun cas la consultation d'un professionnel de santé. Consultez toujours votre médecin ou pharmacien avant d'utiliser des plantes médicinales.", "category": "sante" },
+      { "question": "Peut-on utiliser les plantes pendant la grossesse ?", "answer": "De nombreuses plantes sont déconseillées pendant la grossesse et l'allaitement. Nous indiquons systématiquement les contre-indications sur chaque fiche plante. Dans tous les cas, consultez votre médecin ou votre sage-femme avant toute utilisation de plantes médicinales pendant la grossesse.", "category": "sante" },
+      { "question": "Y a-t-il des interactions entre plantes et médicaments ?", "answer": "Oui, certaines plantes peuvent interagir avec des médicaments. Par exemple, le millepertuis peut réduire l'efficacité de nombreux médicaments. Les contre-indications et interactions connues sont mentionnées sur chaque fiche. En cas de traitement médical, demandez toujours l'avis de votre médecin ou pharmacien.", "category": "sante" },
+      { "question": "Le site propose-t-il des produits à la vente ?", "answer": "Actuellement, notre site est dédié à l'information et à l'éducation sur les plantes médicinales. Notre boutique en ligne est en cours de développement et sera bientôt disponible. Inscrivez-vous à notre newsletter pour être informé de l'ouverture.", "category": "site" },
+      { "question": "Comment puis-je vous contacter ?", "answer": "Vous pouvez nous écrire à contact@remedes-mamie.com, nous appeler au 01 45 85 88 00 ou utiliser le formulaire de contact sur notre site. Notre équipe vous répondra dans les plus brefs délais.", "category": "site" },
+      { "question": "Le contenu est-il disponible en anglais ?", "answer": "Notre site est principalement en français, mais nous travaillons à la traduction progressive de nos contenus en anglais. Certaines pages sont déjà disponibles dans les deux langues.", "category": "site" }
     ]
   },
   "search": {

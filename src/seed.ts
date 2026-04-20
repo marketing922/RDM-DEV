@@ -667,7 +667,7 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
   payload.logger.info('Seeding authors...')
   const authorMap: Record<string, string> = {}
   for (const data of authorsData) {
-    const existing = await payload.find({ collection: 'authors', where: { slug: { equals: data.slug } }, limit: 1 })
+    const existing = await payload.find({ collection: 'authors', where: { slug: { equals: data.slug } }, limit: 1, overrideAccess: true })
     if (existing.docs.length > 0) {
       authorMap[data.slug] = existing.docs[0].id as string
       payload.logger.info(`  Author "${data.name}" already exists, skipping.`)
@@ -676,21 +676,14 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
     const doc = await payload.create({
       collection: 'authors',
       locale: 'fr',
+      overrideAccess: true,
+      draft: false,
       data: {
         name: data.name,
         role: data.role,
         credentials: data.credentials,
         slug: data.slug,
         bio: data.bio.fr,
-      },
-    })
-    // Update English locale
-    await payload.update({
-      collection: 'authors',
-      id: doc.id,
-      locale: 'en',
-      data: {
-        bio: data.bio.en,
       },
     })
     authorMap[data.slug] = doc.id as string
@@ -703,7 +696,7 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
   payload.logger.info('Seeding categories...')
   const categoryMap: Record<string, string> = {}
   for (const data of categoriesData) {
-    const existing = await payload.find({ collection: 'categories', where: { slug: { equals: data.slug } }, limit: 1 })
+    const existing = await payload.find({ collection: 'categories', where: { slug: { equals: data.slug } }, limit: 1, overrideAccess: true })
     if (existing.docs.length > 0) {
       categoryMap[data.slug] = existing.docs[0].id as string
       payload.logger.info(`  Category "${data.name.fr}" already exists, skipping.`)
@@ -712,20 +705,13 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
     const doc = await payload.create({
       collection: 'categories',
       locale: 'fr',
+      overrideAccess: true,
+      draft: false,
       data: {
         name: data.name.fr,
         slug: data.slug,
         description: data.description.fr,
         order: data.order,
-      },
-    })
-    await payload.update({
-      collection: 'categories',
-      id: doc.id,
-      locale: 'en',
-      data: {
-        name: data.name.en,
-        description: data.description.en,
       },
     })
     categoryMap[data.slug] = doc.id as string
@@ -738,7 +724,7 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
   payload.logger.info('Seeding tags...')
   const tagMap: Record<string, string> = {}
   for (const data of tagsData) {
-    const existing = await payload.find({ collection: 'tags', where: { slug: { equals: data.slug } }, limit: 1 })
+    const existing = await payload.find({ collection: 'tags', where: { slug: { equals: data.slug } }, limit: 1, overrideAccess: true })
     if (existing.docs.length > 0) {
       tagMap[data.slug] = existing.docs[0].id as string
       payload.logger.info(`  Tag "${data.name.fr}" already exists, skipping.`)
@@ -747,17 +733,11 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
     const doc = await payload.create({
       collection: 'tags',
       locale: 'fr',
+      overrideAccess: true,
+      draft: false,
       data: {
         name: data.name.fr,
         slug: data.slug,
-      },
-    })
-    await payload.update({
-      collection: 'tags',
-      id: doc.id,
-      locale: 'en',
-      data: {
-        name: data.name.en,
       },
     })
     tagMap[data.slug] = doc.id as string
@@ -770,7 +750,7 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
   payload.logger.info('Seeding benefits...')
   const benefitMap: Record<string, string> = {}
   for (const data of benefitsData) {
-    const existing = await payload.find({ collection: 'benefits', where: { slug: { equals: data.slug } }, limit: 1 })
+    const existing = await payload.find({ collection: 'benefits', where: { slug: { equals: data.slug } }, limit: 1, overrideAccess: true })
     if (existing.docs.length > 0) {
       benefitMap[data.slug] = existing.docs[0].id as string
       payload.logger.info(`  Benefit "${data.name.fr}" already exists, skipping.`)
@@ -779,6 +759,8 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
     const doc = await payload.create({
       collection: 'benefits',
       locale: 'fr',
+      overrideAccess: true,
+      draft: false,
       data: {
         name: data.name.fr,
         slug: data.slug,
@@ -786,17 +768,8 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
         shortDescription: data.shortDescription.fr,
         description: data.description.fr,
         status: 'published',
+        _status: 'published',
         complianceStatus: 'approved',
-      },
-    })
-    await payload.update({
-      collection: 'benefits',
-      id: doc.id,
-      locale: 'en',
-      data: {
-        name: data.name.en,
-        shortDescription: data.shortDescription.en,
-        description: data.description.en,
       },
     })
     benefitMap[data.slug] = doc.id as string
@@ -808,7 +781,7 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
   // -----------------------------------------------------------------------
   payload.logger.info('Seeding wiki entries (plants)...')
   for (const data of wikiEntriesData) {
-    const existing = await payload.find({ collection: 'wikiEntries', where: { slug: { equals: data.slug } }, limit: 1 })
+    const existing = await payload.find({ collection: 'wikiEntries', where: { slug: { equals: data.slug } }, limit: 1, overrideAccess: true })
     if (existing.docs.length > 0) {
       payload.logger.info(`  Plant "${data.name.fr}" already exists, skipping.`)
       continue
@@ -819,6 +792,8 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
     const doc = await payload.create({
       collection: 'wikiEntries',
       locale: 'fr',
+      overrideAccess: true,
+      draft: false,
       data: {
         name: data.name.fr,
         latinName: data.latinName,
@@ -833,21 +808,8 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
         contraindications: data.contraindications.fr,
         author: authorId,
         status: 'published',
+        _status: 'published',
         complianceStatus: 'approved',
-      },
-    })
-    await payload.update({
-      collection: 'wikiEntries',
-      id: doc.id,
-      locale: 'en',
-      data: {
-        name: data.name.en,
-        origin: data.origin.en,
-        partsUsed: data.partsUsed.en,
-        activeCompounds: data.activeCompounds.en,
-        description: data.description.en,
-        precautions: data.precautions.en,
-        contraindications: data.contraindications.en,
       },
     })
   }
@@ -858,7 +820,7 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
   // -----------------------------------------------------------------------
   payload.logger.info('Seeding blog posts...')
   for (const data of blogPostsData) {
-    const existing = await payload.find({ collection: 'blogPosts', where: { slug: { equals: data.slug } }, limit: 1 })
+    const existing = await payload.find({ collection: 'blogPosts', where: { slug: { equals: data.slug } }, limit: 1, overrideAccess: true })
     if (existing.docs.length > 0) {
       payload.logger.info(`  Blog post "${data.title.fr}" already exists, skipping.`)
       continue
@@ -870,6 +832,8 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
     const doc = await payload.create({
       collection: 'blogPosts',
       locale: 'fr',
+      overrideAccess: true,
+      draft: false,
       data: {
         title: data.title.fr,
         slug: data.slug,
@@ -881,17 +845,8 @@ export async function seed(payload: Payload): Promise<{ message: string; counts:
         publishedAt: data.publishedAt,
         readingTime: data.readingTime,
         status: 'published',
+        _status: 'published',
         complianceStatus: 'approved',
-      },
-    })
-    await payload.update({
-      collection: 'blogPosts',
-      id: doc.id,
-      locale: 'en',
-      data: {
-        title: data.title.en,
-        excerpt: data.excerpt.en,
-        content: data.content.en,
       },
     })
   }

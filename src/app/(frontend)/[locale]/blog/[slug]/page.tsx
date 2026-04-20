@@ -3,15 +3,35 @@ import { notFound } from 'next/navigation'
 import { getDictionary } from '@/i18n/server'
 import type { Locale } from '@/i18n/config'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
-import { ArticleJsonLd } from '@/components/seo'
+import { richTextToPlain } from '@/lib/utils'
+import { ArticleJsonLd, GeoStructuredData } from '@/components/seo'
 import { getBlogPostBySlug, getBlogPosts } from '@/lib/queries'
 import { ArticleCard } from '@/components/shared/ArticleCard'
 import Image from 'next/image'
 import { ShareButtons } from '@/components/blog/ShareButtons'
 import { TableOfContents } from '@/components/blog/TableOfContents'
 
+export const revalidate = 3600
+
 type Props = {
   params: Promise<{ locale: string; slug: string }>
+}
+
+export async function generateStaticParams() {
+  try {
+    const { docs: posts } = await getBlogPosts({ limit: 999 })
+    const params: Array<{ locale: string; slug: string }> = []
+    for (const post of posts) {
+      const slug = (post as any).slug
+      if (slug) {
+        params.push({ locale: 'fr', slug })
+        params.push({ locale: 'en', slug })
+      }
+    }
+    return params
+  } catch {
+    return []
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -23,9 +43,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: `Not Found | ${dict.meta.siteName}` }
   }
 
+  const p = post as any
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://remedes-mamie.com'
+
   return {
-    title: `${(post as any).title} | ${dict.blog.title} | ${dict.meta.siteName}`,
-    description: (post as any).excerpt || `${dict.blog.subtitle}`,
+    title: `${p.title} | ${dict.blog.title} | ${dict.meta.siteName}`,
+    description: p.excerpt || `${dict.blog.subtitle}`,
+    openGraph: {
+      ...(p.featuredImage?.url ? { images: [{ url: p.featuredImage.url, width: 1200, height: 630, alt: p.title }] } : {}),
+    },
+    alternates: {
+      canonical: `${siteUrl}/${locale}/blog/${slug}`,
+      languages: {
+        fr: `${siteUrl}/fr/blog/${slug}`,
+        en: `${siteUrl}/en/blog/${slug}`,
+      },
+    },
   }
 }
 
@@ -53,6 +86,28 @@ export default async function BlogDetailPage({ params }: Props) {
         />
 
         <ArticleJsonLd article={post as any} locale={locale} />
+        <GeoStructuredData
+          kind="article"
+          locale={locale}
+          slug={slug}
+          name={articleTitle}
+          image={p.featuredImage?.url}
+          author={p.author?.name}
+          publishedAt={p.publishedAt}
+          updatedAt={p.updatedAt}
+          category={p.category?.name}
+          geo={{
+            directAnswer: p.directAnswer,
+            definition: p.definition,
+            keyTakeaways: p.keyTakeaways,
+            quotableStatements: p.quotableStatements,
+            dataPoints: p.dataPoints,
+            faq: p.faq,
+            authoritySignals: p.authoritySignals,
+            sources: p.sources,
+            lastFactCheckedAt: p.lastFactCheckedAt,
+          }}
+        />
 
         {/* Article header - full width above the two-column layout */}
         <div className="mt-8 max-w-4xl mx-auto lg:mx-0 lg:max-w-none">
@@ -133,7 +188,7 @@ export default async function BlogDetailPage({ params }: Props) {
                 <h2 className="text-lg font-bold text-[#054A57] mb-4">
                   {dict.blog.detail.tableOfContents}
                 </h2>
-                <TableOfContents content={p.content} locale={locale} />
+                <TableOfContents content={typeof p.content === 'string' ? p.content : richTextToPlain(p.content)} locale={locale} />
               </div>
             </div>
           </aside>
@@ -142,10 +197,9 @@ export default async function BlogDetailPage({ params }: Props) {
           <article className="w-full min-w-0 max-w-3xl">
             {/* Prose content with custom styles */}
             {p.content ? (
-              <div
-                className="blog-prose prose prose-lg max-w-none"
-                dangerouslySetInnerHTML={{ __html: p.content }}
-              />
+              <div className="blog-prose prose prose-lg max-w-none">
+                <p>{richTextToPlain(p.content)}</p>
+              </div>
             ) : (
               <div className="prose prose-lg max-w-none">
                 <div className="space-y-4">
@@ -181,7 +235,7 @@ export default async function BlogDetailPage({ params }: Props) {
                     <p className="text-sm text-[#D0802C] font-medium">{p.author.role}</p>
                   )}
                   {p.author.bio && (
-                    <p className="mt-2 text-sm text-[#712E2F]/70">{p.author.bio}</p>
+                    <p className="mt-2 text-sm text-[#712E2F]/70">{richTextToPlain(p.author.bio)}</p>
                   )}
                 </div>
               </div>

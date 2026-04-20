@@ -3,11 +3,32 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getDictionary } from '@/i18n/server'
 import type { Locale } from '@/i18n/config'
+import { richTextToPlain } from '@/lib/utils'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
-import { getBenefitBySlug } from '@/lib/queries'
+import { GeoStructuredData } from '@/components/seo'
+import { getBenefitBySlug, getBenefits } from '@/lib/queries'
+
+export const revalidate = 3600
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>
+}
+
+export async function generateStaticParams() {
+  try {
+    const { docs: benefits } = await getBenefits({ limit: 999 })
+    const params: Array<{ locale: string; slug: string }> = []
+    for (const benefit of benefits) {
+      const slug = (benefit as any).slug
+      if (slug) {
+        params.push({ locale: 'fr', slug })
+        params.push({ locale: 'en', slug })
+      }
+    }
+    return params
+  } catch {
+    return []
+  }
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -19,9 +40,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: `Not Found | ${dict.meta.siteName}` }
   }
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://remedes-mamie.com'
+
   return {
     title: `${(benefit as any).name} | ${dict.benefits.title} | ${dict.meta.siteName}`,
     description: (benefit as any).shortDescription || `${dict.benefits.subtitle}`,
+    alternates: {
+      canonical: `${siteUrl}/${locale}/bienfaits/${slug}`,
+      languages: {
+        fr: `${siteUrl}/fr/bienfaits/${slug}`,
+        en: `${siteUrl}/en/bienfaits/${slug}`,
+      },
+    },
   }
 }
 
@@ -47,37 +77,42 @@ export default async function BienfaitDetailPage({ params }: Props) {
 
   return (
     <main className="bg-[#FEF9E9] min-h-screen">
+      <GeoStructuredData
+        kind="benefit"
+        locale={locale}
+        slug={slug}
+        name={benefitName}
+        publishedAt={b.publishedAt}
+        updatedAt={b.updatedAt}
+        geo={{
+          directAnswer: b.directAnswer,
+          definition: b.definition,
+          keyTakeaways: b.keyTakeaways,
+          quotableStatements: b.quotableStatements,
+          dataPoints: b.dataPoints,
+          faq: b.faq,
+          authoritySignals: b.authoritySignals,
+          sources: b.sources,
+          lastFactCheckedAt: b.lastFactCheckedAt,
+        }}
+      />
       <div className="mx-auto max-w-3xl px-6 py-6">
-        {/* Back arrow */}
-        <Link
-          href={`/${locale}/bienfaits`}
-          className="inline-flex items-center gap-2 text-sm text-[#712E2F] hover:text-[#A2211E] transition-colors mb-6"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M19 12H5" />
-            <path d="M12 19l-7-7 7-7" />
-          </svg>
-          {dict.benefits.title}
-        </Link>
+        <Breadcrumb
+          items={[
+            { label: dict.nav.home, href: `/${locale}` },
+            { label: dict.benefits.title, href: `/${locale}/bienfaits` },
+            { label: benefitName },
+          ]}
+        />
 
         {/* Header with emoji icon */}
-        <div className="text-center mt-4 mb-8">
+        <div className="text-center mt-8 mb-8">
           {b.icon && (
             <span className="text-[56px] block mb-4" role="img" aria-label={benefitName}>
               {b.icon}
             </span>
           )}
-          <h1 className="font-heading text-4xl font-bold text-[#054A57]">
+          <h1 className="text-4xl font-bold text-[#054A57]">
             {benefitName}
           </h1>
           {b.shortDescription && (
@@ -90,21 +125,15 @@ export default async function BienfaitDetailPage({ params }: Props) {
         {/* Content card */}
         <section className="mb-8">
           <div className="bg-white border border-[#DCD8C7] rounded-xl shadow-sm p-6">
-            <h2 className="font-heading text-xl font-bold text-[#054A57] mb-4">
+            <h2 className="text-xl font-bold text-[#054A57] mb-4">
               Les plantes et {['a', 'e', 'i', 'o', 'u', 'é', 'è'].some(v => benefitNameLower.startsWith(v)) ? "l'" : 'la '}{benefitNameLower}
             </h2>
             {b.description ? (
-              <div
-                className="prose prose-sm max-w-none text-gray-700"
-                dangerouslySetInnerHTML={{ __html: b.description }}
-              />
-            ) : b.quickAnswer ? (
-              <div
-                className="prose prose-sm max-w-none text-gray-700"
-                dangerouslySetInnerHTML={{ __html: b.quickAnswer }}
-              />
+              <div className="prose prose-sm max-w-none text-gray-700">
+                <p>{richTextToPlain(b.description)}</p>
+              </div>
             ) : (
-              <p className="text-gray-500 italic">Contenu en cours de r&eacute;daction...</p>
+              <p className="text-gray-500 italic">Contenu en cours de rédaction...</p>
             )}
           </div>
         </section>
@@ -112,8 +141,8 @@ export default async function BienfaitDetailPage({ params }: Props) {
         {/* Related plants - with green checkmarks */}
         {relatedPlants.length > 0 && (
           <section className="mb-8">
-            <h2 className="font-heading text-xl font-bold text-[#054A57] mb-4">
-              Plantes recommand&eacute;es
+            <h2 className="text-xl font-bold text-[#054A57] mb-4">
+              Plantes recommandées
             </h2>
             <ul className="space-y-3">
               {relatedPlants.map((plant, i) => (
@@ -121,7 +150,7 @@ export default async function BienfaitDetailPage({ params }: Props) {
                   <span className="text-green-600 font-bold text-lg">&#10003;</span>
                   {plant.slug ? (
                     <Link
-                      href={`/${locale}/wiki/${plant.slug}`}
+                      href={`/${locale}/plantes/${plant.slug}`}
                       className="text-[#054A57] hover:text-[#A2211E] hover:underline transition-colors"
                     >
                       {plant.name}

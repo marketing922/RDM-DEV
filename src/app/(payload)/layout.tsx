@@ -3,6 +3,7 @@ import { RootLayout } from '@payloadcms/next/layouts'
 import configPromise from '@/payload.config'
 import { importMap } from './admin/importMap'
 import '@payloadcms/next/css'
+import '@/styles/admin.css'
 
 export const metadata: Metadata = {
   title: 'Admin — Les Remèdes de Mamie',

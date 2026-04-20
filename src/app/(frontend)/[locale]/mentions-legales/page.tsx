@@ -147,7 +147,7 @@ export default async function MentionsLegalesPage({ params }: Props) {
                     Donnees personnelles
                   </h2>
                   <div className="text-sm text-[#712E2F]/80 space-y-2">
-                    <p>Pour en savoir plus sur la collecte et le traitement de vos donnees personnelles, veuillez consulter notre <Link href={`/${locale}/politique-de-confidentialite`} className="text-[#A2211E] hover:underline">Politique de Confidentialite</Link>.</p>
+                    <p>Pour en savoir plus sur la collecte et le traitement de vos donnees personnelles, veuillez consulter notre <Link href={`/${locale}/politique-confidentialite`} className="text-[#A2211E] hover:underline">Politique de Confidentialite</Link>.</p>
                     <p>Conformement au Reglement General sur la Protection des Donnees (RGPD) et a la loi Informatique et Libertes du 6 janvier 1978 modifiee, vous disposez de droits sur vos donnees personnelles (acces, rectification, suppression, opposition, portabilite).</p>
                     <p>Pour exercer ces droits, contactez-nous a l&apos;adresse : <a href="mailto:contact@remedes-mamie.com" className="text-[#A2211E] hover:underline">contact@remedes-mamie.com</a></p>
                   </div>

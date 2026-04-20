@@ -8,14 +8,26 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/admin', '/api/', '/checkout/', '/account/'],
+        disallow: ['/admin', '/api/'],
       },
       {
         userAgent: 'GPTBot',
         allow: '/',
       },
       {
+        userAgent: 'OAI-SearchBot',
+        allow: '/',
+      },
+      {
+        userAgent: 'ChatGPT-User',
+        allow: '/',
+      },
+      {
         userAgent: 'ClaudeBot',
+        allow: '/',
+      },
+      {
+        userAgent: 'anthropic-ai',
         allow: '/',
       },
       {

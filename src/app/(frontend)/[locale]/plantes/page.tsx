@@ -5,6 +5,8 @@ import { Breadcrumb } from '@/components/shared/Breadcrumb'
 import { getWikiEntries } from '@/lib/queries'
 import { WikiCard } from '@/components/shared/WikiCard'
 
+export const revalidate = 60
+
 type Props = {
   params: Promise<{ locale: string }>
 }

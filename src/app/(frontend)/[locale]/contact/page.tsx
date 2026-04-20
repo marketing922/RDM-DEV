@@ -34,7 +34,7 @@ export default async function ContactPage({ params }: Props) {
       <section className="py-20 bg-[#FFF5D5]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
-            <h1 className="font-heading text-4xl md:text-5xl text-[#054A57] mb-3">
+            <h1 className="font-bold text-4xl md:text-5xl text-[#054A57] mb-3">
               {dict.contact.title}
             </h1>
             <p className="text-lg text-[#712E2F] max-w-2xl mx-auto">

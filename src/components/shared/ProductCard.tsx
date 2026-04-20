@@ -47,14 +47,14 @@ export function ProductCard({ product, locale }: ProductCardProps) {
     <Card className="flex flex-col">
       {/* Image */}
       <Link href={`/${locale}/boutique/${slug}`} className="block relative">
-        <div className="relative aspect-square overflow-hidden bg-card">
+        <div className="relative aspect-square overflow-hidden bg-[#DCD8C7]">
           {image ? (
             <Image
               src={image.url}
               alt={image.alt || name}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-              className="object-cover transition-transform duration-slow hover:scale-105"
+              className="object-cover transition-transform duration-500 hover:scale-105"
             />
           ) : (
             <div className="flex items-center justify-center w-full h-full text-neutral-200">
@@ -76,7 +76,7 @@ export function ProductCard({ product, locale }: ProductCardProps) {
           )}
 
           {/* Badges overlay */}
-          <div className="absolute top-sm left-sm flex flex-wrap gap-xs">
+          <div className="absolute top-3 left-3 flex flex-wrap gap-2">
             {format && (
               <Badge variant={formatBadgeVariant(format)}>{format}</Badge>
             )}
@@ -86,26 +86,26 @@ export function ProductCard({ product, locale }: ProductCardProps) {
       </Link>
 
       {/* Content */}
-      <div className="flex flex-col flex-1 p-md gap-xs">
+      <div className="flex flex-col flex-1 p-4 gap-2">
         <Link href={`/${locale}/boutique/${slug}`}>
-          <h3 className="font-ui font-medium text-neutral-600 line-clamp-1">
+          <h3 className="font-sans font-medium text-gray-700 line-clamp-1">
             {name}
           </h3>
         </Link>
 
         {shortDescription && (
-          <p className="text-body-sm text-neutral-400 line-clamp-2">
+          <p className="text-sm text-gray-500 line-clamp-2">
             {shortDescription}
           </p>
         )}
 
         {/* Price */}
-        <div className="flex items-center gap-xs mt-auto pt-sm">
-          <span className="text-price text-brand font-medium">
+        <div className="flex items-center gap-2 mt-auto pt-3">
+          <span className="text-xl text-[#A2211E] font-medium">
             {formatPrice(price)}
           </span>
           {hasPromo && (
-            <span className="text-body-sm text-neutral-300 line-through">
+            <span className="text-sm text-gray-400 line-through">
               {formatPrice(compareAtPrice)}
             </span>
           )}
@@ -115,7 +115,7 @@ export function ProductCard({ product, locale }: ProductCardProps) {
         <Button
           variant="primary"
           size="sm"
-          className="w-full mt-sm"
+          className="w-full mt-3"
           disabled={!inStock}
         >
           {inStock ? 'Ajouter au panier' : 'Rupture de stock'}

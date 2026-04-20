@@ -182,7 +182,7 @@ export function Navbar({ dict, locale }: NavbarProps) {
       <header className="sticky top-0 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] z-40 hidden lg:block">
         <nav className="max-w-7xl mx-auto px-6 h-16 grid grid-cols-[1fr_auto_1fr] items-center">
           {/* Logo — left */}
-          <Link href={`/${locale}`} className="text-base font-bold text-[#A2211E] font-heading justify-self-start">
+          <Link href={`/${locale}`} className="text-base font-bold text-[#A2211E] font-bold justify-self-start">
             {dict.meta.siteName}
           </Link>
 
@@ -263,7 +263,7 @@ export function Navbar({ dict, locale }: NavbarProps) {
           </button>
 
           {/* Logo center */}
-          <Link href={`/${locale}`} className="text-sm font-bold text-[#A2211E] font-heading">
+          <Link href={`/${locale}`} className="text-sm font-bold text-[#A2211E] font-bold">
             {dict.meta.siteName}
           </Link>
 

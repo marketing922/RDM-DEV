@@ -5,6 +5,8 @@ import { Breadcrumb } from '@/components/shared/Breadcrumb'
 import { getBenefits } from '@/lib/queries'
 import { BenefitCard } from '@/components/shared/BenefitCard'
 
+export const revalidate = 60
+
 type Props = {
   params: Promise<{ locale: string }>
 }
@@ -47,11 +49,11 @@ export default async function BienfaitsPage({ params }: Props) {
 
         {/* Header */}
         <div className="mt-8 mb-12 text-center">
-          <h1 className="font-heading text-4xl font-bold text-[#054A57]">
+          <h1 className="text-4xl font-bold text-[#054A57]">
             Les Bienfaits des Plantes
           </h1>
           <p className="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">
-            D&eacute;couvrez comment les plantes peuvent am&eacute;liorer votre bien-&ecirc;tre
+            Découvrez comment les plantes peuvent améliorer votre bien-être
           </p>
         </div>
 
@@ -87,7 +89,7 @@ export default async function BienfaitsPage({ params }: Props) {
                   <h3 className="font-bold text-lg text-[#054A57]">{item.name}</h3>
                   <p className="text-sm text-gray-600 mt-2">{item.description}</p>
                   <span className="mt-4 text-sm font-medium text-[#A2211E] group-hover:underline">
-                    D&eacute;couvrir &rarr;
+                    {"Découvrir \u2192"}
                   </span>
                 </a>
               ))}
@@ -104,7 +106,7 @@ export default async function BienfaitsPage({ params }: Props) {
                   <h3 className="font-bold text-lg text-[#054A57]">{item.name}</h3>
                   <p className="text-sm text-gray-600 mt-2">{item.description}</p>
                   <span className="mt-4 text-sm font-medium text-[#A2211E] group-hover:underline">
-                    D&eacute;couvrir &rarr;
+                    {"Découvrir \u2192"}
                   </span>
                 </a>
               ))}

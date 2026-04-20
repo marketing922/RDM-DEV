@@ -13,7 +13,7 @@ export function Footer({ dict, locale }: FooterProps) {
 
           {/* Brand */}
           <div className="lg:col-span-1">
-            <h3 className="text-base font-bold font-heading text-[#FEF9E9] mb-4">
+            <h3 className="text-base font-bold font-bold text-[#FEF9E9] mb-4">
               {dict.meta.siteName}
             </h3>
             <p className="text-sm text-gray-300 leading-relaxed mb-6">
@@ -45,7 +45,7 @@ export function Footer({ dict, locale }: FooterProps) {
 
           {/* Ressources */}
           <div>
-            <h4 className="text-sm font-semibold font-heading text-[#FEF9E9] mb-4">{dict.footer.resources.title}</h4>
+            <h4 className="text-sm font-semibold font-bold text-[#FEF9E9] mb-4">{dict.footer.resources.title}</h4>
             <ul className="space-y-2.5">
               <li><Link href={p('/plantes')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.resources.wiki}</Link></li>
               <li><Link href={p('/blog')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.resources.blog}</Link></li>
@@ -56,7 +56,7 @@ export function Footer({ dict, locale }: FooterProps) {
 
           {/* Informations */}
           <div>
-            <h4 className="text-sm font-semibold font-heading text-[#FEF9E9] mb-4">{dict.footer.info.title}</h4>
+            <h4 className="text-sm font-semibold font-bold text-[#FEF9E9] mb-4">{dict.footer.info.title}</h4>
             <ul className="space-y-2.5">
               <li><Link href={p('/a-propos')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.info.about}</Link></li>
               <li><Link href={p('/contact')} className="text-sm text-gray-300 hover:text-white transition-colors">{dict.footer.info.contact}</Link></li>
@@ -70,7 +70,7 @@ export function Footer({ dict, locale }: FooterProps) {
 
           {/* Contact */}
           <div>
-            <h4 className="text-sm font-semibold font-heading text-[#FEF9E9] mb-4">{dict.footer.contact.title}</h4>
+            <h4 className="text-sm font-semibold font-bold text-[#FEF9E9] mb-4">{dict.footer.contact.title}</h4>
             <ul className="space-y-3 text-sm text-gray-300">
               <li className="flex items-start gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 flex-shrink-0 text-gray-400"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>

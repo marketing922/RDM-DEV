@@ -51,8 +51,8 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <html lang={locale} className={fontVariables}>
-      <body className="bg-page text-neutral-600 font-body antialiased">
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:text-brand font-ui">
+      <body className="bg-[#FEF9E9] text-[#1F2937] antialiased">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-white focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:text-[#A2211E]">
           Aller au contenu principal
         </a>
         <OrganizationJsonLd />

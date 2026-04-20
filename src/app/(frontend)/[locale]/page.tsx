@@ -4,6 +4,12 @@ import type { Locale } from '@/i18n/config'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getWikiEntries, getBlogPosts } from '@/lib/queries'
+import { richTextToPlain } from '@/lib/utils'
+
+const DEFAULT_PLANT_IMAGE = 'https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1761295312/Chat_GPT_Image_Oct_24_2025_10_38_36_AM_1_a78649daf4.png'
+const DEFAULT_BLOG_IMAGE = 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=800&q=80'
+
+export const revalidate = 60
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -84,9 +90,13 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params
   const dict = await getDictionary(locale as Locale)
 
-  // Try to fetch from Payload, fallback to mock data
-  const { docs: dbWikiEntries } = await getWikiEntries({ limit: 3, locale })
-  const { docs: dbBlogPosts } = await getBlogPosts({ limit: 3, locale })
+  // Fetch CMS data in parallel
+  const [wikiResult, blogResult] = await Promise.all([
+    getWikiEntries({ limit: 3, locale }),
+    getBlogPosts({ limit: 3, locale }),
+  ])
+  const dbWikiEntries = wikiResult.docs
+  const dbBlogPosts = blogResult.docs
 
   const wikiEntries = dbWikiEntries.length > 0 ? dbWikiEntries : null
   const blogPosts = dbBlogPosts.length > 0 ? dbBlogPosts : null
@@ -230,39 +240,43 @@ export default async function HomePage({ params }: Props) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {mockPlants.map((plant) => (
-              <Link
-                key={plant.slug}
-                href={`/${locale}/plantes/${plant.slug}`}
-                className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden group hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300"
-              >
-                {/* Image zone */}
-                <div className="relative h-48 bg-[#DCD8C7] overflow-hidden">
-                  <Image
-                    src={plant.image}
-                    alt={plant.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                </div>
-                {/* Content */}
-                <div className="p-5">
-                  <p className="text-lg font-semibold text-[#054A57]">
-                    {plant.name}
-                  </p>
-                  <p className="text-sm text-[#D0802C] italic">
-                    {plant.latinName}
-                  </p>
-                  <p className="text-sm text-[#712E2F]/70 mt-2 line-clamp-2">
-                    {plant.description}
-                  </p>
-                  <p className="text-sm font-semibold text-[#A2211E] mt-3 hover:underline">
-                    {dict.common.learnMore} &rarr;
-                  </p>
-                </div>
-              </Link>
-            ))}
+            {(wikiEntries || mockPlants).map((plant: any) => {
+              const imgSrc = plant.image || (plant.images?.[0] as any)?.image?.url || DEFAULT_PLANT_IMAGE
+              const desc = typeof plant.description === 'string' ? plant.description : richTextToPlain(plant.description)
+              return (
+                <Link
+                  key={plant.slug}
+                  href={`/${locale}/plantes/${plant.slug}`}
+                  className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden group hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300"
+                >
+                  <div className="relative h-48 bg-[#DCD8C7] overflow-hidden">
+                    <Image
+                      src={imgSrc}
+                      alt={plant.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  </div>
+                  <div className="p-5">
+                    <p className="text-lg font-semibold text-[#054A57]">
+                      {plant.name}
+                    </p>
+                    <p className="text-sm text-[#D0802C] italic">
+                      {plant.latinName}
+                    </p>
+                    {desc && (
+                      <p className="text-sm text-[#712E2F]/70 mt-2 line-clamp-2">
+                        {desc}
+                      </p>
+                    )}
+                    <p className="text-sm font-semibold text-[#A2211E] mt-3 hover:underline">
+                      {dict.common.learnMore} &rarr;
+                    </p>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
 
           <div className="text-center mt-12">
@@ -289,71 +303,87 @@ export default async function HomePage({ params }: Props) {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Featured article (2/3) */}
-            <Link
-              href={`/${locale}/blog/${mockBlogPosts[0].slug}`}
-              className="lg:col-span-2 bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden group hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] transition-all duration-300"
-            >
-              <div className="aspect-video relative overflow-hidden">
-                <Image
-                  src={mockBlogPosts[0].image}
-                  alt={mockBlogPosts[0].title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 1024px) 100vw, 66vw"
-                />
-                <span className="absolute top-4 left-4 bg-[#D0802C] text-white text-xs font-bold px-3 py-1 rounded-full">
-                  {mockBlogPosts[0].category}
-                </span>
-              </div>
-              <div className="p-6">
-                <div className="flex items-center gap-3 text-sm text-[#DCD8C7] mb-2">
-                  <span>{mockBlogPosts[0].date}</span>
-                  <span>&middot;</span>
-                  <span>{mockBlogPosts[0].readingTime} {dict.blog.readingTime}</span>
-                </div>
-                <h3 className="text-xl font-bold text-[#054A57] group-hover:text-[#A2211E] transition-colors">
-                  {mockBlogPosts[0].title}
-                </h3>
-                <p className="mt-2 text-[#712E2F]/70 line-clamp-2">
-                  {mockBlogPosts[0].excerpt}
-                </p>
-              </div>
-            </Link>
-
-            {/* Side articles (1/3) */}
-            <div className="flex flex-col gap-6">
-              {mockBlogPosts.slice(1).map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/${locale}/blog/${post.slug}`}
-                  className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden group hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] transition-all duration-300 flex-1"
-                >
-                  <div className="aspect-video relative overflow-hidden">
-                    <Image
-                      src={post.image}
-                      alt={post.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                      sizes="(max-width: 1024px) 100vw, 33vw"
-                    />
-                    <span className="absolute top-3 left-3 bg-[#D0802C] text-white text-xs font-bold px-3 py-1 rounded-full">
-                      {post.category}
-                    </span>
-                  </div>
-                  <div className="p-4">
-                    <div className="flex items-center gap-2 text-xs text-[#DCD8C7] mb-1">
-                      <span>{post.date}</span>
-                      <span>&middot;</span>
-                      <span>{post.readingTime} {dict.blog.readingTime}</span>
+            {(() => {
+              const posts = blogPosts || mockBlogPosts
+              const featured = posts[0] as any
+              const side = posts.slice(1) as any[]
+              const getImg = (p: any) => p.image || p.featuredImage?.url || DEFAULT_BLOG_IMAGE
+              const getCat = (p: any) => p.category?.name || p.category || ''
+              const getDate = (p: any) => p.date || (p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '')
+              return (
+                <>
+                  {/* Featured article (2/3) */}
+                  <Link
+                    href={`/${locale}/blog/${featured.slug}`}
+                    className="lg:col-span-2 bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden group hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] transition-all duration-300"
+                  >
+                    <div className="aspect-video relative overflow-hidden">
+                      <Image
+                        src={getImg(featured)}
+                        alt={featured.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="(max-width: 1024px) 100vw, 66vw"
+                      />
+                      {getCat(featured) && (
+                        <span className="absolute top-4 left-4 bg-[#D0802C] text-white text-xs font-bold px-3 py-1 rounded-full">
+                          {getCat(featured)}
+                        </span>
+                      )}
                     </div>
-                    <h3 className="text-base font-bold text-[#054A57] group-hover:text-[#A2211E] transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
+                    <div className="p-6">
+                      <div className="flex items-center gap-3 text-sm text-[#DCD8C7] mb-2">
+                        <span>{getDate(featured)}</span>
+                        <span>&middot;</span>
+                        <span>{featured.readingTime} {dict.blog.readingTime}</span>
+                      </div>
+                      <h3 className="text-xl font-bold text-[#054A57] group-hover:text-[#A2211E] transition-colors">
+                        {featured.title}
+                      </h3>
+                      <p className="mt-2 text-[#712E2F]/70 line-clamp-2">
+                        {featured.excerpt}
+                      </p>
+                    </div>
+                  </Link>
+
+                  {/* Side articles (1/3) */}
+                  <div className="flex flex-col gap-6">
+                    {side.map((post: any) => (
+                      <Link
+                        key={post.slug}
+                        href={`/${locale}/blog/${post.slug}`}
+                        className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden group hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] transition-all duration-300 flex-1"
+                      >
+                        <div className="aspect-video relative overflow-hidden">
+                          <Image
+                            src={getImg(post)}
+                            alt={post.title}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            sizes="(max-width: 1024px) 100vw, 33vw"
+                          />
+                          {getCat(post) && (
+                            <span className="absolute top-3 left-3 bg-[#D0802C] text-white text-xs font-bold px-3 py-1 rounded-full">
+                              {getCat(post)}
+                            </span>
+                          )}
+                        </div>
+                        <div className="p-4">
+                          <div className="flex items-center gap-2 text-xs text-[#DCD8C7] mb-1">
+                            <span>{getDate(post)}</span>
+                            <span>&middot;</span>
+                            <span>{post.readingTime} {dict.blog.readingTime}</span>
+                          </div>
+                          <h3 className="text-base font-bold text-[#054A57] group-hover:text-[#A2211E] transition-colors line-clamp-2">
+                            {post.title}
+                          </h3>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
-                </Link>
-              ))}
-            </div>
+                </>
+              )
+            })()}
           </div>
 
           <div className="text-center mt-12">

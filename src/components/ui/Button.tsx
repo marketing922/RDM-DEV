@@ -11,21 +11,21 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-brand text-white hover:bg-brand-dark active:scale-[0.97] shadow-sm hover:shadow-md',
+    'bg-[#A2211E] text-white hover:bg-[#712E2F] active:scale-[0.97] shadow-sm hover:shadow-md',
   secondary:
-    'bg-transparent text-brand border-2 border-brand hover:bg-brand hover:text-white active:scale-[0.97]',
+    'bg-transparent text-[#A2211E] border-2 border-[#A2211E] hover:bg-[#A2211E] hover:text-white active:scale-[0.97]',
   ghost:
     'bg-transparent text-neutral-500 hover:bg-neutral-50 active:bg-neutral-100',
   icon:
-    'bg-transparent text-neutral-400 hover:bg-neutral-50 hover:text-brand rounded-full active:scale-[0.93]',
+    'bg-transparent text-neutral-400 hover:bg-neutral-50 hover:text-[#A2211E] rounded-full active:scale-[0.93]',
   pill:
-    'bg-brand-light text-brand hover:bg-brand hover:text-white rounded-pill active:scale-[0.97]',
+    'bg-[#FEF2F2] text-[#A2211E] hover:bg-[#A2211E] hover:text-white rounded-full active:scale-[0.97]',
 }
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'h-[36px] px-md text-body-sm',
-  md: 'h-[44px] px-lg text-body',
-  lg: 'h-[52px] px-xl text-body-lg',
+  sm: 'h-[36px] px-4 text-sm',
+  md: 'h-[44px] px-6 text-base',
+  lg: 'h-[52px] px-8 text-lg',
 }
 
 const iconSizeStyles: Record<ButtonSize, string> = {
@@ -46,10 +46,10 @@ export function Button({
   return (
     <button
       className={`
-        inline-flex items-center justify-center font-ui font-medium
+        inline-flex items-center justify-center font-sans font-medium
         rounded-xl transition-all duration-200
         transform will-change-transform
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A2211E]/50 focus-visible:ring-offset-2
         disabled:opacity-50 disabled:pointer-events-none
         ${variantStyles[variant]}
         ${isIcon ? iconSizeStyles[size] : sizeStyles[size]}

@@ -66,10 +66,10 @@ export default async function AboutPage({ params }: Props) {
       {/* Hero */}
       <section className="py-20 bg-gradient-to-b from-[#FFF5D5] to-[#FEF9E9]">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <h1 className="font-heading text-4xl md:text-5xl font-bold text-[#054A57] mb-4">
+          <h1 className="font-bold text-4xl md:text-5xl font-bold text-[#054A57] mb-4">
             {dict.about.title}
           </h1>
-          <p className="font-body text-lg text-[#712E2F]/70 max-w-2xl mx-auto">
+          <p className="font-normal text-lg text-[#712E2F]/70 max-w-2xl mx-auto">
             {dict.about.subtitle}
           </p>
         </div>
@@ -78,7 +78,7 @@ export default async function AboutPage({ params }: Props) {
       {/* Values */}
       <section className="py-16 bg-[#FEF9E9]">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="font-heading text-3xl font-bold text-[#054A57] text-center mb-12">
+          <h2 className="font-bold text-3xl font-bold text-[#054A57] text-center mb-12">
             {dict.about.values.title}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -90,7 +90,7 @@ export default async function AboutPage({ params }: Props) {
                 <h3 className="font-semibold text-[#054A57] mb-2">
                   {dict.about.values[key].title}
                 </h3>
-                <p className="font-body text-sm text-[#712E2F]/70">
+                <p className="font-normal text-sm text-[#712E2F]/70">
                   {dict.about.values[key].description}
                 </p>
               </div>
@@ -102,7 +102,7 @@ export default async function AboutPage({ params }: Props) {
       {/* Timeline */}
       <section className="py-16 bg-[#FFF5D5]">
         <div className="max-w-3xl mx-auto px-6">
-          <h2 className="font-heading text-3xl font-bold text-[#054A57] text-center mb-12">
+          <h2 className="font-bold text-3xl font-bold text-[#054A57] text-center mb-12">
             {dict.about.timeline.title}
           </h2>
           <div className="relative">
@@ -125,7 +125,7 @@ export default async function AboutPage({ params }: Props) {
                       <h3 className="font-semibold text-[#054A57] mb-1">
                         {item.title}
                       </h3>
-                      <p className="font-body text-sm text-[#712E2F]/70">
+                      <p className="font-normal text-sm text-[#712E2F]/70">
                         {item.description}
                       </p>
                     </div>
@@ -140,7 +140,7 @@ export default async function AboutPage({ params }: Props) {
       {/* Team */}
       <section className="py-16 bg-[#FEF9E9]">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="font-heading text-3xl font-bold text-[#054A57] text-center mb-12">
+          <h2 className="font-bold text-3xl font-bold text-[#054A57] text-center mb-12">
             {dict.about.team.title}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
@@ -168,7 +168,7 @@ export default async function AboutPage({ params }: Props) {
                   <h3 className="font-semibold text-[#054A57] mb-1">
                     {member.name}
                   </h3>
-                  <p className="font-body text-sm text-[#712E2F]/70">
+                  <p className="font-normal text-sm text-[#712E2F]/70">
                     {member.role}
                   </p>
                 </div>
@@ -181,17 +181,17 @@ export default async function AboutPage({ params }: Props) {
       {/* Figures */}
       <section className="py-16 bg-[#054A57]">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="font-heading text-3xl font-bold text-[#FEF9E9] text-center mb-12">
+          <h2 className="font-bold text-3xl font-bold text-[#FEF9E9] text-center mb-12">
             {dict.about.figures.title}
           </h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {figureItems.map(
               (item: { value: string; label: string }, index: number) => (
                 <div key={index} className="text-center">
-                  <div className="font-heading text-4xl md:text-5xl font-bold text-[#FEF9E9] mb-2">
+                  <div className="font-bold text-4xl md:text-5xl font-bold text-[#FEF9E9] mb-2">
                     {item.value}
                   </div>
-                  <div className="font-body text-base text-[#FEF9E9]/80">
+                  <div className="font-normal text-base text-[#FEF9E9]/80">
                     {item.label}
                   </div>
                 </div>

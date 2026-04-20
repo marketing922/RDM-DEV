@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
   const staticPages = [
     '', '/plantes', '/blog', '/bienfaits',
-    '/contact', '/faq', '/a-propos', '/recherche',
+    '/contact', '/faq', '/a-propos',
     '/mentions-legales', '/cgv', '/politique-confidentialite',
     '/politique-cookies', '/avertissement-sante', '/accessibilite',
   ]
