@@ -5,6 +5,11 @@ import type { Locale } from '@/i18n/config'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 import { richTextToPlain } from '@/lib/utils'
 import { ArticleJsonLd, GeoStructuredData } from '@/components/seo'
+import {
+  DirectAnswerBox,
+  KeyTakeawaysBox,
+  FaqAccordion,
+} from '@/components/shared/GeoSections'
 import { getBlogPostBySlug, getBlogPosts } from '@/lib/queries'
 import { ArticleCard } from '@/components/shared/ArticleCard'
 import Image from 'next/image'
@@ -195,7 +200,10 @@ export default async function BlogDetailPage({ params }: Props) {
 
           {/* Main content (right) */}
           <article className="w-full min-w-0 max-w-3xl">
-            {/* Prose content with custom styles */}
+            <DirectAnswerBox text={p.directAnswer} />
+            <div className={p.directAnswer ? 'mt-8' : ''}>
+              {/* Prose content with custom styles */}
+            </div>
             {p.content ? (
               <div className="blog-prose prose prose-lg max-w-none">
                 <p>{richTextToPlain(p.content)}</p>
@@ -240,6 +248,10 @@ export default async function BlogDetailPage({ params }: Props) {
                 </div>
               </div>
             )}
+
+            <KeyTakeawaysBox items={p.keyTakeaways} />
+
+            <FaqAccordion items={p.faq} />
 
             {/* Share buttons */}
             <div className="mt-8 flex flex-wrap items-center gap-3">

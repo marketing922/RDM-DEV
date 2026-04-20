@@ -6,6 +6,11 @@ import type { Locale } from '@/i18n/config'
 import { richTextToPlain } from '@/lib/utils'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 import { GeoStructuredData } from '@/components/seo'
+import {
+  DirectAnswerBox,
+  KeyTakeawaysBox,
+  FaqAccordion,
+} from '@/components/shared/GeoSections'
 import { getBenefitBySlug, getBenefits } from '@/lib/queries'
 
 export const revalidate = 3600
@@ -122,6 +127,9 @@ export default async function BienfaitDetailPage({ params }: Props) {
           )}
         </div>
 
+        <DirectAnswerBox text={b.directAnswer} />
+        <KeyTakeawaysBox items={b.keyTakeaways} />
+
         {/* Content card */}
         <section className="mb-8">
           <div className="bg-white border border-[#DCD8C7] rounded-xl shadow-sm p-6">
@@ -163,6 +171,8 @@ export default async function BienfaitDetailPage({ params }: Props) {
             </ul>
           </section>
         )}
+
+        <FaqAccordion items={b.faq} />
 
         {/* NO "Produits recommandés" section - Phase 1 */}
       </div>

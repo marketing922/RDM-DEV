@@ -7,6 +7,11 @@ import type { Locale } from '@/i18n/config'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 import { richTextToPlain } from '@/lib/utils'
 import { GeoStructuredData } from '@/components/seo'
+import {
+  DirectAnswerBox,
+  KeyTakeawaysBox,
+  FaqAccordion,
+} from '@/components/shared/GeoSections'
 import { getWikiEntryBySlug, getWikiEntries } from '@/lib/queries'
 
 export const revalidate = 3600
@@ -173,6 +178,8 @@ export default async function PlantDetailPage({ params }: Props) {
           </div>
         </div>
 
+        <DirectAnswerBox text={e.directAnswer} />
+
         {/* Two columns: Bienfaits + Infos clés */}
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* LEFT — Bienfaits principaux — now clickable links */}
@@ -246,6 +253,10 @@ export default async function PlantDetailPage({ params }: Props) {
             </div>
           </div>
         )}
+
+        <KeyTakeawaysBox items={e.keyTakeaways} />
+
+        <FaqAccordion items={e.faq} />
 
         {/* Contre-indications */}
         {(e.precautionsText || e.contraindications || e.precautions) && (
