@@ -6,8 +6,8 @@ export const backupAfterChange: CollectionAfterChangeHook = async ({
   collection,
   operation,
 }) => {
-  // Only backup on create/update of published documents
-  if (doc.status !== 'published') return doc
+  // Only backup on create/update of published documents (Payload versioning)
+  if (doc._status !== 'published') return doc
 
   try {
     const data = JSON.stringify(doc, null, 2)

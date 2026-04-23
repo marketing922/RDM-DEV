@@ -6,6 +6,7 @@ import { getDictionary } from '@/i18n/server'
 import { getPageBySlug } from '@/lib/queries'
 import { BlockRenderer } from '@/components/blocks/BlockRenderer'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
+import { siteMetadataBase } from '@/lib/metadata'
 
 export const revalidate = 300
 
@@ -23,12 +24,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://remedes-mamie.com'
 
   return {
+    metadataBase: siteMetadataBase(),
     title: `${p.title} | ${dict.meta.siteName}`,
     alternates: {
-      canonical: `${siteUrl}/${locale}/p/${slug}`,
+      // Canonical points to the new root-level URL — /p/{slug} stays as a
+      // backward-compatible alias but search engines should index the pretty one.
+      canonical: `${siteUrl}/${locale}/${slug}`,
       languages: {
-        fr: `${siteUrl}/fr/p/${slug}`,
-        en: `${siteUrl}/en/p/${slug}`,
+        fr: `${siteUrl}/fr/${slug}`,
+        en: `${siteUrl}/en/${slug}`,
       },
     },
   }

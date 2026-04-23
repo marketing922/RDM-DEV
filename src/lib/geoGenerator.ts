@@ -130,7 +130,7 @@ export async function generateGeoField(
 
   const client = new GoogleGenerativeAI(apiKey)
   const model = client.getGenerativeModel({
-    model: 'gemini-1.5-flash',
+    model: 'gemini-2.5-flash-lite',
     generationConfig: {
       responseMimeType: 'application/json',
       temperature: 0.4,

@@ -10,7 +10,8 @@
     "lint": "next lint",
     "generate:types": "payload generate:types",
     "generate:graphql": "payload generate:graphQLSchema",
-    "seed": "npx tsx seed.mjs"
+    "seed": "npx tsx seed.mjs",
+    "seed:products": "npx tsx --env-file=.env.local seed-products.mjs"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +38,7 @@
     "postcss": "^8.5.10",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
+    "sharp": "^0.34.5",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.2",
     "tailwindcss-animate": "^1.0.7",

@@ -3,6 +3,7 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+import sharp from 'sharp'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -16,14 +17,27 @@ import {
   WikiEntries,
   BlogPosts,
   Pages,
+  SitePages,
   Users,
   AuditLog,
 } from './collections'
+import { SiteSettings } from './globals/SiteSettings'
+import { Navigation } from './globals/Navigation'
+import { Footer } from './globals/Footer'
+import {
+  BRAND,
+  TAGLINES_BY_COLLECTION,
+  fitTitle,
+  fitDescription,
+  resolveDescriptionSource,
+  resolveImageId,
+} from './lib/seo-helpers'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  sharp,
   admin: {
     user: Users.slug,
     meta: {
@@ -53,6 +67,12 @@ export default buildConfig({
         account: {
           Component: '@/components/admin/Account.tsx#default',
         },
+        settings: {
+          Component: '@/components/admin/views/Settings.tsx#default',
+          path: '/settings',
+          exact: true,
+          meta: { title: 'Paramètres' },
+        },
       },
     },
   },
@@ -66,9 +86,11 @@ export default buildConfig({
     WikiEntries,
     BlogPosts,
     Pages,
+    SitePages,
     Users,
     AuditLog,
   ],
+  globals: [SiteSettings, Navigation, Footer],
   editor: lexicalEditor(),
   db: postgresAdapter({
     pool: {
@@ -85,18 +107,35 @@ export default buildConfig({
       ? [vercelBlobStorage({ collections: { media: true }, token: process.env.BLOB_READ_WRITE_TOKEN })]
       : []),
     seoPlugin({
-      collections: ['benefits', 'wikiEntries', 'blogPosts', 'pages'],
-      generateTitle: ({ doc }) => `${(doc as any)?.name || (doc as any)?.title || ''} | Les Remèdes de Mamie`,
-      generateURL: ({ doc, collectionSlug }) => {
+      collections: ['benefits', 'wikiEntries', 'blogPosts', 'pages', 'sitePages'],
+      generateTitle: ({ doc, collectionSlug }) => {
+        const d = doc as any
+        const base = String(d?.name || d?.title || '')
+        const tagline =
+          TAGLINES_BY_COLLECTION[collectionSlug || 'pages'] || BRAND
+        return fitTitle(base, BRAND, tagline)
+      },
+      generateDescription: ({ doc, locale, collectionSlug }: any) => {
+        const source = resolveDescriptionSource(doc as any, collectionSlug, locale)
+        return fitDescription(String(source || ''))
+      },
+      generateImage: ({ doc }) => {
+        const id = resolveImageId(doc as any)
+        return id as any
+      },
+      generateURL: ({ doc, collectionSlug, locale }) => {
         const slug = (doc as any)?.slug || ''
+        const loc = locale || 'fr'
         const prefixMap: Record<string, string> = {
           wikiEntries: '/plantes',
           blogPosts: '/blog',
           benefits: '/bienfaits',
-          pages: '',
+          pages: '', // Pages live at the root: /{locale}/{slug}
+          sitePages: '', // Static site pages live at the root: /{locale}/{slug}
         }
         const prefix = prefixMap[collectionSlug || ''] ?? ''
-        return `https://lesremedesdmamie.fr${prefix}/${slug}`
+        const base = process.env.NEXT_PUBLIC_SITE_URL || 'https://lesremedesdmamie.fr'
+        return `${base}/${loc}${prefix}/${slug}`
       },
     }),
   ],

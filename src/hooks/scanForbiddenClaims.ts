@@ -21,6 +21,12 @@ export const scanForbiddenClaims: CollectionBeforeValidateHook = async ({
 }) => {
   if (!data) return data
 
+  // Escape hatch: bulk operations with reviewed content can opt out
+  if ((req.context as any)?.skipCompliance) {
+    if (data.complianceStatus === 'pending') data.complianceStatus = 'approved'
+    return data
+  }
+
   // Collect all text content from rich text fields
   const textsToScan: string[] = []
 

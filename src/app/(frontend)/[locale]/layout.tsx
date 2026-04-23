@@ -1,11 +1,14 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
 import { fontVariables } from '@/lib/fonts'
 import { locales, type Locale } from '@/i18n/config'
 import { getDictionary } from '@/i18n/server'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { MobileNav } from '@/components/layout/MobileNav'
+import { loadNavigation, loadFooter } from '@/lib/layoutGlobals'
 
 import { OrganizationJsonLd } from '@/components/seo'
 import '@/styles/globals.css'
@@ -49,6 +52,12 @@ export default async function LocaleLayout({ children, params }: Props) {
   if (!locales.includes(locale as Locale)) notFound()
   const dict = await getDictionary(locale as Locale)
 
+  const payload = await getPayload({ config: configPromise })
+  const [navigation, footer] = await Promise.all([
+    loadNavigation(payload, locale),
+    loadFooter(payload, locale),
+  ])
+
   return (
     <html lang={locale} className={fontVariables}>
       <body className="bg-[#FEF9E9] text-[#1F2937] antialiased">
@@ -56,9 +65,9 @@ export default async function LocaleLayout({ children, params }: Props) {
           Aller au contenu principal
         </a>
         <OrganizationJsonLd />
-        <Navbar dict={dict} locale={locale} />
+        <Navbar dict={dict} locale={locale} navigation={navigation} />
         <main id="main-content" className="min-h-screen">{children}</main>
-        <Footer dict={dict} locale={locale} />
+        <Footer dict={dict} locale={locale} footer={footer} />
         <MobileNav dict={dict} locale={locale} />
       </body>
     </html>

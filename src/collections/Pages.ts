@@ -1,10 +1,11 @@
-import type { CollectionConfig, Field } from 'payload'
+import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
-import { createAuditLog } from '@/hooks'
+import { createAuditLog, autoSlug } from '@/hooks'
+import { slugify } from '@/lib/slugify'
 
-const adminOnlyField: Field['access'] = {
-  create: ({ req }) => req.user?.role === 'admin',
-  update: ({ req }) => req.user?.role === 'admin',
+const adminOnlyField = {
+  create: ({ req }: any) => req.user?.role === 'admin',
+  update: ({ req }: any) => req.user?.role === 'admin',
   read: () => true,
 }
 
@@ -21,6 +22,11 @@ export const Pages: CollectionConfig = {
     description: 'G\u00e9rer les pages statiques du site (accueil, \u00e0 propos, etc.)',
     components: {
       beforeList: ['@/components/admin/ListHero.tsx#default'],
+      views: {
+        list: {
+          Component: '@/components/admin/views/PagesList.tsx#default',
+        },
+      },
       edit: {
         beforeDocumentControls: ['@/components/admin/DocHeaderChip.tsx#default'],
       },
@@ -55,9 +61,21 @@ export const Pages: CollectionConfig = {
       type: 'text',
       unique: true,
       label: 'Slug (URL)',
+      hooks: {
+        beforeValidate: [autoSlug('title')],
+        beforeChange: [
+          ({ value, data, originalDoc }) => {
+            if (value && typeof value === 'string' && value.trim()) {
+              return slugify(value)
+            }
+            const source = data?.name || data?.title || originalDoc?.name || originalDoc?.title
+            return source ? slugify(String(source)) : value
+          },
+        ],
+      },
       admin: {
         placeholder: 'a-propos',
-        description: 'Identifiant unique pour l\u2019URL de la page',
+        description: 'Identifiant unique pour l\u2019URL de la page. G\u00e9n\u00e9r\u00e9 automatiquement depuis le titre si vide.',
       },
     },
     {
@@ -279,7 +297,7 @@ export const Pages: CollectionConfig = {
           admin: {
             description:
               '\u26a0 Bloc avanc\u00e9 admin uniquement. Le HTML/CSS/JS est injecte tel quel dans la page. Scope CSS automatique via un wrapper unique. Risque XSS: n\u2019injecter que du code que vous avez \u00e9crit.',
-          },
+          } as any,
           fields: [
             {
               name: 'label',

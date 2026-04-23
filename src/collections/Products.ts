@@ -1,7 +1,8 @@
 import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
-import { scanForbiddenClaims, gatePublishCompliance, createAuditLog } from '@/hooks'
+import { scanForbiddenClaims, gatePublishCompliance, createAuditLog, autoSlug } from '@/hooks'
 import { backupAfterChange } from '@/hooks/backupAfterChange'
+import { slugify } from '@/lib/slugify'
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -11,10 +12,16 @@ export const Products: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'sku', 'price', 'status', 'inStock'],
-    group: 'Syst\u00e8me',
-    description: 'Catalogue produits (Phase 2 \u2014 e-commerce)',
-    hidden: true,
+    defaultColumns: ['name', 'sku', 'price', '_status', 'inStock'],
+    group: 'Contenu',
+    description: 'Catalogue produits affich\u00e9s sur la page /produits',
+    components: {
+      views: {
+        list: {
+          Component: '@/components/admin/views/ProductsList.tsx#default',
+        },
+      },
+    },
   },
   versions: {
     drafts: true,
@@ -46,6 +53,9 @@ export const Products: CollectionConfig = {
               admin: {
                 placeholder: 'Ex : Tisane Camomille Bio',
                 description: 'Le nom commercial du produit',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
+                },
               },
             },
             {
@@ -53,9 +63,21 @@ export const Products: CollectionConfig = {
               type: 'text',
               unique: true,
               label: 'Slug (URL)',
+              hooks: {
+                beforeValidate: [autoSlug('name')],
+                beforeChange: [
+                  ({ value, data, originalDoc }) => {
+                    if (value && typeof value === 'string' && value.trim()) {
+                      return slugify(value)
+                    }
+                    const source = data?.name || data?.title || originalDoc?.name || originalDoc?.title
+                    return source ? slugify(String(source)) : value
+                  },
+                ],
+              },
               admin: {
                 placeholder: 'tisane-camomille-bio',
-                description: 'Identifiant unique pour l\u2019URL du produit',
+                description: 'Identifiant unique pour l\u2019URL du produit. G\u00e9n\u00e9r\u00e9 automatiquement depuis le nom si vide.',
               },
             },
             {
@@ -76,6 +98,9 @@ export const Products: CollectionConfig = {
               label: 'Description courte',
               admin: {
                 description: 'R\u00e9sum\u00e9 affich\u00e9 dans les listes de produits',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextareaField.tsx#default',
+                },
               },
             },
             {
@@ -163,6 +188,9 @@ export const Products: CollectionConfig = {
               label: 'Ingr\u00e9dients',
               admin: {
                 description: 'Liste compl\u00e8te des ingr\u00e9dients (INCI ou communs)',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextareaField.tsx#default',
+                },
               },
             },
             {
@@ -188,6 +216,15 @@ export const Products: CollectionConfig = {
         {
           label: 'M\u00e9dias et classement',
           fields: [
+            {
+              name: 'externalImageUrl',
+              type: 'text',
+              label: 'URL image externe (fallback)',
+              admin: {
+                description:
+                  'URL directe vers une image h\u00e9berg\u00e9e ailleurs (utilis\u00e9e si aucune image upload\u00e9e). Pour les produits import\u00e9s.',
+              },
+            },
             {
               name: 'images',
               type: 'array',
@@ -240,15 +277,40 @@ export const Products: CollectionConfig = {
           ],
         },
         {
+          label: 'Liens marchands',
+          description: 'URLs vers les pages produit sur les plateformes partenaires (Amazon, Temu).',
+          fields: [
+            {
+              name: 'amazonUrl',
+              type: 'text',
+              label: 'URL Amazon',
+              admin: {
+                placeholder: 'https://www.amazon.fr/dp/...',
+                description: 'Lien direct vers la fiche produit sur Amazon',
+              },
+            },
+            {
+              name: 'temuUrl',
+              type: 'text',
+              label: 'URL Temu',
+              admin: {
+                placeholder: 'https://www.temu.com/...',
+                description: 'Lien direct vers la fiche produit sur Temu',
+              },
+            },
+          ],
+        },
+        {
           label: 'Publication',
           fields: [
             {
               name: 'status',
               type: 'select',
               defaultValue: 'draft',
-              label: 'Statut de publication',
+              label: 'Workflow interne',
               admin: {
-                description: 'Contr\u00f4le la visibilit\u00e9 du produit sur le site',
+                description:
+                  '\u26a0\ufe0f Ne contr\u00f4le PAS la visibilit\u00e9 sur le site. Pour publier/d\u00e9publier, utilisez les boutons Save Draft / Publish changes en haut de la page.',
               },
               options: [
                 { label: 'Brouillon', value: 'draft' },

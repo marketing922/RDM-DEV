@@ -1,8 +1,9 @@
 import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
-import { scanForbiddenClaims, gatePublishCompliance, createAuditLog } from '@/hooks'
+import { scanForbiddenClaims, gatePublishCompliance, createAuditLog, autoSlug } from '@/hooks'
 import { backupAfterChange } from '@/hooks/backupAfterChange'
 import { geoTab } from '@/fields/geoFields'
+import { slugify } from '@/lib/slugify'
 
 export const WikiEntries: CollectionConfig = {
   slug: 'wikiEntries',
@@ -12,11 +13,19 @@ export const WikiEntries: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'latinName', 'status', 'complianceStatus', 'updatedAt'],
+    defaultColumns: ['name', 'latinName', '_status', 'complianceStatus', 'updatedAt'],
     group: 'Contenu',
     description: 'G\u00e9rer les fiches plantes de l\u2019encyclop\u00e9die des rem\u00e8des naturels',
     components: {
       beforeList: ['@/components/admin/ListHero.tsx#default'],
+      // Almanach-style banner at the top of the edit view (above the fields).
+      // Uses the `Description` slot which renders in Payload 3.83's document view.
+      Description: '@/components/admin/editor/PlantHeader.tsx#default',
+      views: {
+        list: {
+          Component: '@/components/admin/views/PlantsList.tsx#default',
+        },
+      },
       edit: {
         beforeDocumentControls: ['@/components/admin/DocHeaderChip.tsx#default'],
       },
@@ -52,6 +61,9 @@ export const WikiEntries: CollectionConfig = {
               admin: {
                 placeholder: 'Ex : Camomille',
                 description: 'Le nom commun en fran\u00e7ais',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
+                },
               },
             },
             {
@@ -68,9 +80,21 @@ export const WikiEntries: CollectionConfig = {
               type: 'text',
               unique: true,
               label: 'Slug (URL)',
+              hooks: {
+                beforeValidate: [autoSlug('name')],
+                beforeChange: [
+                  ({ value, data, originalDoc }) => {
+                    if (value && typeof value === 'string' && value.trim()) {
+                      return slugify(value)
+                    }
+                    const source = data?.name || data?.title || originalDoc?.name || originalDoc?.title
+                    return source ? slugify(String(source)) : value
+                  },
+                ],
+              },
               admin: {
                 placeholder: 'camomille',
-                description: 'Identifiant unique utilis\u00e9 dans l\u2019URL. G\u00e9n\u00e9r\u00e9 automatiquement si vide.',
+                description: 'Identifiant unique utilis\u00e9 dans l\u2019URL. G\u00e9n\u00e9r\u00e9 automatiquement depuis le nom si vide.',
               },
             },
             {
@@ -80,6 +104,9 @@ export const WikiEntries: CollectionConfig = {
               label: 'Description courte',
               admin: {
                 description: 'R\u00e9sum\u00e9 de 1\u20132 phrases affich\u00e9 dans les listes et aper\u00e7us',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextareaField.tsx#default',
+                },
               },
             },
           ],
@@ -94,6 +121,9 @@ export const WikiEntries: CollectionConfig = {
               admin: {
                 placeholder: 'Ex : Ast\u00e9rac\u00e9es',
                 description: 'La famille botanique \u00e0 laquelle appartient la plante',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
+                },
               },
             },
             {
@@ -104,6 +134,9 @@ export const WikiEntries: CollectionConfig = {
               admin: {
                 placeholder: 'Ex : Europe, Asie occidentale',
                 description: 'R\u00e9gions d\u2019origine de la plante',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
+                },
               },
             },
             {
@@ -114,6 +147,9 @@ export const WikiEntries: CollectionConfig = {
               admin: {
                 placeholder: 'Ex : Fleurs, feuilles',
                 description: 'Les parties de la plante employ\u00e9es en phytoth\u00e9rapie',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
+                },
               },
             },
             {
@@ -123,6 +159,9 @@ export const WikiEntries: CollectionConfig = {
               label: 'Principes actifs',
               admin: {
                 description: 'Les mol\u00e9cules actives et compos\u00e9s chimiques de la plante',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextareaField.tsx#default',
+                },
               },
             },
             {
@@ -133,6 +172,9 @@ export const WikiEntries: CollectionConfig = {
               admin: {
                 placeholder: 'Ex : Juin \u00e0 ao\u00fbt',
                 description: 'P\u00e9riode et m\u00e9thode de r\u00e9colte',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
+                },
               },
             },
             {
@@ -143,6 +185,9 @@ export const WikiEntries: CollectionConfig = {
               admin: {
                 placeholder: 'Ex : Tisane, huile essentielle',
                 description: 'Formes galéniques disponibles',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
+                },
               },
             },
             {
@@ -153,6 +198,9 @@ export const WikiEntries: CollectionConfig = {
               admin: {
                 placeholder: 'Ex : Au sec, \u00e0 l\u2019abri de la lumi\u00e8re',
                 description: 'Conditions de conservation recommand\u00e9es',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
+                },
               },
             },
           ],
@@ -167,6 +215,9 @@ export const WikiEntries: CollectionConfig = {
               label: 'Description longue (texte brut)',
               admin: {
                 description: 'Description d\u00e9taill\u00e9e en texte brut, utilis\u00e9e pour le SEO',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextareaField.tsx#default',
+                },
               },
             },
             {
@@ -185,6 +236,9 @@ export const WikiEntries: CollectionConfig = {
               label: 'Pr\u00e9cautions (texte brut)',
               admin: {
                 description: 'Pr\u00e9cautions d\u2019emploi en texte simple',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextareaField.tsx#default',
+                },
               },
             },
             {
@@ -258,9 +312,10 @@ export const WikiEntries: CollectionConfig = {
               name: 'status',
               type: 'select',
               defaultValue: 'draft',
-              label: 'Statut de publication',
+              label: 'Workflow interne',
               admin: {
-                description: 'Contr\u00f4le la visibilit\u00e9 de la fiche sur le site',
+                description:
+                  '\u26a0\ufe0f Ne contr\u00f4le PAS la visibilit\u00e9 sur le site. Pour publier/d\u00e9publier, utilisez les boutons Save Draft / Publish changes en haut de la page.',
               },
               options: [
                 { label: 'Brouillon', value: 'draft' },

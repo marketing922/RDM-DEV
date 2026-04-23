@@ -98,10 +98,10 @@ const pickContext = (fields: any, collectionSlug?: string) => {
 }
 
 const BUTTON_LABEL: Record<GeoFieldType, string> = {
-  directAnswer: 'Générer la réponse directe',
-  definition: 'Générer la définition',
-  keyTakeaways: 'Générer les points-clés',
-  faq: 'Générer la FAQ',
+  directAnswer: 'générer la réponse directe',
+  definition: 'générer la définition',
+  keyTakeaways: 'générer les points-clés',
+  faq: 'générer la FAQ',
 }
 
 const GeoGenerateButton: React.FC<Props> = ({ path }) => {
@@ -112,6 +112,7 @@ const GeoGenerateButton: React.FC<Props> = ({ path }) => {
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [hover, setHover] = useState(false)
 
   const handleGenerate = useCallback(async () => {
     if (!fieldType) return
@@ -170,56 +171,53 @@ const GeoGenerateButton: React.FC<Props> = ({ path }) => {
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: 6,
-        margin: '4px 0 10px',
+        gap: 4,
+        margin: '2px 0 8px',
       }}
     >
       <button
         type="button"
         onClick={handleGenerate}
         disabled={loading}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
         style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: 8,
-          alignSelf: 'flex-start',
-          padding: '7px 14px',
-          borderRadius: 8,
-          border: '1px solid rgba(162, 33, 30, 0.25)',
-          background: loading
-            ? '#FEF9E9'
-            : 'linear-gradient(135deg, #FFF5D5 0%, #FEF9E9 100%)',
-          color: '#A2211E',
-          fontSize: 12.5,
-          fontWeight: 600,
+          gap: 5,
+          alignSelf: 'flex-end',
+          background: 'transparent',
+          border: 'none',
+          padding: '2px 4px',
+          fontSize: 11,
+          fontFamily: 'var(--ff-sans), system-ui, sans-serif',
+          fontWeight: 500,
+          color: hover ? '#054A57' : '#5A4F45',
+          opacity: loading ? 0.55 : hover ? 1 : 0.7,
           cursor: loading ? 'wait' : 'pointer',
-          transition: 'background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease',
-          boxShadow: '0 2px 6px rgba(162, 33, 30, 0.08)',
+          transition: 'color 0.12s ease, opacity 0.12s ease',
         }}
       >
         {loading ? (
-          <Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} />
+          <Loader2 size={11} style={{ animation: 'rm-geo-spin 1s linear infinite' }} />
         ) : (
-          <Sparkles size={13} />
+          <Sparkles size={11} />
         )}
-        {loading ? 'Génération en cours…' : BUTTON_LABEL[fieldType]}
+        <span>{loading ? 'génération…' : BUTTON_LABEL[fieldType]}</span>
       </button>
       {error && (
         <span
           style={{
-            fontSize: 11.5,
-            color: '#B91C1C',
-            background: '#FEF2F2',
-            padding: '4px 8px',
-            borderRadius: 6,
-            border: '1px solid rgba(239, 68, 68, 0.25)',
-            alignSelf: 'flex-start',
+            fontSize: 11,
+            color: '#A2211E',
+            alignSelf: 'flex-end',
+            paddingLeft: 4,
           }}
         >
-          ⚠ {error}
+          {error}
         </span>
       )}
-      <style>{`@keyframes spin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }`}</style>
+      <style>{`@keyframes rm-geo-spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 }

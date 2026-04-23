@@ -1,8 +1,9 @@
 import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
-import { scanForbiddenClaims, gatePublishCompliance, createAuditLog } from '@/hooks'
+import { scanForbiddenClaims, gatePublishCompliance, createAuditLog, autoSlug } from '@/hooks'
 import { backupAfterChange } from '@/hooks/backupAfterChange'
 import { geoTab } from '@/fields/geoFields'
+import { slugify } from '@/lib/slugify'
 
 export const BlogPosts: CollectionConfig = {
   slug: 'blogPosts',
@@ -12,13 +13,19 @@ export const BlogPosts: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'author', 'status', 'publishedAt', 'updatedAt'],
+    defaultColumns: ['title', 'author', '_status', 'publishedAt', 'updatedAt'],
     group: 'Contenu',
     description: 'R\u00e9diger et g\u00e9rer les articles du blog',
     components: {
       beforeList: ['@/components/admin/ListHero.tsx#default'],
+      // Almanach-style banner at the top of the edit view (above the fields).
+      // Uses the `Description` slot which renders in Payload 3.83's document view.
+      Description: '@/components/admin/editor/ArticleHeader.tsx#default',
       edit: {
         beforeDocumentControls: ['@/components/admin/DocHeaderChip.tsx#default'],
+      },
+      views: {
+        list: { Component: '@/components/admin/views/ArticlesList.tsx#default' },
       },
     },
   },
@@ -52,6 +59,9 @@ export const BlogPosts: CollectionConfig = {
               admin: {
                 placeholder: 'Ex : Les bienfaits de la camomille',
                 description: 'Le titre principal affich\u00e9 sur le blog',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
+                },
               },
             },
             {
@@ -59,9 +69,21 @@ export const BlogPosts: CollectionConfig = {
               type: 'text',
               unique: true,
               label: 'Slug (URL)',
+              hooks: {
+                beforeValidate: [autoSlug('title')],
+                beforeChange: [
+                  ({ value, data, originalDoc }) => {
+                    if (value && typeof value === 'string' && value.trim()) {
+                      return slugify(value)
+                    }
+                    const source = data?.name || data?.title || originalDoc?.name || originalDoc?.title
+                    return source ? slugify(String(source)) : value
+                  },
+                ],
+              },
               admin: {
                 placeholder: 'les-bienfaits-de-la-camomille',
-                description: 'Identifiant unique pour l\u2019URL de l\u2019article',
+                description: 'Identifiant unique pour l\u2019URL de l\u2019article. G\u00e9n\u00e9r\u00e9 automatiquement depuis le titre si vide.',
               },
             },
             {
@@ -71,6 +93,9 @@ export const BlogPosts: CollectionConfig = {
               label: 'Extrait',
               admin: {
                 description: 'Court r\u00e9sum\u00e9 affich\u00e9 dans les listes d\u2019articles et le SEO',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextareaField.tsx#default',
+                },
               },
             },
             {
@@ -125,6 +150,36 @@ export const BlogPosts: CollectionConfig = {
               },
             },
             {
+              name: 'relatedPlants',
+              type: 'relationship',
+              relationTo: 'wikiEntries',
+              hasMany: true,
+              label: 'Plantes citées',
+              admin: {
+                description: 'Fiches plantes mentionnées dans cet article.',
+              },
+            },
+            {
+              name: 'relatedProducts',
+              type: 'relationship',
+              relationTo: 'products',
+              hasMany: true,
+              label: 'Produits associés',
+              admin: {
+                description: 'Produits à mettre en avant dans cet article.',
+              },
+            },
+            {
+              name: 'relatedBenefits',
+              type: 'relationship',
+              relationTo: 'benefits',
+              hasMany: true,
+              label: 'Bienfaits liés',
+              admin: {
+                description: 'Bienfaits qui concernent cet article.',
+              },
+            },
+            {
               name: 'publishedAt',
               type: 'date',
               label: 'Date de publication',
@@ -150,9 +205,10 @@ export const BlogPosts: CollectionConfig = {
               name: 'status',
               type: 'select',
               defaultValue: 'draft',
-              label: 'Statut de publication',
+              label: 'Workflow interne',
               admin: {
-                description: 'Contr\u00f4le la visibilit\u00e9 de l\u2019article sur le site',
+                description:
+                  '\u26a0\ufe0f Ne contr\u00f4le PAS la visibilit\u00e9 sur le site. Pour publier/d\u00e9publier, utilisez les boutons Save Draft / Publish changes en haut de la page.',
               },
               options: [
                 { label: 'Brouillon', value: 'draft' },

@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
         collection: 'wikiEntries',
         where: {
           and: [
-            { status: { equals: 'published' } },
+            { _status: { equals: 'published' } },
             {
               or: [
                 { name: { like: query } },
@@ -29,12 +29,13 @@ export async function GET(req: NextRequest) {
         },
         limit: 5,
         locale: locale as any,
+        depth: 0,
       }),
       payload.find({
         collection: 'blogPosts',
         where: {
           and: [
-            { status: { equals: 'published' } },
+            { _status: { equals: 'published' } },
             {
               or: [
                 { title: { like: query } },
@@ -45,17 +46,19 @@ export async function GET(req: NextRequest) {
         },
         limit: 5,
         locale: locale as any,
+        depth: 0,
       }),
       payload.find({
         collection: 'benefits',
         where: {
           and: [
-            { status: { equals: 'published' } },
+            { _status: { equals: 'published' } },
             { name: { like: query } },
           ],
         },
         limit: 5,
         locale: locale as any,
+        depth: 0,
       }),
     ])
 

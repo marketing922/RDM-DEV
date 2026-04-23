@@ -24,7 +24,7 @@ export const geoTab: Tab = {
         placeholder:
           'Ex : La camomille romaine est une plante médicinale aux propriétés calmantes, digestives et anti-inflammatoires, traditionnellement utilisée en infusion pour apaiser les troubles du sommeil et les tensions digestives.',
         description:
-          '⚡ Commencez par la réponse, pas par du contexte. Ce paragraphe est extrait verbatim par les IA (Google AI Overviews, ChatGPT, Perplexity) et sert aussi de meta description SEO. Règle : 40-60 mots, factuel, auto-portant. Évitez "Dans cet article, nous allons voir…".',
+          'Commencez par la réponse, pas par du contexte. Ce paragraphe est extrait verbatim par les IA (Google AI Overviews, ChatGPT, Perplexity) et sert aussi de meta description SEO. Règle : 40-60 mots, factuel, auto-portant. Évitez "Dans cet article, nous allons voir…".',
         rows: 4,
         components: {
           beforeInput: ['@/components/admin/GeoGenerateButton.tsx#default'],
@@ -40,7 +40,7 @@ export const geoTab: Tab = {
         placeholder:
           'Ex : La camomille romaine (Chamaemelum nobile) est une plante vivace de la famille des Astéracées, utilisée depuis l\u2019Antiquité pour ses propriétés apaisantes et digestives.',
         description:
-          '📖 Format strict : "[Terme] est/sont une/un …". Commencez toujours par le mot défini. Utilisée par les IA pour les requêtes "Qu\u2019est-ce que X ?" et "Définition de X". 25-50 mots.',
+          'Format strict : "[Terme] est/sont une/un …". Commencez toujours par le mot défini. Utilisée par les IA pour les requêtes "Qu\u2019est-ce que X ?" et "Définition de X". 25-50 mots.',
         rows: 3,
         components: {
           beforeInput: ['@/components/admin/GeoGenerateButton.tsx#default'],
@@ -57,7 +57,7 @@ export const geoTab: Tab = {
       labels: { singular: 'Point-clé', plural: 'Points-clés' },
       admin: {
         description:
-          '💡 Chaque point doit être AUTO-PORTANT (compréhensible sans les autres). Un fait par point. Évitez "il", "cette plante" — répétez le nom. C\u2019est le bloc le plus cité dans les résumés IA.',
+          'Chaque point doit être AUTO-PORTANT (compréhensible sans les autres). Un fait par point. Évitez "il", "cette plante" — répétez le nom. C\u2019est le bloc le plus cité dans les résumés IA.',
         components: {
           beforeInput: ['@/components/admin/GeoGenerateButton.tsx#default'],
         },
@@ -81,7 +81,7 @@ export const geoTab: Tab = {
       labels: { singular: 'Déclaration', plural: 'Déclarations' },
       admin: {
         description:
-          '💬 Phrases courtes (≤25 mots), vérifiables, avec source. Une stat ou un fait précis par déclaration. Les IA citent ces phrases verbatim, source incluse — elles deviennent des "citations d\u2019autorité".',
+          'Phrases courtes (≤25 mots), vérifiables, avec source. Une stat ou un fait précis par déclaration. Les IA citent ces phrases verbatim, source incluse — elles deviennent des "citations d\u2019autorité".',
       },
       fields: [
         {
@@ -114,7 +114,7 @@ export const geoTab: Tab = {
       labels: { singular: 'Donnée', plural: 'Données' },
       admin: {
         description:
-          '📊 Unités SI de préférence (mg, ml, %, minutes). ≥5 data points → citabilité IA +156%. Chaque ligne devient un bloc structuré PropertyValue dans le JSON-LD.',
+          'Unités SI de préférence (mg, ml, %, minutes). ≥5 data points → citabilité IA +156%. Chaque ligne devient un bloc structuré PropertyValue dans le JSON-LD.',
       },
       fields: [
         {
@@ -162,7 +162,7 @@ export const geoTab: Tab = {
       labels: { singular: 'Q/R', plural: 'Questions/Réponses' },
       admin: {
         description:
-          '❓ Posez les questions comme un utilisateur les poserait à ChatGPT ou Google. Réponse auto-portante (2-4 phrases). Affiché visiblement + FAQPage JSON-LD (obligatoire Google pour indexation).',
+          'Posez les questions comme un utilisateur les poserait à ChatGPT ou Google. Réponse auto-portante (2-4 phrases). Affiché visiblement + FAQPage JSON-LD (obligatoire Google pour indexation).',
         components: {
           beforeInput: ['@/components/admin/GeoGenerateButton.tsx#default'],
         },
@@ -235,7 +235,7 @@ export const geoTab: Tab = {
       labels: { singular: 'Source', plural: 'Sources' },
       admin: {
         description:
-          '🔬 Sources primaires vérifiables (EMA/HMPC, études indexées PubMed, monographies officielles). Cible : ≥1 citation par 500 mots. Rendues visibles en bas de page + bloc citation JSON-LD.',
+          'Sources primaires vérifiables (EMA/HMPC, études indexées PubMed, monographies officielles). Cible : ≥1 citation par 500 mots. Rendues visibles en bas de page + bloc citation JSON-LD.',
       },
       fields: [
         {

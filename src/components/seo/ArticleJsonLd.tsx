@@ -1,4 +1,5 @@
 import { JsonLd } from './JsonLd'
+import { resolveMediaUrl, type MediaDocLike } from '@/lib/mediaUrl'
 
 type ArticleJsonLdProps = {
   article: {
@@ -6,7 +7,7 @@ type ArticleJsonLdProps = {
     slug: string
     excerpt?: string
     content?: string
-    featuredImage?: { url?: string }
+    featuredImage?: MediaDocLike | null
     author?: { name: string }
     publishedAt?: string
     updatedAt?: string
@@ -24,7 +25,7 @@ export function ArticleJsonLd({ article, locale }: ArticleJsonLdProps) {
       '@type': 'Article',
       headline: article.title,
       description: article.excerpt || '',
-      image: article.featuredImage?.url || '',
+      image: resolveMediaUrl(article.featuredImage) ?? undefined,
       url: `${siteUrl}/${locale}/blog/${article.slug}`,
       datePublished: article.publishedAt,
       dateModified: article.updatedAt || article.publishedAt,

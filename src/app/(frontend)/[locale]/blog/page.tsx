@@ -3,15 +3,18 @@ import { getDictionary } from '@/i18n/server'
 import type { Locale } from '@/i18n/config'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 import { getFeaturedBlogPost, getBlogPosts } from '@/lib/queries'
-import { ArticleCard } from '@/components/shared/ArticleCard'
 import Image from 'next/image'
 import Link from 'next/link'
+import { resolveMediaUrl } from '@/lib/mediaUrl'
+import BlogSearch from '@/components/blog/BlogSearch'
+import Reveal from '@/components/ui/Reveal'
+import { siteMetadataBase } from '@/lib/metadata'
 
 export const revalidate = 60
 
 type Props = {
   params: Promise<{ locale: string }>
-  searchParams: Promise<{ page?: string; category?: string }>
+  searchParams: Promise<{ page?: string; category?: string; q?: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -19,34 +22,85 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dict = await getDictionary(locale as Locale)
 
   return {
+    metadataBase: siteMetadataBase(),
     title: `${dict.blog.title} | ${dict.meta.siteName}`,
     description: dict.blog.subtitle,
   }
 }
 
+function formatDate(value: string | undefined, locale: string) {
+  if (!value) return ''
+  try {
+    return new Date(value).toLocaleDateString(locale, {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
+  } catch {
+    return ''
+  }
+}
+
 export default async function BlogPage({ params, searchParams }: Props) {
   const { locale } = await params
-  const { page: pageParam, category: categoryParam } = await searchParams
+  const { page: pageParam, category: categoryParam, q: qParam } = await searchParams
   const dict = await getDictionary(locale as Locale)
-  const featuredPost = await getFeaturedBlogPost(locale)
 
+  const q = String(qParam || '').trim()
   const currentPage = parseInt(pageParam || '1', 10)
-  const postsPerPage = 6
-  const { docs: posts, totalPages } = await getBlogPosts({
+  const postsPerPage = 9
+  const activeCategory = categoryParam || 'all'
+  const isFiltered = q !== '' || activeCategory !== 'all'
+
+  // Featured post only on page 1, no filter, no search — otherwise skip.
+  const featuredPost = isFiltered || currentPage > 1
+    ? null
+    : ((await getFeaturedBlogPost(locale)) as any)
+
+  const { docs: postsRaw, totalPages } = await getBlogPosts({
     limit: postsPerPage,
     page: currentPage,
     locale,
+    category: activeCategory,
+    search: q,
   })
+  const posts = postsRaw as any[]
 
+  // Dedupe featured post from grid on page 1
+  const gridPosts =
+    currentPage === 1 && featuredPost
+      ? posts.filter((p) => p.id !== featuredPost.id)
+      : posts
+
+  // Build category list from dict (may exist without posts having categories)
   const categoryKeys = Object.keys(dict.blog.categories) as Array<
     keyof typeof dict.blog.categories
   >
 
-  const activeCategory = categoryParam || 'all'
+  // Helper to preserve current q + category across pagination / chip clicks.
+  const buildUrl = (overrides: Record<string, string | null>) => {
+    const params = new URLSearchParams()
+    const mixed: Record<string, string | null> = {
+      q: q || null,
+      category: activeCategory === 'all' ? null : activeCategory,
+      page: currentPage > 1 ? String(currentPage) : null,
+      ...overrides,
+    }
+    for (const [key, value] of Object.entries(mixed)) {
+      if (value !== null && value !== '') params.set(key, String(value))
+    }
+    const qs = params.toString()
+    return qs ? `/${locale}/blog?${qs}` : `/${locale}/blog`
+  }
+
+  // Detect whether any post in current page has a category (to decide if filter bar is meaningful)
+  const anyCategoryOnPosts =
+    (featuredPost && featuredPost.category) ||
+    posts.some((p) => p.category && (p.category.name || p.category.slug))
 
   return (
-    <main className="bg-[#FEF9E9] min-h-screen">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+    <main className="min-h-screen bg-rm-cream">
+      <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-6">
         <Breadcrumb
           items={[
             { label: dict.nav.home, href: `/${locale}` },
@@ -54,228 +108,339 @@ export default async function BlogPage({ params, searchParams }: Props) {
           ]}
         />
 
-        {/* Header */}
-        <div className="mt-8 mb-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#054A57]">
-            {dict.blog.title}
+        {/* ─── Header almanach ─── */}
+        <Reveal>
+        <header className="mt-10 md:mt-14 mb-10 md:mb-14 text-center max-w-3xl mx-auto">
+          <div className="flex items-center justify-center gap-2.5 mb-5">
+            <span className="block w-7 h-px bg-rm-burgundy" />
+            <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+              Journal
+            </span>
+            <span className="block w-7 h-px bg-rm-burgundy" />
+          </div>
+          <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] text-[40px] sm:text-[52px] md:text-[60px]">
+            Le <em className="italic text-rm-burgundy">Journal</em> des plantes
           </h1>
-          <p className="mt-3 text-lg text-[#712E2F]/70 max-w-2xl mx-auto">
+          <p className="font-serif italic text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-5">
             {dict.blog.subtitle}
           </p>
-        </div>
+        </header>
+        </Reveal>
 
-        {/* Featured article */}
-        <div className="mb-12">
-          <p className="text-sm font-medium text-[#A2211E] mb-3 uppercase tracking-wide">
-            {dict.blog.featured}
-          </p>
-          {featuredPost ? (
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col md:flex-row hover:shadow-lg transition-shadow duration-300">
-              {/* Image left 3/5 */}
-              <div className="w-full md:w-3/5 aspect-video md:aspect-auto md:min-h-[360px] bg-[#FFF5D5] relative overflow-hidden">
-                {(featuredPost as any).featuredImage ? (
-                  <Image
-                    src={(featuredPost as any).featuredImage.url}
-                    alt={(featuredPost as any).featuredImage.alt || (featuredPost as any).title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 60vw"
-                    className="object-cover"
-                    priority
-                  />
-                ) : (
-                  <div className="w-full h-full bg-[#FFF5D5] animate-pulse" />
-                )}
-              </div>
-              {/* Content right 2/5 */}
-              <div className="w-full md:w-2/5 p-6 lg:p-8 flex flex-col justify-center">
-                {(featuredPost as any).category && (
-                  <span className="text-sm font-medium text-[#D0802C] uppercase tracking-wide">
-                    {(featuredPost as any).category.name}
-                  </span>
-                )}
-                <h2 className="text-2xl lg:text-3xl font-bold text-[#054A57] mt-2 mb-3">
-                  {(featuredPost as any).title}
-                </h2>
-                {(featuredPost as any).excerpt && (
-                  <p className="text-base text-[#712E2F]/70 line-clamp-3 mb-4">
-                    {(featuredPost as any).excerpt}
-                  </p>
-                )}
-                <div className="flex items-center gap-3 text-sm text-[#712E2F]/60 mb-4">
-                  {(featuredPost as any).author && (
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-[#FFF5D5] overflow-hidden shrink-0">
-                        {(featuredPost as any).author.avatar ? (
-                          <Image
-                            src={(featuredPost as any).author.avatar.url}
-                            alt={(featuredPost as any).author.name}
-                            width={32}
-                            height={32}
-                            className="object-cover w-full h-full"
-                          />
-                        ) : (
-                          <div className="flex items-center justify-center w-full h-full bg-[#FFF5D5] text-[#A2211E] text-xs font-medium">
-                            {(featuredPost as any).author.name.charAt(0).toUpperCase()}
-                          </div>
-                        )}
-                      </div>
-                      <span>{(featuredPost as any).author.name}</span>
-                    </div>
-                  )}
-                  {(featuredPost as any).publishedAt && (
-                    <span className="ml-auto">
-                      {new Date((featuredPost as any).publishedAt).toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })}
-                    </span>
-                  )}
-                </div>
-                <Link
-                  href={`/${locale}/blog/${(featuredPost as any).slug}`}
-                  className="inline-flex items-center text-[#A2211E] font-medium hover:underline"
-                >
-                  Lire l&apos;article
-                  <span className="ml-1">&rarr;</span>
-                </Link>
-              </div>
-            </div>
-          ) : (
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col md:flex-row">
-              <div className="w-full md:w-3/5 aspect-video md:aspect-auto md:min-h-[360px] bg-[#FFF5D5] animate-pulse" />
-              <div className="w-full md:w-2/5 p-6 lg:p-8 flex flex-col justify-center">
-                <div className="bg-[#FFF5D5] rounded h-3 w-20 animate-pulse mb-3" />
-                <div className="bg-[#FFF5D5] rounded h-7 w-full animate-pulse mb-2" />
-                <div className="bg-[#FFF5D5] rounded h-7 w-3/4 animate-pulse mb-4" />
-                <div className="space-y-2 mb-4">
-                  <div className="bg-[#FFF5D5] rounded h-4 w-full animate-pulse" />
-                  <div className="bg-[#FFF5D5] rounded h-4 w-5/6 animate-pulse" />
-                  <div className="bg-[#FFF5D5] rounded h-4 w-2/3 animate-pulse" />
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-[#FFF5D5] animate-pulse" />
-                  <div className="bg-[#FFF5D5] rounded h-3 w-24 animate-pulse" />
-                  <div className="bg-[#FFF5D5] rounded h-3 w-16 animate-pulse ml-auto" />
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        {/* ─── Search ─── */}
+        <BlogSearch initialSearch={q} placeholder={dict.blog.searchPlaceholder || 'Rechercher un article…'} />
 
-        {/* Category filter pills */}
-        <div className="mb-10 overflow-x-auto scrollbar-hide">
-          <div className="flex md:flex-wrap md:justify-center gap-2 min-w-max md:min-w-0">
-            {categoryKeys.map((key) => {
-              const isActive = String(key) === activeCategory
-              return (
-                <Link
-                  key={String(key)}
-                  href={
-                    key === 'all'
-                      ? `/${locale}/blog`
-                      : `/${locale}/blog?category=${String(key)}`
-                  }
-                  className={`inline-flex items-center h-9 px-5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                    isActive
-                      ? 'bg-[#A2211E] text-white shadow-sm'
-                      : 'bg-white text-[#712E2F] border border-[#DCD8C7] hover:bg-[#FFF5D5] hover:text-[#A2211E] hover:border-[#A2211E]'
-                  }`}
-                >
-                  {dict.blog.categories[key]}
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Article grid - Desktop: 3 cols, Tablet: 2 cols, Mobile: list items */}
-        {posts.length > 0 ? (
-          <>
-            {/* Desktop/tablet grid */}
-            <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts.map((post) => (
-                <ArticleCard key={post.id} post={post as any} locale={locale} />
-              ))}
+        {/* ─── Category filter chips (only if relevant) ─── */}
+        {anyCategoryOnPosts && (
+          <div className="mb-10 md:mb-12 overflow-x-auto scrollbar-hide border-t border-b border-dashed border-rm-rule py-4">
+            <div className="flex md:flex-wrap md:justify-center gap-2 min-w-max md:min-w-0">
+              {categoryKeys.map((key) => {
+                const isActive = String(key) === activeCategory
+                return (
+                  <Link
+                    key={String(key)}
+                    href={buildUrl({
+                      category: key === 'all' ? null : String(key),
+                      page: null,
+                    })}
+                    className={`inline-flex items-center h-8 px-4 rounded-full font-sans text-[11px] tracking-[0.18em] uppercase transition-colors whitespace-nowrap ${
+                      isActive
+                        ? 'bg-rm-burgundy text-white border border-rm-burgundy'
+                        : 'bg-rm-paper text-rm-teal border border-rm-ruleStrong hover:border-rm-burgundy hover:text-rm-burgundy'
+                    }`}
+                  >
+                    {dict.blog.categories[key]}
+                  </Link>
+                )
+              })}
             </div>
-            {/* Mobile list */}
-            <div className="flex flex-col gap-3 sm:hidden">
-              {posts.map((post) => (
-                <ArticleCard key={post.id} post={post as any} locale={locale} compact />
-              ))}
-            </div>
-          </>
-        ) : (
-          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div className="aspect-video bg-[#FFF5D5] animate-pulse" />
-                <div className="p-4">
-                  <div className="bg-[#FFF5D5] rounded h-3 w-16 animate-pulse mb-2" />
-                  <div className="bg-[#FFF5D5] rounded h-5 w-full animate-pulse mb-1" />
-                  <div className="bg-[#FFF5D5] rounded h-5 w-2/3 animate-pulse mb-3" />
-                  <div className="space-y-1.5 mb-3">
-                    <div className="bg-[#FFF5D5] rounded h-3 w-full animate-pulse" />
-                    <div className="bg-[#FFF5D5] rounded h-3 w-5/6 animate-pulse" />
-                  </div>
-                  <div className="flex items-center gap-2 pt-2 border-t border-[#DCD8C7]">
-                    <div className="w-6 h-6 rounded-full bg-[#FFF5D5] animate-pulse" />
-                    <div className="bg-[#FFF5D5] rounded h-3 w-20 animate-pulse" />
-                    <div className="bg-[#FFF5D5] rounded h-3 w-16 animate-pulse ml-auto" />
-                  </div>
-                </div>
-              </div>
-            ))}
           </div>
         )}
 
-        {/* Pagination */}
+        {/* ─── Featured + Sidebar (page 1 only) ─── */}
+        {currentPage === 1 && featuredPost && (
+          <section className="mb-16 md:mb-20">
+            <div className="flex items-center gap-2.5 mb-5">
+              <span className="block w-7 h-px bg-rm-burgundy" />
+              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+                {dict.blog.featured}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+              {/* Featured article 2/3 */}
+              <Reveal className="lg:col-span-2">
+              <Link
+                href={`/${locale}/blog/${featuredPost.slug}`}
+                className="group bg-rm-paper border border-rm-rule overflow-hidden flex flex-col h-full transition-colors hover:border-rm-ruleStrong"
+              >
+                <div className="relative aspect-[16/9] bg-rm-creamSoft overflow-hidden">
+                  {featuredPost.featuredImage ? (
+                    <Image
+                      src={resolveMediaUrl(featuredPost.featuredImage, 'card') ?? ''}
+                      alt={featuredPost.featuredImage.alt || featuredPost.title}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 66vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                      priority
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-rm-creamSoft" />
+                  )}
+                  {featuredPost.category?.name && (
+                    <span className="absolute top-4 left-4 bg-rm-cream/95 border border-rm-ruleStrong text-rm-ochre font-sans text-[10px] tracking-[0.22em] uppercase px-3 py-1.5">
+                      {featuredPost.category.name}
+                    </span>
+                  )}
+                </div>
+                <div className="p-6 md:p-8 flex flex-col">
+                  <div className="flex items-center gap-3 font-mono text-[11px] tracking-wide text-rm-inkSoft/80 uppercase mb-4">
+                    {featuredPost.publishedAt && (
+                      <span>{formatDate(featuredPost.publishedAt, locale)}</span>
+                    )}
+                    {featuredPost.readingTime && (
+                      <>
+                        <span className="text-rm-ruleStrong">·</span>
+                        <span>
+                          {featuredPost.readingTime} {dict.blog.readingTime}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  <h2 className="font-display text-[28px] md:text-[34px] leading-[1.1] text-rm-teal tracking-[-0.01em] group-hover:text-rm-burgundy transition-colors">
+                    {featuredPost.title}
+                  </h2>
+                  {featuredPost.excerpt && (
+                    <p className="font-serif italic text-[16px] md:text-[17px] leading-[1.55] text-rm-inkSoft mt-4 line-clamp-3">
+                      {featuredPost.excerpt}
+                    </p>
+                  )}
+                  <span className="mt-6 font-sans text-sm font-semibold text-rm-burgundy inline-flex items-center gap-1.5">
+                    Lire l&apos;article
+                    <span aria-hidden="true">→</span>
+                  </span>
+                </div>
+              </Link>
+              </Reveal>
+
+              {/* Sidebar 1/3 — 2-3 latest (excluding featured) */}
+              <aside className="flex flex-col gap-6">
+                {posts
+                  .filter((p) => p.id !== featuredPost.id)
+                  .slice(0, 3)
+                  .map((post: any, sIdx: number) => (
+                    <Reveal key={post.id} delay={120 + sIdx * 100}>
+                    <Link
+                      href={`/${locale}/blog/${post.slug}`}
+                      className="group flex gap-4 bg-rm-paper border border-rm-rule p-4 hover:border-rm-ruleStrong transition-colors h-full"
+                    >
+                      <div className="relative w-24 h-24 shrink-0 bg-rm-creamSoft overflow-hidden border border-rm-rule">
+                        {post.featuredImage ? (
+                          <Image
+                            src={resolveMediaUrl(post.featuredImage, 'thumbnail') ?? ''}
+                            alt={post.featuredImage.alt || post.title}
+                            fill
+                            sizes="96px"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-rm-creamSoft" />
+                        )}
+                      </div>
+                      <div className="min-w-0 flex flex-col justify-center">
+                        {post.category?.name && (
+                          <span className="font-sans text-[10px] tracking-[0.22em] uppercase text-rm-ochre mb-1">
+                            {post.category.name}
+                          </span>
+                        )}
+                        <h3 className="font-display text-[17px] leading-[1.15] text-rm-teal line-clamp-2 group-hover:text-rm-burgundy transition-colors">
+                          {post.title}
+                        </h3>
+                        {post.readingTime && (
+                          <span className="font-mono text-[10px] tracking-wide text-rm-inkSoft/70 uppercase mt-2">
+                            {post.readingTime} {dict.blog.readingTime}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+                    </Reveal>
+                  ))}
+              </aside>
+            </div>
+          </section>
+        )}
+
+        {/* ─── Dotted separator ─── */}
+        <div className="border-t border-dashed border-rm-rule mb-12 md:mb-14" />
+
+        {/* ─── Grid — les autres articles ─── */}
+        {gridPosts.length > 0 ? (
+          <>
+            <Reveal className="flex items-center gap-2.5 mb-6">
+              <span className="block w-7 h-px bg-rm-burgundy" />
+              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+                Tous les articles
+              </span>
+            </Reveal>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+              {gridPosts.map((post: any, idx: number) => {
+                const num = String((currentPage - 1) * postsPerPage + idx + 1).padStart(3, '0')
+                return (
+                  <Reveal key={post.id} delay={(idx % 3) * 90}>
+                  <Link
+                    href={`/${locale}/blog/${post.slug}`}
+                    className="group bg-rm-paper border border-rm-rule overflow-hidden flex flex-col h-full hover:border-rm-ruleStrong transition-colors"
+                  >
+                    <div className="relative aspect-[4/3] bg-rm-creamSoft overflow-hidden">
+                      {post.featuredImage ? (
+                        <Image
+                          src={resolveMediaUrl(post.featuredImage, 'card') ?? ''}
+                          alt={post.featuredImage.alt || post.title}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-rm-creamSoft" />
+                      )}
+                      <span className="absolute top-3 left-3 font-mono text-[10px] tracking-[0.2em] uppercase text-rm-teal/70 bg-rm-cream/90 border border-rm-rule px-2 py-1">
+                        N° {num}
+                      </span>
+                      {post.category?.name && (
+                        <span className="absolute top-3 right-3 bg-rm-cream/95 border border-rm-ruleStrong text-rm-ochre font-sans text-[10px] tracking-[0.22em] uppercase px-2.5 py-1">
+                          {post.category.name}
+                        </span>
+                      )}
+                    </div>
+                    <div className="p-5 md:p-6 flex flex-col flex-1">
+                      <div className="font-mono text-[11px] tracking-wide text-rm-inkSoft/80 uppercase mb-3 flex items-center gap-2">
+                        {post.publishedAt && (
+                          <span>{formatDate(post.publishedAt, locale)}</span>
+                        )}
+                        {post.readingTime && (
+                          <>
+                            <span className="text-rm-ruleStrong">·</span>
+                            <span>
+                              {post.readingTime} {dict.blog.readingTime}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      <h3 className="font-display text-[22px] leading-[1.15] text-rm-teal tracking-[-0.01em] group-hover:text-rm-burgundy transition-colors line-clamp-2">
+                        {post.title}
+                      </h3>
+                      {post.excerpt && (
+                        <p className="font-serif italic text-[15px] leading-[1.55] text-rm-inkSoft mt-3 line-clamp-3">
+                          {post.excerpt}
+                        </p>
+                      )}
+                      <span className="mt-5 font-sans text-sm font-semibold text-rm-burgundy inline-flex items-center gap-1.5">
+                        {dict.blog.readMore}
+                        <span aria-hidden="true">→</span>
+                      </span>
+                    </div>
+                  </Link>
+                  </Reveal>
+                )
+              })}
+            </div>
+          </>
+        ) : (
+          /* ─── Empty state almanach ─── */
+          <div className="border border-dashed border-rm-ruleStrong bg-rm-paper p-10 md:p-16 text-center max-w-2xl mx-auto">
+            <div className="flex items-center justify-center gap-2.5 mb-5">
+              <span className="block w-7 h-px bg-rm-burgundy" />
+              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+                Le journal
+              </span>
+              <span className="block w-7 h-px bg-rm-burgundy" />
+            </div>
+            <h2 className="font-display text-[26px] md:text-[32px] text-rm-teal leading-[1.15]">
+              {isFiltered ? (
+                <>
+                  <em className="italic">Aucun article</em> pour ces critères
+                </>
+              ) : (
+                <>
+                  <em className="italic">Le cahier</em> est encore vierge
+                </>
+              )}
+            </h2>
+            <p className="font-serif italic text-[16px] leading-[1.55] text-rm-inkSoft mt-4">
+              {isFiltered
+                ? 'Essayez d’autres mots-clés ou une autre catégorie.'
+                : 'Aucun article n’a encore été publié. Revenez bientôt — le journal s’étoffe au fil des saisons.'}
+            </p>
+            {isFiltered ? (
+              <Link
+                href={`/${locale}/blog`}
+                className="inline-block mt-6 font-sans text-sm font-semibold text-rm-burgundy underline underline-offset-4 decoration-1 hover:text-rm-teal transition-colors"
+              >
+                Effacer les filtres →
+              </Link>
+            ) : (
+              <Link
+                href={`/${locale}/plantes`}
+                className="inline-flex items-center gap-2 mt-8 font-sans text-sm font-semibold bg-rm-burgundy text-white px-6 py-3 hover:bg-rm-burgundy/90 transition-colors"
+              >
+                Parcourir les plantes
+                <span aria-hidden="true">→</span>
+              </Link>
+            )}
+          </div>
+        )}
+
+        {/* ─── Pagination ─── */}
         {(totalPages ?? 1) > 1 && (
-          <nav className="mt-12 flex justify-center items-center gap-2" aria-label="Pagination">
-            {/* Previous arrow */}
+          <nav
+            className="mt-16 flex justify-center items-center gap-3 border-t border-dashed border-rm-rule pt-10"
+            aria-label="Pagination"
+          >
             {currentPage > 1 ? (
               <Link
-                href={`/${locale}/blog?page=${currentPage - 1}${categoryParam ? `&category=${categoryParam}` : ''}`}
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-[#DCD8C7] text-[#712E2F] hover:bg-[#FFF5D5] hover:border-[#A2211E] hover:text-[#A2211E] transition-colors"
+                href={buildUrl({ page: String(currentPage - 1) })}
+                className="w-10 h-10 flex items-center justify-center border border-rm-ruleStrong text-rm-teal hover:bg-rm-paper hover:border-rm-burgundy hover:text-rm-burgundy transition-colors"
                 aria-label="Page précédente"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
               </Link>
             ) : (
-              <span className="w-10 h-10 flex items-center justify-center rounded-full border border-[#DCD8C7] text-[#DCD8C7] cursor-not-allowed">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <span className="w-10 h-10 flex items-center justify-center border border-rm-rule text-rm-ruleStrong cursor-not-allowed">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
               </span>
             )}
 
-            {/* Page numbers */}
             {Array.from({ length: totalPages ?? 1 }, (_, i) => i + 1).map((pageNum) => (
               <Link
                 key={pageNum}
-                href={`/${locale}/blog?page=${pageNum}${categoryParam ? `&category=${categoryParam}` : ''}`}
-                className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-medium transition-colors ${
+                href={buildUrl({ page: pageNum === 1 ? null : String(pageNum) })}
+                className={`min-w-10 h-10 px-3 flex items-center justify-center font-mono text-sm transition-colors ${
                   pageNum === currentPage
-                    ? 'bg-[#A2211E] text-white'
-                    : 'border border-[#DCD8C7] text-[#712E2F] hover:bg-[#FFF5D5] hover:border-[#A2211E] hover:text-[#A2211E]'
+                    ? 'bg-rm-burgundy text-white border border-rm-burgundy'
+                    : 'border border-rm-ruleStrong text-rm-teal hover:bg-rm-paper hover:border-rm-burgundy hover:text-rm-burgundy'
                 }`}
               >
                 {pageNum}
               </Link>
             ))}
 
-            {/* Next arrow */}
             {currentPage < (totalPages ?? 1) ? (
               <Link
-                href={`/${locale}/blog?page=${currentPage + 1}${categoryParam ? `&category=${categoryParam}` : ''}`}
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-[#DCD8C7] text-[#712E2F] hover:bg-[#FFF5D5] hover:border-[#A2211E] hover:text-[#A2211E] transition-colors"
+                href={buildUrl({ page: String(currentPage + 1) })}
+                className="w-10 h-10 flex items-center justify-center border border-rm-ruleStrong text-rm-teal hover:bg-rm-paper hover:border-rm-burgundy hover:text-rm-burgundy transition-colors"
                 aria-label="Page suivante"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               </Link>
             ) : (
-              <span className="w-10 h-10 flex items-center justify-center rounded-full border border-[#DCD8C7] text-[#DCD8C7] cursor-not-allowed">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <span className="w-10 h-10 flex items-center justify-center border border-rm-rule text-rm-ruleStrong cursor-not-allowed">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               </span>

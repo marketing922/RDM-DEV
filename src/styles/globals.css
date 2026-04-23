@@ -1,32 +1,51 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@layer base {
-  :root {
-    --brand: #A2211E;
-    --brand-dark: #712E2F;
-    --page-bg: #FEF9E9;
-    --card-bg: #DCD8C7;
-    --radius: 8px;
-  }
+@theme {
+  /* ── Remèdes de Mamie — almanach tokens (Tailwind v4) ── */
+  --color-rm-burgundy: #A2211E;
+  --color-rm-teal: #054A57;
+  --color-rm-cream: #FEF9E9;
+  --color-rm-creamSoft: #FFF5D5;
+  --color-rm-paper: #FBF6E2;
+  --color-rm-stone: #DCD8C7;
+  --color-rm-ochre: #D0802C;
+  --color-rm-ink: #1F2937;
+  --color-rm-inkSoft: #5A4F45;
+  --color-rm-rule: #E8E1C9;
+  --color-rm-ruleStrong: #C9C2AA;
 
+  /* Legacy brand aliases (kept for pages still using them) */
+  --color-brand: #A2211E;
+  --color-brand-dark: #712E2F;
+  --color-brand-light: #FEF2F2;
+  --color-page: #FEF9E9;
+  --color-card: #DCD8C7;
+
+  /* Font families — indirect through --ff-* set by next/font */
+  --font-display: var(--ff-display), Georgia, serif;
+  --font-serif: var(--ff-serif), Georgia, serif;
+  --font-sans: var(--ff-sans), system-ui, sans-serif;
+  --font-mono: var(--ff-mono), ui-monospace, monospace;
+  --font-heading: var(--ff-display), Georgia, serif;
+  --font-body: var(--ff-serif), Georgia, serif;
+  --font-ui: var(--ff-sans), system-ui, sans-serif;
+}
+
+@layer base {
   html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
   body {
-    background-color: var(--page-bg);
-    color: #1F2937;
-    font-family: var(--font-lora), Georgia, serif;
+    background-color: var(--color-rm-cream);
+    color: var(--color-rm-ink);
+    font-family: var(--ff-serif), Georgia, serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  h1, h2, h3, h4, h5, h6 { font-family: var(--font-poppins), system-ui, sans-serif; }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--ff-display), Georgia, serif;
+  }
 
-  /* iOS HIG: focus visible */
-  :focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-
-  /* iOS HIG: touch targets */
-  button, a, input, select, textarea { min-height: 44px; }
-
-  /* Selection */
+  :focus-visible { outline: 2px solid var(--color-rm-burgundy); outline-offset: 2px; }
   ::selection { background: rgba(162, 33, 30, 0.15); }
 }
 
@@ -35,4 +54,3 @@
     @apply mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8;
   }
 }
-

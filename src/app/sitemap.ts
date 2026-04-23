@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { getWikiEntries, getBlogPosts, getBenefits } from '@/lib/queries'
+import { getWikiEntries, getBlogPosts, getBenefits, getProducts } from '@/lib/queries'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://remedes-mamie.com'
 
@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Static pages
   const staticPages = [
-    '', '/plantes', '/blog', '/bienfaits',
+    '', '/plantes', '/blog', '/bienfaits', '/produits',
     '/contact', '/faq', '/a-propos',
     '/mentions-legales', '/cgv', '/politique-confidentialite',
     '/politique-cookies', '/avertissement-sante', '/accessibilite',
@@ -24,11 +24,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   )
 
   // Dynamic pages from Payload
-  const [wiki, blog, benefits] = await Promise.all([
+  const [wiki, blog, benefits, products] = await Promise.all([
     getWikiEntries({ limit: 500, locale: 'fr' }),
     getBlogPosts({ limit: 500, locale: 'fr' }),
     getBenefits({ limit: 500, locale: 'fr' }),
+    getProducts({ limit: 500, locale: 'fr' }),
   ])
+
+  const productEntries = locales.flatMap((locale) =>
+    products.docs.map((p: any) => ({
+      url: `${siteUrl}/${locale}/produits/${p.slug}`,
+      lastModified: new Date(p.updatedAt || p.createdAt),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    })),
+  )
 
   const wikiEntries = locales.flatMap((locale) =>
     wiki.docs.map((w: any) => ({
@@ -62,5 +72,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...wikiEntries,
     ...blogEntries,
     ...benefitEntries,
+    ...productEntries,
   ]
 }

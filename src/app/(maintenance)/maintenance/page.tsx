@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
+import { siteMetadataBase } from '@/lib/metadata'
 
 export const metadata: Metadata = {
+  metadataBase: siteMetadataBase(),
   title: 'Site en maintenance — Les Remèdes de Mamie',
   description: 'Notre site est en cours de maintenance. Nous revenons très bientôt.',
 }

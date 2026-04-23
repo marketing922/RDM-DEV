@@ -6,6 +6,9 @@ export const gatePublishCompliance: CollectionBeforeChangeHook = async ({
   req,
   operation,
 }) => {
+  // Escape hatch: bulk operations with reviewed content can opt out
+  if ((req.context as any)?.skipCompliance) return data
+
   // Only check when trying to publish
   if (data?.status !== 'published') return data
 

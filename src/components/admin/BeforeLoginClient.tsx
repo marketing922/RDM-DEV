@@ -121,23 +121,22 @@ const BeforeLoginClient: React.FC<BeforeLoginClientProps> = ({
 
       <div
         style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '64px',
-          height: '64px',
-          backgroundColor: '#A2211E',
-          borderRadius: '50%',
+          display: 'inline-block',
           marginBottom: '18px',
           opacity: titleVisible ? 1 : 0,
-          transform: titleVisible ? 'scale(1) rotate(0deg)' : 'scale(0.6) rotate(-45deg)',
+          transform: titleVisible ? 'scale(1)' : 'scale(0.9) translateY(8px)',
           transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)',
-          boxShadow: '0 8px 20px rgba(162, 33, 30, 0.25)',
           position: 'relative',
           zIndex: 1,
         }}
       >
-        <Leaf size={32} color="#FEF9E9" />
+        <img
+          src="/assets/brand/rm-logo.png"
+          alt="Les Remèdes de Mamie"
+          width={180}
+          height={129}
+          style={{ width: 180, height: 'auto', objectFit: 'contain', display: 'block' }}
+        />
       </div>
 
       <h1

@@ -1,0 +1,1327 @@
+/* =============================================================
+   Les Remèdes de Mamie — Admin Theme
+   Palette: burgundy #A2211E · teal #054A57 · cream #FEF9E9
+   ============================================================= */
+
+:root {
+  --rdm-burgundy: #A2211E;
+  --rdm-burgundy-hover: #712E2F;
+  --rdm-burgundy-soft: rgba(162, 33, 30, 0.08);
+  --rdm-teal: #054A57;
+  --rdm-orange: #D0802C;
+  --rdm-cream: #FEF9E9;
+  --rdm-cream-soft: #FFF5D5;
+  --rdm-border: #DCD8C7;
+  --rdm-text: #1F2937;
+  --rdm-text-muted: #6B7280;
+
+  /* Payload theme variables */
+  --theme-elevation-0: #FEF9E9;
+  --theme-elevation-50: #FFF5D5;
+  --theme-elevation-100: #ffffff;
+  --theme-elevation-150: #ffffff;
+  --theme-elevation-200: #ffffff;
+  --theme-elevation-250: #FBF6E2;
+  --theme-elevation-300: #F3EEDC;
+  --theme-elevation-350: #E8E3D0;
+  --theme-elevation-400: #DCD8C7;
+  --theme-elevation-450: #c9c4b2;
+  --theme-elevation-500: #A89D82;
+  --theme-elevation-600: #6B7280;
+  --theme-elevation-650: #4B5563;
+  --theme-elevation-700: #374151;
+  --theme-elevation-750: #1F2937;
+  --theme-elevation-800: #111827;
+  --theme-elevation-850: #0A0F1A;
+  --theme-elevation-900: #050810;
+  --theme-elevation-950: #000000;
+  --theme-elevation-1000: #000000;
+
+  --theme-success-50: #ECFDF5;
+  --theme-success-100: #D1FAE5;
+  --theme-success-500: #10B981;
+  --theme-success-600: #059669;
+
+  --theme-error-50: #FEF2F2;
+  --theme-error-100: #FEE2E2;
+  --theme-error-500: #EF4444;
+  --theme-error-600: #B91C1C;
+
+  --theme-warning-50: #FEF9E9;
+  --theme-warning-100: #FEF3C7;
+  --theme-warning-500: #D0802C;
+  --theme-warning-600: #92400E;
+
+  --theme-baseline: 20;
+  --theme-bg: var(--rdm-cream);
+}
+
+/* =============================================================
+   Typography
+   ============================================================= */
+body,
+.payload__body {
+  background-color: var(--rdm-cream) !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  color: var(--rdm-text);
+}
+
+h1, h2, h3, h4, h5, h6,
+.list-header h1, .doc-header h1, .step-nav h1 {
+  color: var(--rdm-teal);
+  letter-spacing: -0.01em;
+}
+
+.field-label,
+.field-type label,
+label {
+  color: var(--rdm-teal) !important;
+  font-weight: 600 !important;
+  font-size: 12.5px !important;
+  letter-spacing: 0.02em;
+}
+
+/* =============================================================
+   Top header bar (step-nav / breadcrumbs)
+   ============================================================= */
+.app-header,
+.step-nav,
+.doc-header,
+.list-header {
+  background-color: #FFFFFF !important;
+  border-bottom: 1px solid var(--rdm-border) !important;
+}
+
+.step-nav a,
+.step-nav__link {
+  color: var(--rdm-teal) !important;
+  font-weight: 500 !important;
+}
+
+.step-nav a:hover {
+  color: var(--rdm-burgundy) !important;
+}
+
+.doc-breadcrumbs a,
+.breadcrumbs a {
+  color: var(--rdm-burgundy) !important;
+  text-decoration: none;
+}
+
+.doc-breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+/* =============================================================
+   Buttons
+   ============================================================= */
+.btn,
+button.btn {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em;
+  transition: transform 0.12s ease, box-shadow 0.15s ease, background-color 0.15s ease !important;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn--style-primary,
+button.btn--style-primary {
+  background-color: var(--rdm-burgundy) !important;
+  border-color: var(--rdm-burgundy) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(162, 33, 30, 0.20);
+}
+
+.btn--style-primary:hover {
+  background-color: var(--rdm-burgundy-hover) !important;
+  border-color: var(--rdm-burgundy-hover) !important;
+  box-shadow: 0 6px 18px rgba(162, 33, 30, 0.28);
+}
+
+.btn--style-secondary {
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--rdm-border) !important;
+  color: var(--rdm-teal) !important;
+}
+
+.btn--style-secondary:hover {
+  background-color: var(--rdm-cream-soft) !important;
+  border-color: var(--rdm-teal) !important;
+}
+
+.btn--style-error {
+  background-color: transparent !important;
+  border: 1px solid #EF4444 !important;
+  color: #B91C1C !important;
+}
+
+.btn--style-error:hover {
+  background-color: #FEF2F2 !important;
+}
+
+/* =============================================================
+   Inputs / selects / textareas — visible, tactile, clear borders
+   Payload uses classNamePrefix "rs" (NOT "react-select") for selects.
+   ============================================================= */
+.field-type > input[type='text'],
+.field-type > input[type='email'],
+.field-type > input[type='password'],
+.field-type > input[type='number'],
+.field-type > input[type='url'],
+.field-type > input[type='date'],
+.field-type > input[type='datetime-local'],
+.field-type input[type='text']:not(.rs__input):not([class*='rs__']),
+.field-type input[type='email']:not(.rs__input):not([class*='rs__']),
+.field-type input[type='password']:not(.rs__input):not([class*='rs__']),
+.field-type input[type='number']:not(.rs__input):not([class*='rs__']),
+.field-type input[type='url']:not(.rs__input):not([class*='rs__']),
+.field-type input[type='date']:not(.rs__input):not([class*='rs__']),
+.field-type input[type='datetime-local']:not(.rs__input):not([class*='rs__']),
+.field-type textarea {
+  background-color: #FFFFFF !important;
+  border: 1.5px solid #C9C4B2 !important;
+  border-radius: 8px !important;
+  color: var(--rdm-text) !important;
+  padding: 10px 12px !important;
+  font-size: 14px !important;
+  min-height: 42px !important;
+  box-shadow: inset 0 1px 2px rgba(5, 74, 87, 0.03) !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease !important;
+}
+
+/* React-select internal input must NEVER get the outer input styling — it's a
+   pure typing layer inside the select control */
+.rs__input,
+.rs__input input,
+input.rs__input,
+.rs__input-container input {
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+  color: var(--rdm-text) !important;
+}
+
+.rs__input:focus,
+.rs__input input:focus,
+.rs__input-container input:focus {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+textarea {
+  min-height: 80px !important;
+  padding: 12px !important;
+  line-height: 1.5 !important;
+}
+
+.field-type input[type='text']:hover,
+.field-type input[type='email']:hover,
+.field-type input[type='password']:hover,
+.field-type input[type='number']:hover,
+.field-type input[type='url']:hover,
+.field-type textarea:hover {
+  border-color: var(--rdm-teal) !important;
+  background-color: #FFFFFF !important;
+}
+
+.field-type input[type='text']:focus,
+.field-type input[type='email']:focus,
+.field-type input[type='password']:focus,
+.field-type input[type='number']:focus,
+.field-type input[type='url']:focus,
+.field-type input[type='date']:focus,
+.field-type input[type='datetime-local']:focus,
+.field-type textarea:focus,
+input:focus,
+textarea:focus {
+  border-color: var(--rdm-burgundy) !important;
+  box-shadow: 0 0 0 3px rgba(162, 33, 30, 0.12), inset 0 1px 2px rgba(5, 74, 87, 0.03) !important;
+  outline: none !important;
+  background-color: #FFFFFF !important;
+}
+
+/* =============================================================
+   React-select (Payload prefix "rs") — relationships, multi-select
+   ============================================================= */
+.rs__control {
+  background-color: #FFFFFF !important;
+  border: 1.5px solid #C9C4B2 !important;
+  border-radius: 8px !important;
+  min-height: 44px !important;
+  padding-left: 38px !important;
+  box-shadow: inset 0 1px 2px rgba(5, 74, 87, 0.03) !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23054A57' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.3-4.3'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: 14px center !important;
+  background-size: 16px 16px !important;
+}
+
+.rs__control:hover {
+  border-color: var(--rdm-teal) !important;
+  background-color: #FFFFFF !important;
+}
+
+.rs__control--is-focused,
+.rs__control--menu-is-open {
+  border-color: var(--rdm-burgundy) !important;
+  box-shadow: 0 0 0 3px rgba(162, 33, 30, 0.12), inset 0 1px 2px rgba(5, 74, 87, 0.03) !important;
+  background-color: #FFFFFF !important;
+}
+
+.rs__value-container {
+  padding: 2px 12px !important;
+  background-color: transparent !important;
+}
+
+.rs__input-container,
+.rs__input {
+  color: var(--rdm-text) !important;
+  background-color: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.rs__placeholder {
+  color: #9CA3AF !important;
+  font-size: 14px !important;
+}
+
+.rs__single-value {
+  color: var(--rdm-text) !important;
+}
+
+.rs__multi-value {
+  background-color: var(--rdm-cream-soft) !important;
+  border: 1px solid var(--rdm-border) !important;
+  border-radius: 6px !important;
+  margin: 2px 4px 2px 0 !important;
+}
+
+.rs__multi-value__label {
+  color: var(--rdm-teal) !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  padding: 3px 6px !important;
+}
+
+.rs__multi-value__remove {
+  color: var(--rdm-burgundy) !important;
+  border-radius: 0 6px 6px 0 !important;
+}
+
+.rs__multi-value__remove:hover {
+  background-color: var(--rdm-burgundy) !important;
+  color: #FFFFFF !important;
+}
+
+.rs__indicators {
+  background-color: transparent !important;
+}
+
+.rs__indicator,
+.rs__dropdown-indicator,
+.rs__clear-indicator {
+  color: var(--rdm-text-muted) !important;
+  padding: 6px !important;
+}
+
+.rs__indicator:hover {
+  color: var(--rdm-burgundy) !important;
+}
+
+.rs__indicator-separator {
+  background-color: var(--rdm-border) !important;
+}
+
+.rs__menu {
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--rdm-border) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 24px rgba(5, 74, 87, 0.12) !important;
+  overflow: hidden;
+  margin-top: 4px !important;
+  z-index: 50;
+}
+
+.rs__option {
+  background-color: #FFFFFF !important;
+  color: var(--rdm-text) !important;
+  padding: 10px 14px !important;
+  cursor: pointer;
+}
+
+.rs__option--is-focused {
+  background-color: var(--rdm-cream-soft) !important;
+  color: var(--rdm-teal) !important;
+}
+
+.rs__option--is-selected {
+  background-color: var(--rdm-burgundy) !important;
+  color: #FFFFFF !important;
+}
+
+/* "+" add button next to relationship selects */
+.relationship__add-new,
+.relationship-add-new__add-button,
+.relationship__wrap > button,
+button.relationship__add-new-button {
+  background-color: #FFFFFF !important;
+  border: 1.5px solid #C9C4B2 !important;
+  border-radius: 8px !important;
+  color: var(--rdm-teal) !important;
+  min-height: 42px !important;
+  min-width: 42px !important;
+  padding: 0 14px !important;
+  transition: border-color 0.15s ease, background-color 0.15s ease !important;
+}
+
+.relationship__add-new:hover,
+.relationship-add-new__add-button:hover {
+  background-color: var(--rdm-cream-soft) !important;
+  border-color: var(--rdm-teal) !important;
+}
+
+/* Placeholder color for standard inputs */
+.field-type input::placeholder,
+.field-type textarea::placeholder,
+input::placeholder,
+textarea::placeholder {
+  color: #9CA3AF !important;
+  opacity: 1 !important;
+}
+
+.react-select__option--is-focused {
+  background-color: var(--rdm-cream-soft) !important;
+}
+
+.react-select__option--is-selected {
+  background-color: var(--rdm-burgundy) !important;
+  color: #FFFFFF !important;
+}
+
+/* =============================================================
+   Tables (list views)
+   ============================================================= */
+.collection-list,
+.list-view,
+.default-cell {
+  background-color: transparent;
+}
+
+.table table,
+table.table {
+  background-color: #FFFFFF !important;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--rdm-border);
+  box-shadow: 0 2px 8px rgba(5, 74, 87, 0.04);
+}
+
+.table th,
+table thead th {
+  background-color: var(--rdm-cream-soft) !important;
+  color: var(--rdm-teal) !important;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--rdm-border) !important;
+}
+
+.table td,
+table tbody td {
+  border-bottom: 1px solid var(--rdm-border) !important;
+  padding: 12px 14px !important;
+}
+
+.table tbody tr:hover,
+table tbody tr:hover {
+  background-color: var(--rdm-cream) !important;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none !important;
+}
+
+/* Pagination */
+.paginator__button {
+  border-radius: 8px !important;
+  border: 1px solid var(--rdm-border) !important;
+  background-color: #FFFFFF !important;
+}
+
+.paginator__button--active {
+  background-color: var(--rdm-burgundy) !important;
+  color: #FFFFFF !important;
+  border-color: var(--rdm-burgundy) !important;
+}
+
+/* =============================================================
+   Tabs
+   ============================================================= */
+.tabs-field__tab-button {
+  color: var(--rdm-text-muted) !important;
+  font-weight: 500 !important;
+  border-bottom: 2px solid transparent !important;
+  transition: color 0.15s ease, border-color 0.15s ease !important;
+}
+
+.tabs-field__tab-button:hover {
+  color: var(--rdm-teal) !important;
+}
+
+.tabs-field__tab-button--active {
+  color: var(--rdm-burgundy) !important;
+  border-bottom-color: var(--rdm-burgundy) !important;
+  font-weight: 600 !important;
+}
+
+/* =============================================================
+   Cards / sections / collapsible — handled more precisely below.
+   This legacy broad rule has been removed because it was stacking
+   borders/backgrounds on every internal wrapper (.blocks-field__rows,
+   .collapsible__content, .group-field__content, ...) creating nested
+   boxes that mixed the hierarchy. Cards are now applied only to
+   root-level .tabs-field and top-level group/array/blocks fields,
+   and nested collapsibles inherit their parent's surface. */
+
+/* .collapsible__toggle is the invisible overlay button that makes the
+   whole header clickable — Payload keeps it `color: transparent` so the
+   aria-text "Toggle Block" is available to screen readers but not visible.
+   DO NOT override its color. We only style the row-toggler (custom groups). */
+.collapsible-field__row-toggler {
+  color: var(--rdm-teal) !important;
+  font-weight: 600 !important;
+}
+
+/* =============================================================
+   Pills / badges / chips
+   ============================================================= */
+.pill {
+  background-color: var(--rdm-cream-soft) !important;
+  color: var(--rdm-teal) !important;
+  border: 1px solid var(--rdm-border) !important;
+  border-radius: 999px !important;
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em;
+}
+
+.pill--has-link:hover {
+  background-color: #FFFFFF !important;
+  border-color: var(--rdm-burgundy) !important;
+  color: var(--rdm-burgundy) !important;
+}
+
+.status__label,
+.status--published {
+  background-color: #ECFDF5 !important;
+  color: #065F46 !important;
+}
+
+.status--draft {
+  background-color: var(--rdm-cream-soft) !important;
+  color: var(--rdm-orange) !important;
+}
+
+/* =============================================================
+   Modals / drawers
+   ============================================================= */
+.drawer__content,
+.modal__content,
+.document-drawer__content {
+  background-color: var(--rdm-cream) !important;
+  border-radius: 16px !important;
+}
+
+.drawer__header,
+.modal__header {
+  background-color: #FFFFFF !important;
+  border-bottom: 1px solid var(--rdm-border) !important;
+}
+
+/* =============================================================
+   Login page
+   ============================================================= */
+.login {
+  background: linear-gradient(135deg, var(--rdm-cream) 0%, var(--rdm-cream-soft) 60%, #F5ECCB 100%) !important;
+  min-height: 100vh;
+  padding: 32px 16px !important;
+}
+
+/* Brand natif caché — on a notre BeforeLogin */
+.login__brand,
+.create-first-user__brand {
+  display: none !important;
+}
+
+/* Carte unique: englobe BeforeLogin + formulaire dans un seul bloc */
+.login__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0 !important;
+  width: 80vw !important;
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--rdm-border) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 20px 48px rgba(162, 33, 30, 0.10), 0 6px 16px rgba(5, 74, 87, 0.05) !important;
+  overflow: hidden;
+}
+
+/* Formulaire : fait partie intégrante de la carte, pas de bordure/ombre propre */
+.login__form-wrap,
+.login__form {
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 32px 40px 36px !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Labels teal */
+.login .field-label,
+.login label,
+.login__form label {
+  color: var(--rdm-teal) !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  letter-spacing: 0.02em;
+  margin-bottom: 6px !important;
+}
+
+/* Asterisque requis en orange brand au lieu du rouge brut */
+.login .required,
+.login__form .required {
+  color: var(--rdm-orange) !important;
+  margin-left: 2px;
+}
+
+/* Inputs login — padding généreux + focus brand */
+.login input[type='text'],
+.login input[type='email'],
+.login input[type='password'],
+.login__form input[type='text'],
+.login__form input[type='email'],
+.login__form input[type='password'] {
+  background-color: var(--rdm-cream) !important;
+  border: 1px solid var(--rdm-border) !important;
+  border-radius: 10px !important;
+  padding: 12px 14px !important;
+  font-size: 14px !important;
+  color: var(--rdm-text) !important;
+  height: auto !important;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease !important;
+}
+
+.login input[type='text']:focus,
+.login input[type='email']:focus,
+.login input[type='password']:focus,
+.login__form input[type='text']:focus,
+.login__form input[type='email']:focus,
+.login__form input[type='password']:focus {
+  background-color: #FFFFFF !important;
+  border-color: var(--rdm-burgundy) !important;
+  box-shadow: 0 0 0 3px rgba(162, 33, 30, 0.12) !important;
+  outline: none !important;
+}
+
+/* Lien "Forgot password?" en brand */
+.login a,
+.login__form a,
+.login-field__forgot-password,
+a.login-field__forgot-password {
+  color: var(--rdm-burgundy) !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  text-decoration: none !important;
+  transition: color 0.15s ease !important;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.login a:hover,
+.login__form a:hover,
+.login-field__forgot-password:hover {
+  color: var(--rdm-burgundy-hover) !important;
+  text-decoration: underline !important;
+}
+
+/* Bouton Login — pleine largeur, shadow brand */
+.login .btn--style-primary,
+.login__form .btn--style-primary,
+.login__form button[type='submit'] {
+  width: 100% !important;
+  padding: 14px 20px !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  margin-top: 12px !important;
+  background-color: var(--rdm-burgundy) !important;
+  border-color: var(--rdm-burgundy) !important;
+  box-shadow: 0 6px 18px rgba(162, 33, 30, 0.22) !important;
+}
+
+.login .btn--style-primary:hover,
+.login__form .btn--style-primary:hover,
+.login__form button[type='submit']:hover {
+  background-color: var(--rdm-burgundy-hover) !important;
+  border-color: var(--rdm-burgundy-hover) !important;
+  box-shadow: 0 8px 22px rgba(162, 33, 30, 0.30) !important;
+  transform: translateY(-1px);
+}
+
+/* Champ : espacement vertical */
+.login .field-type,
+.login__form .field-type {
+  margin-bottom: 16px !important;
+}
+
+.login .field-type:last-of-type,
+.login__form .field-type:last-of-type {
+  margin-bottom: 0 !important;
+}
+
+/* =============================================================
+   Checkboxes / radios
+   ============================================================= */
+.checkbox-input__input,
+.radio-input__input {
+  accent-color: var(--rdm-burgundy);
+}
+
+.checkbox-input--checked .checkbox-input__icon,
+.radio-input--checked .radio-input__icon {
+  background-color: var(--rdm-burgundy) !important;
+  border-color: var(--rdm-burgundy) !important;
+}
+
+/* =============================================================
+   Toasts / notifications
+   ============================================================= */
+.payload-toast-item {
+  border-radius: 12px !important;
+  border: 1px solid var(--rdm-border) !important;
+  box-shadow: 0 10px 28px rgba(5, 74, 87, 0.10) !important;
+}
+
+.payload-toast-item[data-type='success'] {
+  background-color: #ECFDF5 !important;
+  color: #065F46 !important;
+}
+
+.payload-toast-item[data-type='error'] {
+  background-color: #FEF2F2 !important;
+  color: #B91C1C !important;
+}
+
+/* =============================================================
+   Scrollbars (subtle brand touch)
+   ============================================================= */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--rdm-cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--rdm-border);
+  border-radius: 8px;
+  border: 2px solid var(--rdm-cream);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--rdm-burgundy);
+}
+
+/* =============================================================
+   Misc polish
+   ============================================================= */
+.doc-controls__controls .btn {
+  min-height: 40px;
+}
+
+.collection-list__header,
+.list-controls {
+  background-color: transparent !important;
+}
+
+/* Masquer le toggler natif Payload — remplacé par nos boutons custom dans Nav.tsx */
+.nav-toggler,
+button.nav-toggler,
+.app-header__mobile-nav-toggler {
+  display: none !important;
+}
+
+.rich-text-lexical,
+.lexical-editor__container {
+  background-color: #FFFFFF !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--rdm-border) !important;
+}
+
+/* =============================================================
+   Content containers — max-width + centered
+   ============================================================= */
+
+/* Main template wrap: generous padding, never edge-to-edge on wide screens */
+.template-default__wrap,
+.template-minimal__wrap {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* List view: single constraint on the outer wrap */
+.collection-list {
+  max-width: 1280px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 24px 44px !important;
+  box-sizing: border-box;
+}
+
+/* List header: native Payload 3 layout has
+   .list-header > .list-header__content > .list-header__title-and-actions
+   (flex row with h1.list-header__title + .list-header__title-actions wrapper).
+   We push the actions wrapper to the right end of that flex row + down a bit. */
+.list-header {
+  padding: 0 !important;
+  margin-bottom: 18px !important;
+}
+
+.list-header__title,
+.list-header h1 {
+  margin: 0 !important;
+  font-size: 26px !important;
+  font-weight: 700 !important;
+  color: var(--rdm-teal) !important;
+}
+
+/* The wrapper holding the Create New button (sibling of the h1 title).
+   margin-left: auto pushes it to the far right of the 1fr column.
+   margin-top: 14px drops it below the title baseline visually. */
+.list-header__title-actions {
+  margin-left: auto !important;
+  margin-top: 14px !important;
+  margin-bottom: 0 !important;
+}
+
+/* The Create New button (a.btn.btn--style-pill, inside __title-actions)
+   SCOPED to the list header only — otherwise it leaks onto any <a> pointing
+   to a /create URL (e.g. dashboard quick-action cards). */
+.list-header__title-actions .btn,
+.list-header__title-actions a,
+.list-header .list-create-new-doc__create-new-button {
+  background-color: var(--rdm-burgundy) !important;
+  color: #FFFFFF !important;
+  padding: 10px 20px !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  letter-spacing: 0.01em;
+  text-decoration: none !important;
+  border: 1px solid var(--rdm-burgundy) !important;
+  box-shadow: 0 3px 10px rgba(162, 33, 30, 0.20) !important;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease !important;
+  white-space: nowrap;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px;
+  height: auto !important;
+  min-height: unset !important;
+  line-height: 1.2 !important;
+}
+
+.list-header__title-actions .btn:hover,
+.list-header__title-actions a:hover,
+.list-header .list-create-new-doc__create-new-button:hover {
+  background-color: var(--rdm-burgundy-hover) !important;
+  border-color: var(--rdm-burgundy-hover) !important;
+  box-shadow: 0 5px 14px rgba(162, 33, 30, 0.28) !important;
+  transform: translateY(-1px);
+  color: #FFFFFF !important;
+}
+
+/* =============================================================
+   Edit / Create view — structural polish
+   ============================================================= */
+
+/* Full-width bars (header, controls) keep their native layout, but their
+   content is centered in a 1200px column via symmetric side padding. */
+.doc-header,
+.doc-controls {
+  padding-left: max(28px, calc((100% - 1200px) / 2)) !important;
+  padding-right: max(28px, calc((100% - 1200px) / 2)) !important;
+}
+
+.collection-edit,
+.edit-upload {
+  padding: 0 !important;
+}
+
+/* Doc header */
+.doc-header {
+  padding-top: 18px !important;
+  padding-bottom: 12px !important;
+  background-color: transparent !important;
+  border-bottom: none !important;
+}
+
+.doc-header h1 {
+  font-size: 22px !important;
+  color: var(--rdm-teal) !important;
+  font-weight: 700 !important;
+  margin: 0 !important;
+}
+
+.doc-header p {
+  font-size: 13px !important;
+  color: var(--rdm-text-muted) !important;
+  margin: 4px 0 0 !important;
+}
+
+/* =============================================================
+   Doc controls — "Creating new X" + Save Draft + Publish changes
+   ============================================================= */
+.doc-controls {
+  background-color: #FFFFFF !important;
+  border-top: 1px solid var(--rdm-border) !important;
+  border-bottom: 1px solid var(--rdm-border) !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+.doc-controls__label,
+.doc-controls__content-left {
+  color: var(--rdm-teal) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
+
+/* Publish changes (primary) — burgundy brand, compact sizing */
+.doc-controls .btn--style-primary {
+  background-color: var(--rdm-burgundy) !important;
+  border-color: var(--rdm-burgundy) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 6px rgba(162, 33, 30, 0.18) !important;
+  padding: 7px 14px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  min-height: 0 !important;
+  line-height: 1.3 !important;
+}
+
+.doc-controls .btn--style-primary:hover {
+  background-color: var(--rdm-burgundy-hover) !important;
+  border-color: var(--rdm-burgundy-hover) !important;
+}
+
+/* Split-button variant (Button with SubMenuPopupContent) — Publish changes.
+   Payload renders <div class="btn--style-primary btn--withPopup"> containing
+   an inner <button> (no style class) + a chevron Popup. The outer div gets
+   our burgundy; the inner button & chevron must inherit transparent/white. */
+.doc-controls .btn--style-primary.btn--withPopup {
+  background-color: var(--rdm-burgundy) !important;
+  border: 1px solid var(--rdm-burgundy) !important;
+  border-radius: 8px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: stretch !important;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(162, 33, 30, 0.18) !important;
+}
+
+.doc-controls .btn--style-primary.btn--withPopup:hover {
+  background-color: var(--rdm-burgundy-hover) !important;
+  border-color: var(--rdm-burgundy-hover) !important;
+}
+
+/* Inner main button (Publish changes text) — transparent over burgundy */
+.doc-controls .btn--style-primary.btn--withPopup > button,
+.doc-controls .btn--style-primary.btn--withPopup > .btn,
+.doc-controls .btn--style-primary.btn--withPopup > a.btn {
+  background-color: transparent !important;
+  border: none !important;
+  color: #FFFFFF !important;
+  padding: 7px 14px !important;
+  border-radius: 0 !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  min-height: 0 !important;
+  line-height: 1.3 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+/* Chevron popup trigger button (dropdown arrow) */
+.doc-controls .btn--style-primary.btn--withPopup .popup-button,
+.doc-controls .btn--style-primary.btn--withPopup .popup button {
+  background-color: transparent !important;
+  border: none !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #FFFFFF !important;
+  border-radius: 0 !important;
+  padding: 0 10px !important;
+  box-shadow: none !important;
+}
+
+.doc-controls .btn--style-primary.btn--withPopup .popup-button:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Save Draft (secondary) — match sizing */
+.doc-controls .btn--style-secondary {
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--rdm-border) !important;
+  color: var(--rdm-teal) !important;
+  padding: 7px 14px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  min-height: 0 !important;
+  line-height: 1.3 !important;
+}
+
+.doc-controls .btn--style-secondary:hover {
+  background-color: var(--rdm-cream-soft) !important;
+  border-color: var(--rdm-teal) !important;
+}
+
+/* =============================================================
+   UNIFIED FORM CARDS — each top-level section = its own card
+   Applies to: the tabs block, and every root-level group/array/blocks
+   (e.g. the SEO meta group added by seoPlugin, richText blocks, etc.)
+   ============================================================= */
+
+/* Root-level render-fields: no card, just a flex/column wrapper.
+   Its direct children (tabs-field, groups, arrays) each become cards. */
+.collection-edit > form > .render-fields,
+.collection-edit > .render-fields,
+.edit-upload > form > .render-fields,
+.edit-upload > .render-fields {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 16px 28px 40px !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* The tabs-field card */
+.tabs-field {
+  margin: 0 !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--rdm-border) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 14px rgba(5, 74, 87, 0.05) !important;
+  overflow: hidden;
+}
+
+/* Root-level group/array/blocks fields (SEO meta, etc.) → each its own card.
+   Payload uses .group-field--top-level / .array-field--top-level modifiers.
+   Stronger border + shadow so the cards are clearly distinct from the page. */
+.group-field--top-level,
+.render-fields > .field-type.group-field,
+.render-fields > .field-type.array-field,
+.render-fields > .field-type.blocks-field,
+.render-fields > .field-type.collapsible-field {
+  margin: 0 !important;
+  padding: 24px 28px !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #C9C4B2 !important;
+  border-radius: 14px !important;
+  box-shadow: 0 6px 18px rgba(5, 74, 87, 0.07), 0 1px 3px rgba(5, 74, 87, 0.04) !important;
+}
+
+/* Block rows inside a blocks-field — visually distinct container per block */
+.blocks-field__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 16px !important;
+}
+
+.blocks-field__row,
+.blocks-field .collapsible--style-default {
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--rdm-border) !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.blocks-field__row:hover,
+.blocks-field .collapsible--style-default:hover {
+  border-color: #B0A992 !important;
+  box-shadow: 0 2px 8px rgba(5, 74, 87, 0.05) !important;
+}
+
+/* Block row content area (expanded fields) — clear padding, spacing */
+.blocks-field .collapsible__content {
+  padding: 18px 20px !important;
+  background-color: #FFFFFF !important;
+  border-top: 1px solid var(--rdm-border) !important;
+}
+
+.blocks-field .collapsible__content .field-type {
+  margin-bottom: 18px !important;
+}
+
+.blocks-field .collapsible__content .field-type:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Remove borders/backgrounds from nested render-fields wrappers so no
+   double boxing inside the block content */
+.blocks-field .collapsible__content .render-fields {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  gap: 0 !important;
+  display: block !important;
+}
+
+/* "Add Block" button at the bottom of the blocks field */
+.blocks-field__drawer-toggler,
+.blocks-field__add-button {
+  margin-top: 16px !important;
+}
+
+/* SEO meta group title ("SEO") */
+.group-field--top-level .group-field__title,
+.render-fields > .field-type.group-field .group-field__title {
+  color: var(--rdm-teal) !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  margin: 0 0 4px !important;
+}
+
+/* Wrap inside top-level group — no double bg */
+.group-field--top-level > .group-field__wrap,
+.render-fields > .field-type.group-field > .group-field__wrap {
+  padding: 0 !important;
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* NESTED group/array (inside tabs or inside another group) → soft cream */
+.group-field--within-tab:not(.group-field--top-level),
+.group-field--within-group,
+.array-field--within-tab,
+.array-field--within-group,
+.blocks-field--within-tab {
+  background-color: var(--rdm-cream) !important;
+  border: 1px solid var(--rdm-border) !important;
+  border-radius: 10px !important;
+  padding: 16px 18px !important;
+  margin-top: 0 !important;
+}
+
+/* Tabs bar = card header (flush top, cream bg, bottom border) */
+.tabs-field__tabs-wrap {
+  background-color: var(--rdm-cream) !important;
+  border-bottom: 1px solid var(--rdm-border) !important;
+  padding: 8px 12px !important;
+  margin: 0 !important;
+}
+
+.tabs-field__tabs {
+  display: flex !important;
+  gap: 2px !important;
+  padding: 0 !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  flex-wrap: wrap;
+  width: auto !important;
+  max-width: 100%;
+}
+
+.tabs-field__tab-button {
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  border: none !important;
+  background-color: transparent !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  color: var(--rdm-text-muted) !important;
+  transition: background-color 0.15s ease, color 0.15s ease !important;
+  white-space: nowrap;
+}
+
+.tabs-field__tab-button:hover {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  color: var(--rdm-teal) !important;
+  border-bottom: none !important;
+}
+
+.tabs-field__tab-button--active {
+  background-color: #FFFFFF !important;
+  color: var(--rdm-burgundy) !important;
+  font-weight: 600 !important;
+  border-bottom: none !important;
+  box-shadow: 0 1px 3px rgba(162, 33, 30, 0.10), 0 0 0 1px rgba(162, 33, 30, 0.08);
+}
+
+/* Content area below tabs = card body */
+.tabs-field__content-wrap {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 28px 32px !important;
+  margin: 0 !important;
+  max-width: none !important;
+}
+
+/* Render-fields INSIDE tabs — strip the inner card since .tabs-field already is one */
+.tabs-field .render-fields {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+  border-radius: 0 !important;
+}
+
+/* STANDALONE render-fields (collections without tabs, e.g. Pages) KEEP the card */
+.collection-edit > .render-fields,
+.edit-upload > .render-fields,
+.collection-edit > form > .render-fields,
+.edit-upload > form > .render-fields {
+  max-width: 1200px !important;
+  margin: 16px auto 40px !important;
+  padding: 28px 32px !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--rdm-border) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 4px 14px rgba(5, 74, 87, 0.05) !important;
+  box-sizing: border-box;
+}
+
+/* Field spacing */
+.render-fields .field-type {
+  margin-bottom: 20px !important;
+}
+
+.render-fields .field-type:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Dashboard/Account views */
+.dashboard,
+.account {
+  max-width: 1280px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 24px 28px !important;
+  box-sizing: border-box;
+}
+
+/* Breadcrumbs (step nav) — full-width bar, content centered in 1280px */
+.step-nav {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+  padding-left: max(28px, calc((100% - 1280px) / 2)) !important;
+  padding-right: max(28px, calc((100% - 1280px) / 2)) !important;
+}
+
+/* Search/filter controls bar: tighter spacing */
+.list-controls {
+  padding: 14px 16px !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--rdm-border) !important;
+  border-radius: 12px !important;
+  margin-bottom: 14px !important;
+  box-shadow: 0 2px 6px rgba(5, 74, 87, 0.03);
+}
+
+/* "Columns" / "Filters" buttons on list controls */
+.list-controls__buttons .btn,
+.list-controls .btn--style-pill {
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--rdm-border) !important;
+  color: var(--rdm-teal) !important;
+  border-radius: 8px !important;
+  padding: 7px 14px !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+}
+
+.list-controls__buttons .btn:hover,
+.list-controls .btn--style-pill:hover {
+  background-color: var(--rdm-cream-soft) !important;
+  border-color: var(--rdm-teal) !important;
+}
+
+/* Search input inside list-controls */
+.list-controls .search-filter input,
+.list-controls input[type='text'] {
+  background-color: var(--rdm-cream) !important;
+  border: 1px solid transparent !important;
+  padding: 10px 14px 10px 40px !important;
+  font-size: 14px !important;
+}
+
+.list-controls .search-filter input:focus,
+.list-controls input[type='text']:focus {
+  background-color: #FFFFFF !important;
+}
+
+/* Empty state ("No Results") — cleaner card */
+.collection-list .no-results,
+.not-found {
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--rdm-border) !important;
+  border-radius: 14px !important;
+  padding: 40px 32px !important;
+  text-align: left;
+  box-shadow: 0 2px 8px rgba(5, 74, 87, 0.04);
+}
+
+.collection-list .no-results h2,
+.not-found h2 {
+  font-size: 20px !important;
+  margin: 0 0 8px !important;
+}
+
+.collection-list .no-results p,
+.not-found p {
+  color: var(--rdm-text-muted) !important;
+  margin: 0 0 16px !important;
+}
+
+/* Per-page / pagination footer */
+.per-page {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  font-size: 13px !important;
+  color: var(--rdm-text-muted) !important;
+}

@@ -1,35 +1,35 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useNav } from '@payloadcms/ui'
+import { useNav, useAuth } from '@payloadcms/ui'
 import {
-  Leaf,
   Sprout,
   Heart,
   FileText,
   Package,
   File as FileIcon,
   Image as ImageIcon,
-  FolderTree,
-  Tag,
   Users,
   User,
   BookOpen,
-  ExternalLink,
-  LogOut,
-  ChevronDown,
-  ChevronRight,
-  ChevronLeft,
   LayoutDashboard,
+  Settings,
   PanelLeftOpen,
+  FileStack,
+  Menu,
+  PanelBottom,
 } from 'lucide-react'
+import { RM } from '@/components/admin/primitives/tokens'
 
 type NavItem = {
   id: string
-  name: string
-  icon: React.ComponentType<{ size?: number | string; color?: string }>
+  label: string
+  icon: React.ComponentType<{ width?: number | string; height?: number | string; style?: React.CSSProperties }>
   href: string
+  collection?: string
+  count?: number
 }
 
 type NavGroup = {
@@ -40,424 +40,309 @@ type NavGroup = {
 
 const navigationGroups: NavGroup[] = [
   {
-    id: 'content',
-    title: 'Contenu',
+    id: 'edition',
+    title: 'Édition',
     items: [
-      { id: 'plantes', name: 'Plantes', icon: Sprout, href: '/admin/collections/wikiEntries' },
-      { id: 'bienfaits', name: 'Bienfaits', icon: Heart, href: '/admin/collections/benefits' },
-      { id: 'articles', name: 'Articles', icon: FileText, href: '/admin/collections/blogPosts' },
-      { id: 'produits', name: 'Produits', icon: Package, href: '/admin/collections/products' },
-      { id: 'pages', name: 'Pages', icon: FileIcon, href: '/admin/collections/pages' },
+      { id: 'dashboard', label: 'Tableau de bord', icon: LayoutDashboard, href: '/admin' },
+      { id: 'plantes', label: 'Plantes', icon: Sprout, href: '/admin/collections/wikiEntries', collection: 'wikiEntries' },
+      { id: 'articles', label: 'Articles', icon: FileText, href: '/admin/collections/blogPosts', collection: 'blogPosts' },
+      { id: 'bienfaits', label: 'Bienfaits', icon: Heart, href: '/admin/collections/benefits', collection: 'benefits' },
+      { id: 'produits', label: 'Produits', icon: Package, href: '/admin/collections/products', collection: 'products' },
+      { id: 'pages', label: 'Landing pages', icon: FileIcon, href: '/admin/collections/pages', collection: 'pages' },
+      { id: 'site-pages', label: 'Pages du site', icon: FileStack, href: '/admin/collections/sitePages', collection: 'sitePages' },
+      { id: 'navigation', label: 'Navigation', icon: Menu, href: '/admin/globals/navigation' },
+      { id: 'footer', label: 'Pied de page', icon: PanelBottom, href: '/admin/globals/footer' },
+      { id: 'medias', label: 'Médias', icon: ImageIcon, href: '/admin/collections/media', collection: 'media' },
     ],
   },
   {
-    id: 'media',
-    title: 'Médias',
+    id: 'maison',
+    title: 'Maison',
     items: [
-      { id: 'medias', name: 'Médias', icon: ImageIcon, href: '/admin/collections/media' },
-    ],
-  },
-  {
-    id: 'taxonomy',
-    title: 'Taxonomie',
-    items: [
-      { id: 'categories', name: 'Catégories', icon: FolderTree, href: '/admin/collections/categories' },
-      { id: 'tags', name: 'Tags', icon: Tag, href: '/admin/collections/tags' },
-    ],
-  },
-  {
-    id: 'users',
-    title: 'Utilisateurs',
-    items: [
-      { id: 'auteurs', name: 'Auteurs', icon: Users, href: '/admin/collections/authors' },
-      { id: 'utilisateurs', name: 'Utilisateurs', icon: User, href: '/admin/collections/users' },
-      { id: 'journal', name: 'Journal', icon: BookOpen, href: '/admin/collections/auditLog' },
+      { id: 'utilisateurs', label: 'Utilisateurs', icon: Users, href: '/admin/collections/users', collection: 'users' },
+      { id: 'auteurs', label: 'Auteurs', icon: User, href: '/admin/collections/authors', collection: 'authors' },
+      { id: 'parametres', label: 'Paramètres', icon: Settings, href: '/admin/settings' },
+      { id: 'journal', label: "Journal d'audit", icon: BookOpen, href: '/admin/collections/auditLog', collection: 'auditLog' },
     ],
   },
 ]
 
-// Strict design-system tokens — thème clair
-const SIDEBAR_BG = '#FEF9E9' // backgrounds.page (cream)
-const SIDEBAR_BG_DEEP = '#FFF5D5' // cream-soft pour header/footer
-const SIDEBAR_HOVER = '#FFF5D5' // hover subtil
-const BORDER = '#DCD8C7' // backgrounds.card
-const ACCENT = '#A2211E' // brand.primary (actif)
-const ACCENT_HOVER = '#712E2F' // brand.primaryHover
-const TEAL = '#054A57' // info.DEFAULT (headings + group labels)
-const ORANGE = '#D0802C' // warning.icon (accents warm)
-const TEXT = '#374151' // neutral.700
-const TEXT_MUTED = '#6B7280' // neutral.500
-
 const STORAGE_KEY = 'rdm-admin-nav-open'
 
-const NavLink: React.FC<{ item: NavItem; isActive: boolean }> = ({ item, isActive }) => {
+const NavLinkRow: React.FC<{ item: NavItem; isActive: boolean }> = ({ item, isActive }) => {
   const Icon = item.icon
   const [hover, setHover] = useState(false)
-
-  const bg = isActive ? ACCENT : hover ? SIDEBAR_HOVER : 'transparent'
-  const iconColor = isActive ? '#FFFFFF' : ACCENT
-  const textColor = isActive ? '#FFFFFF' : TEXT
+  const bg = isActive ? RM.burgundy : hover ? 'rgba(255,255,255,0.06)' : 'transparent'
+  const color = isActive ? '#fff' : RM.creamSoft
 
   return (
-    <a
+    <Link
       href={item.href}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 12,
-        padding: '10px 12px',
-        borderRadius: 8,
+        gap: 10,
+        padding: '9px 12px',
+        fontSize: 13,
+        fontFamily: RM.fSans,
+        fontWeight: isActive ? 600 : 400,
+        background: bg,
+        color,
+        borderRadius: 6,
+        marginBottom: 2,
         textDecoration: 'none',
-        backgroundColor: bg,
-        color: textColor,
-        fontSize: 13.5,
-        fontWeight: isActive ? 600 : 500,
-        boxShadow: isActive ? '0 4px 12px rgba(162, 33, 30, 0.25)' : 'none',
-        transition: 'background-color 0.15s ease, color 0.15s ease, box-shadow 0.2s ease',
+        transition: 'background-color 0.15s ease, color 0.15s ease',
       }}
     >
-      <Icon size={17} color={iconColor} />
-      <span style={{ flex: 1 }}>{item.name}</span>
-    </a>
-  )
-}
-
-const CollapsibleGroup: React.FC<{
-  group: NavGroup
-  pathname: string
-  open: boolean
-  onToggle: () => void
-}> = ({ group, pathname, open, onToggle }) => {
-  const hasActive = group.items.some(
-    (i) => pathname === i.href || pathname.startsWith(i.href + '/'),
-  )
-  const [headerHover, setHeaderHover] = useState(false)
-
-  return (
-    <div style={{ marginBottom: 8 }}>
-      <button
-        type="button"
-        onClick={onToggle}
-        onMouseEnter={() => setHeaderHover(true)}
-        onMouseLeave={() => setHeaderHover(false)}
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '8px 12px',
-          background: headerHover ? SIDEBAR_HOVER : 'transparent',
-          border: 'none',
-          borderRadius: 8,
-          cursor: 'pointer',
-          color: TEAL,
-          fontSize: 11,
-          fontWeight: 700,
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          transition: 'background-color 0.15s ease',
-        }}
-      >
-        <span>{group.title}</span>
-        <span
-          style={{
-            display: 'inline-flex',
-            transition: 'transform 0.2s ease',
-            transform: open ? 'rotate(0deg)' : 'rotate(-90deg)',
-          }}
-        >
-          <ChevronDown size={14} />
-        </span>
-      </button>
-      <div
-        style={{
-          overflow: 'hidden',
-          maxHeight: open ? `${group.items.length * 44 + 8}px` : '0px',
-          opacity: open ? 1 : 0,
-          transition: 'max-height 0.25s ease, opacity 0.2s ease',
-        }}
-        {...(!open ? { 'aria-hidden': 'true' as const } : {})}
-      >
-        <ul
-          style={{
-            listStyle: 'none',
-            margin: 0,
-            padding: '4px 8px 0',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-          }}
-        >
-          {group.items.map((item) => {
-            const isActive =
-              pathname === item.href || pathname.startsWith(item.href + '/')
-            return (
-              <li key={item.id}>
-                <NavLink item={item} isActive={isActive} />
-              </li>
-            )
-          })}
-        </ul>
-      </div>
-      {!open && hasActive && (
-        <div
-          style={{
-            height: 2,
-            width: 22,
-            margin: '4px 14px 0',
-            backgroundColor: ACCENT,
-            borderRadius: 2,
-          }}
-        />
+      <Icon width={15} height={15} />
+      <span style={{ flex: 1 }}>{item.label}</span>
+      {item.count !== undefined && item.count > 0 && (
+        <span style={{ fontFamily: RM.fMono, fontSize: 10, opacity: 0.7 }}>{item.count}</span>
       )}
-    </div>
+    </Link>
   )
 }
 
 const Nav: React.FC = () => {
   const pathname = usePathname() || ''
   const { navOpen, setNavOpen, navRef } = useNav()
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(navigationGroups.map((g) => [g.id, true])),
-  )
+  const { user } = useAuth()
   const [mounted, setMounted] = useState(false)
+  const [openerHover, setOpenerHover] = useState(false)
+  const [counts, setCounts] = useState<Record<string, number>>({})
 
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) setOpenGroups((prev) => ({ ...prev, ...JSON.parse(raw) }))
+      if (raw !== null) {
+        const parsed = JSON.parse(raw)
+        if (typeof parsed === 'boolean') setNavOpen(parsed)
+      }
     } catch {}
     setMounted(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/admin/nav-counts', { credentials: 'include' })
+      .then((r) => (r.ok ? r.json() : {}))
+      .then((data) => {
+        if (!cancelled) setCounts(data || {})
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   useEffect(() => {
     if (!mounted) return
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(openGroups))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(navOpen))
     } catch {}
-  }, [openGroups, mounted])
+  }, [navOpen, mounted])
 
-  const isDashboardActive = useMemo(
-    () => pathname === '/admin' || pathname === '/admin/',
-    [pathname],
-  )
+  const userName =
+    (user as any)?.firstName && (user as any)?.lastName
+      ? `${(user as any).firstName} ${(user as any).lastName}`
+      : (user as any)?.email?.split('@')[0] || 'Admin'
+  const userRole =
+    (user as any)?.role === 'admin'
+      ? 'Admin'
+      : (user as any)?.role === 'editor'
+        ? 'Éditrice'
+        : 'Contributrice'
+  const initials = userName
+    .split(' ')
+    .map((s: string) => s[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase()
 
-  const toggle = (id: string) => setOpenGroups((prev) => ({ ...prev, [id]: !prev[id] }))
-
-  const [logoutHover, setLogoutHover] = useState(false)
-  const [siteHover, setSiteHover] = useState(false)
-  const [collapseHover, setCollapseHover] = useState(false)
-  const [openerHover, setOpenerHover] = useState(false)
+  const isItemActive = (href: string) => {
+    if (href === '#') return false
+    if (href === '/admin') return pathname === '/admin' || pathname === '/admin/'
+    return pathname === href || pathname.startsWith(href + '/')
+  }
 
   return (
     <>
-    {!navOpen && (
-      <button
-        type="button"
-        aria-label="Ouvrir le menu"
-        onClick={() => setNavOpen(true)}
-        onMouseEnter={() => setOpenerHover(true)}
-        onMouseLeave={() => setOpenerHover(false)}
-        style={{
-          position: 'fixed',
-          top: 14,
-          left: 14,
-          zIndex: 50,
-          width: 40,
-          height: 40,
-          borderRadius: 10,
-          border: 'none',
-          background: openerHover ? ACCENT_HOVER : ACCENT,
-          color: '#FFFFFF',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          boxShadow: '0 6px 16px rgba(0, 0, 0, 0.18)',
-          transition: 'background-color 0.15s ease, transform 0.15s ease',
-          transform: openerHover ? 'scale(1.05)' : 'scale(1)',
-        }}
-      >
-        <PanelLeftOpen size={18} />
-      </button>
-    )}
-    <aside
-      ref={navRef as React.RefObject<HTMLElement>}
-      {...(!navOpen ? { 'aria-hidden': 'true' as const } : {})}
-      style={{
-        width: navOpen ? 280 : 0,
-        minWidth: navOpen ? 280 : 0,
-        height: '100vh',
-        position: 'sticky',
-        top: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        background: SIDEBAR_BG,
-        borderRight: navOpen ? `1px solid ${BORDER}` : 'none',
-        boxShadow: navOpen ? '4px 0 20px rgba(0, 0, 0, 0.18)' : 'none',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-        zIndex: 40,
-        overflow: 'hidden',
-        transition: 'width 0.25s ease, min-width 0.25s ease',
-      }}
-    >
-      <div
-        style={{
-          padding: '20px 22px',
-          borderBottom: `1px solid ${BORDER}`,
-          background: SIDEBAR_BG_DEEP,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 12,
-        }}
-      >
-        <div
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: 10,
-            background: ORANGE,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 6px 16px rgba(208, 128, 44, 0.35)',
-          }}
-        >
-          <Leaf size={22} color="#FFFFFF" />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0, flex: 1 }}>
-          <span
-            style={{
-              fontWeight: 700,
-              color: ACCENT,
-              fontSize: 15,
-              lineHeight: 1.2,
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-            }}
-          >
-            Remèdes de Mamie
-          </span>
-          <span style={{ fontSize: 11, color: TEXT_MUTED, letterSpacing: '0.04em' }}>
-            Admin CMS
-          </span>
-        </div>
+      {!navOpen && (
         <button
+          suppressHydrationWarning
           type="button"
-          aria-label="Réduire le menu"
-          onClick={() => setNavOpen(false)}
-          onMouseEnter={() => setCollapseHover(true)}
-          onMouseLeave={() => setCollapseHover(false)}
+          aria-label="Ouvrir le menu"
+          onClick={() => setNavOpen(true)}
+          onMouseEnter={() => setOpenerHover(true)}
+          onMouseLeave={() => setOpenerHover(false)}
           style={{
-            width: 32,
-            height: 32,
-            borderRadius: 8,
+            position: 'fixed',
+            top: 14,
+            left: 14,
+            zIndex: 50,
+            width: 40,
+            height: 40,
+            borderRadius: 10,
             border: 'none',
-            background: collapseHover ? SIDEBAR_HOVER : 'transparent',
-            color: TEAL,
+            background: openerHover ? RM.burgundyDark : RM.burgundy,
+            color: '#FFFFFF',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            flexShrink: 0,
-            transition: 'background-color 0.15s ease',
+            boxShadow: '0 6px 16px rgba(0, 0, 0, 0.18)',
+            transition: 'background-color 0.15s ease, transform 0.15s ease',
+            transform: openerHover ? 'scale(1.05)' : 'scale(1)',
           }}
         >
-          <ChevronLeft size={18} />
+          <PanelLeftOpen size={18} />
         </button>
-      </div>
-
-      <div style={{ padding: '14px 12px 4px' }}>
-        <NavLink
-          item={{
-            id: 'dashboard',
-            name: 'Tableau de bord',
-            href: '/admin',
-            icon: LayoutDashboard,
-          }}
-          isActive={isDashboardActive}
-        />
-      </div>
-
-      <nav
+      )}
+      <aside
+        ref={navRef as React.RefObject<HTMLElement>}
+        {...(!navOpen ? { 'aria-hidden': 'true' as const } : {})}
         style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '8px 12px 16px',
+          // Spacer in Payload's flex layout — reserves the column width so the
+          // main content area doesn't creep left when the inner nav goes
+          // position: fixed.
+          width: navOpen ? 248 : 0,
+          minWidth: navOpen ? 248 : 0,
+          flexShrink: 0,
+          transition: 'width 0.25s ease, min-width 0.25s ease',
+          zIndex: 40,
         }}
       >
-        {navigationGroups.map((group) => (
-          <CollapsibleGroup
-            key={group.id}
-            group={group}
-            pathname={pathname}
-            open={openGroups[group.id] !== false}
-            onToggle={() => toggle(group.id)}
-          />
-        ))}
-      </nav>
-
       <div
         style={{
-          marginTop: 'auto',
-          borderTop: `1px solid ${BORDER}`,
-          background: SIDEBAR_BG_DEEP,
-          padding: '14px 14px 16px',
+          // The actual floating sidebar — fixed to the viewport so it never
+          // scrolls with page content.
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: navOpen ? 248 : 0,
+          height: '100vh',
+          background: RM.teal,
+          color: RM.cream,
+          padding: navOpen ? '24px 16px' : 0,
+          fontFamily: RM.fSans,
+          zIndex: 40,
+          overflow: 'hidden',
+          boxSizing: 'border-box',
+          transition: 'width 0.25s ease, padding 0.25s ease',
           display: 'flex',
           flexDirection: 'column',
-          gap: 6,
         }}
       >
-        <a
-          href="/"
-          target="_blank"
-          rel="noopener noreferrer"
-          onMouseEnter={() => setSiteHover(true)}
-          onMouseLeave={() => setSiteHover(false)}
+        {/* Header */}
+        <div
           style={{
+            padding: '4px 8px 20px',
             display: 'flex',
             alignItems: 'center',
-            gap: 10,
-            padding: '10px 12px',
-            borderRadius: 8,
-            textDecoration: 'none',
-            background: siteHover ? ACCENT_HOVER : ACCENT,
-            color: '#FFFFFF',
-            fontSize: 13,
-            fontWeight: 600,
-            boxShadow: '0 4px 10px rgba(162, 33, 30, 0.25)',
-            transition: 'background-color 0.15s ease',
+            gap: 12,
           }}
         >
-          <ExternalLink size={15} />
-          <span>Voir le site</span>
-        </a>
-        <a
-          href="/admin/logout"
-          onMouseEnter={() => setLogoutHover(true)}
-          onMouseLeave={() => setLogoutHover(false)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            padding: '10px 12px',
-            borderRadius: 8,
-            textDecoration: 'none',
-            background: logoutHover ? SIDEBAR_HOVER : 'transparent',
-            color: logoutHover ? ACCENT : TEXT_MUTED,
-            fontSize: 13,
-            fontWeight: 500,
-            transition: 'background-color 0.15s ease, color 0.15s ease',
-          }}
-        >
-          <LogOut size={15} color={logoutHover ? ACCENT : TEXT_MUTED} />
-          <span>Déconnexion</span>
-        </a>
+          <img
+            src="/assets/brand/rm-logo.png"
+            alt="Les Remèdes de Mamie"
+            width={64}
+            height={46}
+            style={{ width: 64, height: 46, objectFit: 'contain', flexShrink: 0, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))' }}
+          />
+          <div
+            style={{
+              fontSize: 10,
+              letterSpacing: 2,
+              color: RM.creamSoft,
+              opacity: 0.7,
+              textTransform: 'uppercase',
+            }}
+          >
+            CMS · v2.4
+          </div>
+        </div>
+
+        {/* Groups */}
+        <nav style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+          {navigationGroups.map((group, gIdx) => (
+            <div key={group.id}>
+              <div
+                style={{
+                  fontSize: 10,
+                  letterSpacing: 2.5,
+                  color: RM.creamSoft,
+                  opacity: 0.5,
+                  textTransform: 'uppercase',
+                  padding: gIdx === 0 ? '14px 12px 8px' : '22px 12px 8px',
+                }}
+              >
+                {group.title}
+              </div>
+              {group.items.map((item) => {
+                const liveCount = item.collection ? (counts[item.collection] ?? 0) : 0
+                return (
+                  <NavLinkRow
+                    key={item.id}
+                    item={{ ...item, count: liveCount }}
+                    isActive={isItemActive(item.href)}
+                  />
+                )
+              })}
+            </div>
+          ))}
+        </nav>
+
+        {/* Footer user card */}
+        {navOpen && (
+          <div
+            style={{
+              marginTop: 12,
+              background: 'rgba(255,255,255,0.08)',
+              borderRadius: 8,
+              padding: 12,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+            }}
+          >
+            <div
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: 17,
+                background: RM.ochre,
+                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 600,
+                fontSize: 14,
+                flexShrink: 0,
+              }}
+            >
+              {initials}
+            </div>
+            <div style={{ fontSize: 12, minWidth: 0 }}>
+              <div
+                style={{
+                  fontWeight: 600,
+                  color: RM.cream,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {userName}
+              </div>
+              <div style={{ color: RM.creamSoft, opacity: 0.6, fontSize: 11 }}>{userRole}</div>
+            </div>
+          </div>
+        )}
       </div>
-    </aside>
+      </aside>
     </>
   )
 }

@@ -12,6 +12,11 @@ export const Users: CollectionConfig = {
     defaultColumns: ['email', 'firstName', 'lastName', 'role'],
     group: 'Syst\u00e8me',
     description: 'G\u00e9rer les comptes utilisateurs et leurs permissions',
+    components: {
+      views: {
+        list: { Component: '@/components/admin/views/UsersList.tsx#default' },
+      },
+    },
   },
   fields: [
     {

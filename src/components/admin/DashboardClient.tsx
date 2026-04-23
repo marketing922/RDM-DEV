@@ -1,374 +1,558 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import React, { useState } from 'react'
+import Link from 'next/link'
 import {
   Leaf,
+  Bookmark,
   Heart,
+  Sprout,
   FileText,
   Package,
-  TrendingUp,
-  Clock,
-  User,
-  Calendar,
+  Image as ImageIcon,
+  Settings,
 } from 'lucide-react'
+import { RM, cmsBtn } from '@/components/admin/primitives/tokens'
 
-type StatProps = {
+export type QueueItem = {
+  id: string
+  collection: 'wikiEntries' | 'blogPosts' | 'benefits'
   title: string
-  value: number | string
-  icon: React.ElementType
-  trend?: string
-  color: string
-}
-
-type QuickAction = {
-  label: string
-  icon: React.ElementType
+  author: string
+  action: string
+  time: string
   href: string
-  color: string
 }
 
 export type ActivityItem = {
   id: string
-  type: string
-  description: string
-  timestamp: string
-  user: string
+  time: string
+  who: string
+  verb: string
+  target: string
 }
 
-const StatCard: React.FC<StatProps> = ({ title, value, icon: Icon, trend, color }) => (
-  <motion.div
-    whileHover={{ y: -4, boxShadow: '0 12px 28px rgba(162, 33, 30, 0.12)' }}
-    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-    style={{
-      background: 'linear-gradient(135deg, #FFFFFF 0%, #FEF9E9 100%)',
-      border: '1px solid #DCD8C7',
-      borderRadius: '12px',
-      padding: '24px',
-      cursor: 'default',
-      position: 'relative',
-      overflow: 'hidden',
-    }}
-  >
-    <div
-      aria-hidden
-      style={{ position: 'absolute', top: 0, right: 0, width: 100, height: 100, opacity: 0.06 }}
-    >
-      <Icon size={100} style={{ color }} />
-    </div>
-    <div style={{ position: 'relative', zIndex: 1 }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: 12,
-        }}
-      >
-        <span style={{ fontSize: 13, color: '#6B7280', fontWeight: 500 }}>{title}</span>
-        <div
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 10,
-            background: `${color}15`,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Icon size={20} style={{ color }} />
-        </div>
-      </div>
-      <div style={{ fontSize: 32, fontWeight: 700, color: '#054A57', marginBottom: 6 }}>{value}</div>
-      {trend && (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 4,
-            fontSize: 12,
-            color: '#16a34a',
-          }}
-        >
-          <TrendingUp size={14} />
-          <span>{trend}</span>
-        </div>
-      )}
-    </div>
-  </motion.div>
-)
-
-const QuickActionButton: React.FC<QuickAction> = ({ label, icon: Icon, href, color }) => (
-  <motion.a
-    href={href}
-    whileHover={{ scale: 1.03 }}
-    whileTap={{ scale: 0.97 }}
-    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: 12,
-      padding: 20,
-      background: 'linear-gradient(135deg, #FFFFFF 0%, #FEF9E9 100%)',
-      border: '1px solid #DCD8C7',
-      borderRadius: 12,
-      textDecoration: 'none',
-      cursor: 'pointer',
-    }}
-  >
-    <div
-      style={{
-        width: 48,
-        height: 48,
-        borderRadius: 12,
-        background: `${color}15`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Icon size={24} style={{ color }} />
-    </div>
-    <span style={{ fontSize: 13, fontWeight: 600, color: '#054A57', textAlign: 'center' }}>
-      {label}
-    </span>
-  </motion.a>
-)
-
-const ActivityRow: React.FC<{ activity: ActivityItem; index: number }> = ({
-  activity,
-  index,
-}) => (
-  <motion.div
-    initial={{ opacity: 0, x: -16 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ delay: index * 0.08 }}
-    style={{
-      padding: 16,
-      background: '#FEF9E9',
-      borderRadius: 8,
-      marginBottom: 10,
-      border: '1px solid #DCD8C7',
-    }}
-  >
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'start',
-        marginBottom: 6,
-        gap: 12,
-      }}
-    >
-      <span style={{ fontSize: 13, fontWeight: 600, color: '#054A57' }}>{activity.type}</span>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 4,
-          fontSize: 11,
-          color: '#9CA3AF',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        <Clock size={11} />
-        <span>{activity.timestamp}</span>
-      </div>
-    </div>
-    <p style={{ fontSize: 13, color: '#374151', margin: '0 0 6px' }}>{activity.description}</p>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#6B7280' }}>
-      <User size={11} />
-      <span>{activity.user}</span>
-    </div>
-  </motion.div>
-)
+export type DashboardData = {
+  userName: string
+  greeting: string
+  publishedWeek: { total: number; plants: number; articles: number; href: string }
+  pendingReview: { total: number; urgent: number; href: string }
+  newContent30d: {
+    total: number
+    plants: number
+    articles: number
+    products: number
+    href: string
+  }
+  newsletter: {
+    provider: 'none' | 'brevo'
+    listId?: string
+    configured: boolean
+    href: string
+  }
+  queue: QueueItem[]
+  activity: ActivityItem[]
+}
 
 export type DashboardClientProps = {
-  counts: { plants: number; benefits: number; articles: number; products: number }
-  activities: ActivityItem[]
-  userName?: string
+  data: DashboardData
 }
 
-const BURGUNDY = '#A2211E'
-const TEAL = '#054A57'
-const ORANGE = '#D0802C'
+const statCardBaseStyle: React.CSSProperties = {
+  background: RM.paper,
+  border: `1px solid ${RM.rule}`,
+  borderRadius: 8,
+  padding: '18px 20px',
+  display: 'block',
+  textDecoration: 'none',
+  color: 'inherit',
+  cursor: 'pointer',
+  transition: 'border-color 0.15s, box-shadow 0.15s',
+}
 
-const DashboardClient: React.FC<DashboardClientProps> = ({ counts, activities, userName }) => {
-  const [greeting, setGreeting] = useState('Bonjour')
-  const [currentDate, setCurrentDate] = useState('')
+const statLabelStyle: React.CSSProperties = {
+  fontSize: 11,
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
+  color: RM.inkSoft,
+  fontFamily: RM.fSans,
+  fontWeight: 600,
+}
 
-  useEffect(() => {
-    const h = new Date().getHours()
-    if (h < 12) setGreeting('Bonjour')
-    else if (h < 18) setGreeting('Bon après-midi')
-    else setGreeting('Bonsoir')
+const statValueStyle: React.CSSProperties = {
+  fontFamily: RM.fDisplay,
+  fontSize: 38,
+  color: RM.teal,
+  lineHeight: 1,
+  margin: '10px 0 8px',
+}
 
-    setCurrentDate(
-      new Date().toLocaleDateString('fr-FR', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
-    )
-  }, [])
+const statSubStyle: React.CSSProperties = {
+  fontSize: 11,
+  color: RM.inkSoft,
+  fontFamily: RM.fSans,
+}
 
-  const stats: StatProps[] = [
-    { title: 'Plantes', value: counts.plants, icon: Leaf, color: TEAL },
-    { title: 'Bienfaits', value: counts.benefits, icon: Heart, color: BURGUNDY },
-    { title: 'Articles', value: counts.articles, icon: FileText, color: ORANGE },
-    { title: 'Produits', value: counts.products, icon: Package, color: TEAL },
-  ]
+const panelStyle: React.CSSProperties = {
+  background: RM.paper,
+  border: `1px solid ${RM.rule}`,
+  borderRadius: 10,
+  overflow: 'hidden',
+}
 
-  const actions: QuickAction[] = [
-    {
-      label: 'Nouvelle plante',
-      icon: Leaf,
-      href: '/admin/collections/wikiEntries/create',
-      color: TEAL,
-    },
-    {
-      label: 'Nouveau bienfait',
-      icon: Heart,
-      href: '/admin/collections/benefits/create',
-      color: BURGUNDY,
-    },
-    {
-      label: 'Nouvel article',
-      icon: FileText,
-      href: '/admin/collections/blogPosts/create',
-      color: ORANGE,
-    },
-    {
-      label: 'Nouveau produit',
-      icon: Package,
-      href: '/admin/collections/products/create',
-      color: TEAL,
-    },
-  ]
+const panelHeaderStyle: React.CSSProperties = {
+  padding: '16px 20px',
+  borderBottom: `1px solid ${RM.rule}`,
+  background: RM.creamSoft,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: 12,
+}
+
+const panelTitleStyle: React.CSSProperties = {
+  fontFamily: RM.fDisplay,
+  fontSize: 20,
+  color: RM.teal,
+  margin: 0,
+}
+
+const iconSquareStyle: React.CSSProperties = {
+  width: 32,
+  height: 32,
+  borderRadius: 6,
+  background: RM.creamSoft,
+  border: `1px solid ${RM.rule}`,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: RM.teal,
+}
+
+const QueueIcon: React.FC<{ collection: QueueItem['collection'] }> = ({ collection }) => {
+  const Icon = collection === 'wikiEntries' ? Leaf : collection === 'blogPosts' ? Bookmark : Heart
+  return (
+    <div style={iconSquareStyle}>
+      <Icon size={15} />
+    </div>
+  )
+}
+
+type StatCardProps = {
+  label: string
+  value: React.ReactNode
+  sub: React.ReactNode
+  subColor?: string
+  href: string
+}
+
+const StatCard: React.FC<StatCardProps> = ({ label, value, sub, subColor, href }) => {
+  const [hover, setHover] = useState(false)
+  const style: React.CSSProperties = {
+    ...statCardBaseStyle,
+    borderColor: hover ? RM.ruleStrong : RM.rule,
+    boxShadow: hover ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
+  }
+  return (
+    <Link
+      href={href}
+      style={style}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <div style={statLabelStyle}>{label}</div>
+      <div style={statValueStyle}>{value}</div>
+      <div style={{ ...statSubStyle, ...(subColor ? { color: subColor } : null) }}>{sub}</div>
+    </Link>
+  )
+}
+
+type QuickAction = {
+  icon: React.ComponentType<{ size?: number }>
+  label: string
+  hint: string
+  href: string
+}
+
+const quickActions: QuickAction[] = [
+  {
+    icon: Sprout,
+    label: 'Nouvelle plante',
+    hint: 'Créer une fiche',
+    href: '/admin/collections/wikiEntries/create',
+  },
+  {
+    icon: FileText,
+    label: 'Nouvel article',
+    hint: 'Commencer un brouillon',
+    href: '/admin/collections/blogPosts/create',
+  },
+  {
+    icon: Heart,
+    label: 'Nouveau bienfait',
+    hint: 'Ajouter une entrée',
+    href: '/admin/collections/benefits/create',
+  },
+  {
+    icon: Package,
+    label: 'Nouveau produit',
+    hint: 'Référence boutique',
+    href: '/admin/collections/products/create',
+  },
+  {
+    icon: ImageIcon,
+    label: 'Médiathèque',
+    hint: 'Gérer les visuels',
+    href: '/admin/collections/media',
+  },
+  {
+    icon: Settings,
+    label: 'Paramètres',
+    hint: 'Config du site',
+    href: '/admin/settings',
+  },
+]
+
+const QuickActionTile: React.FC<{ action: QuickAction }> = ({ action }) => {
+  const [hover, setHover] = useState(false)
+  const Icon = action.icon
+  return (
+    <Link
+      href={action.href}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        padding: '14px 12px',
+        border: `1px solid ${hover ? RM.ruleStrong : RM.rule}`,
+        borderRadius: 8,
+        background: 'white',
+        textDecoration: 'none',
+        transition: 'all 0.15s',
+        cursor: 'pointer',
+        boxShadow: hover ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
+      }}
+    >
+      <div
+        style={{
+          width: 32,
+          height: 32,
+          borderRadius: 6,
+          background: RM.creamSoft,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: RM.burgundy,
+          flexShrink: 0,
+        }}
+      >
+        <Icon size={16} />
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div
+          style={{
+            fontFamily: RM.fSans,
+            fontSize: 13,
+            color: RM.teal,
+            fontWeight: 600,
+          }}
+        >
+          {action.label}
+        </div>
+        <div style={{ fontSize: 11, color: RM.inkSoft }}>{action.hint}</div>
+      </div>
+    </Link>
+  )
+}
+
+const DashboardClient: React.FC<DashboardClientProps> = ({ data }) => {
+  const {
+    greeting,
+    publishedWeek,
+    pendingReview,
+    newContent30d,
+    newsletter,
+    queue,
+    activity,
+  } = data
+
+  const newsletterValue = '—'
+  const newsletterSub =
+    newsletter.provider === 'brevo' && newsletter.configured
+      ? `${newsletter.listId} · Brevo connecté`
+      : 'À configurer →'
+
+  const new30dSub = `${newContent30d.plants} plante${newContent30d.plants > 1 ? 's' : ''} · ${newContent30d.articles} article${newContent30d.articles > 1 ? 's' : ''} · ${newContent30d.products} produit${newContent30d.products > 1 ? 's' : ''}`
 
   return (
     <div
       style={{
         padding: 32,
-        background: 'linear-gradient(135deg, #FEF9E9 0%, #FFF5D5 100%)',
+        background: RM.cream,
         minHeight: 'calc(100vh - 60px)',
+        fontFamily: RM.fSans,
+        color: RM.ink,
       }}
     >
       <div style={{ maxWidth: 1400, margin: '0 auto' }}>
-        <motion.div
-          initial={{ opacity: 0, y: -16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          style={{ marginBottom: 32 }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
-            <h1 style={{ fontSize: 32, fontWeight: 700, color: '#054A57', margin: 0 }}>
-              {greeting}
-              {userName ? `, ${userName}` : ''}
-            </h1>
-            <Leaf size={28} color="#D0802C" />
-          </div>
+        {/* Header */}
+        <header style={{ marginBottom: 28 }}>
           <div
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              color: '#6B7280',
-              fontSize: 14,
+              fontSize: 11,
+              textTransform: 'uppercase',
+              letterSpacing: '0.14em',
+              color: RM.inkSoft,
+              fontWeight: 600,
+              marginBottom: 6,
             }}
           >
-            <Calendar size={14} />
-            <p style={{ margin: 0, textTransform: 'capitalize' }}>{currentDate}</p>
+            {greeting}
           </div>
-        </motion.div>
+          <h1
+            style={{
+              fontFamily: RM.fDisplay,
+              fontSize: 40,
+              color: RM.teal,
+              margin: '0 0 4px',
+              lineHeight: 1.1,
+            }}
+          >
+            Tableau de bord
+          </h1>
+          <p
+            style={{
+              fontFamily: RM.fSerif,
+              fontStyle: 'italic',
+              fontSize: 15,
+              color: RM.inkSoft,
+              margin: 0,
+            }}
+          >
+            vue d&apos;ensemble de la rédaction
+          </p>
+        </header>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.15, duration: 0.4 }}
+        {/* Stat cards */}
+        <section
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))',
-            gap: 20,
-            marginBottom: 36,
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: 16,
+            marginBottom: 24,
           }}
         >
-          {stats.map((s, i) => (
-            <motion.div
-              key={s.title}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + i * 0.08 }}
-            >
-              <StatCard {...s} />
-            </motion.div>
-          ))}
-        </motion.div>
+          <StatCard
+            label="Publié cette semaine"
+            value={publishedWeek.total}
+            sub={`${publishedWeek.plants} plante${publishedWeek.plants > 1 ? 's' : ''} · ${publishedWeek.articles} article${publishedWeek.articles > 1 ? 's' : ''}`}
+            href={publishedWeek.href}
+          />
+          <StatCard
+            label="En attente de révision"
+            value={pendingReview.total}
+            sub={
+              pendingReview.urgent > 0
+                ? `${pendingReview.urgent} urgent${pendingReview.urgent > 1 ? 's' : ''}`
+                : 'Aucun urgent'
+            }
+            subColor={pendingReview.urgent > 0 ? RM.burgundy : undefined}
+            href={pendingReview.href}
+          />
+          <StatCard
+            label="Nouveautés · 30 jours"
+            value={newContent30d.total}
+            sub={new30dSub}
+            href={newContent30d.href}
+          />
+          <StatCard
+            label="Abonnés newsletter"
+            value={newsletterValue}
+            sub={newsletterSub}
+            href={newsletter.href}
+          />
+        </section>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55 }}
-          style={{ marginBottom: 36 }}
+        {/* Main grid */}
+        <section
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1.4fr 1fr',
+            gap: 20,
+          }}
         >
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#054A57', margin: '0 0 16px' }}>
-            Actions rapides
-          </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
-              gap: 14,
-            }}
-          >
-            {actions.map((a, i) => (
-              <motion.div
-                key={a.label}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.65 + i * 0.08 }}
+          {/* LEFT — File de révision */}
+          <div style={panelStyle}>
+            <div style={panelHeaderStyle}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <h2 style={panelTitleStyle}>File de révision</h2>
+                <span
+                  style={{
+                    background: RM.burgundy,
+                    color: '#fff',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    padding: '2px 8px',
+                    borderRadius: 999,
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {pendingReview.total}
+                </span>
+              </div>
+              <a
+                href="/admin/collections/wikiEntries?where[_status][equals]=draft"
+                style={{
+                  fontSize: 12,
+                  color: RM.teal,
+                  textDecoration: 'none',
+                  fontWeight: 600,
+                }}
               >
-                <QuickActionButton {...a} />
-              </motion.div>
-            ))}
+                Tout voir →
+              </a>
+            </div>
+            <div>
+              {queue.length === 0 ? (
+                <div
+                  style={{
+                    padding: '28px 20px',
+                    textAlign: 'center',
+                    color: RM.inkSoft,
+                    fontSize: 13,
+                  }}
+                >
+                  Aucun document en attente. Bonne nouvelle.
+                </div>
+              ) : (
+                queue.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '36px 1fr auto auto',
+                      gap: 14,
+                      alignItems: 'center',
+                      padding: '14px 20px',
+                      borderBottom:
+                        idx === queue.length - 1 ? 'none' : `1px solid ${RM.rule}`,
+                    }}
+                  >
+                    <QueueIcon collection={item.collection} />
+                    <div style={{ minWidth: 0 }}>
+                      <div
+                        style={{
+                          fontFamily: RM.fDisplay,
+                          fontSize: 15,
+                          color: RM.teal,
+                          lineHeight: 1.25,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {item.title}
+                      </div>
+                      <div style={{ fontSize: 11, color: RM.inkSoft, marginTop: 2 }}>
+                        {item.author} · {item.action}
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: RM.inkSoft,
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {item.time}
+                    </div>
+                    <a
+                      href={item.href}
+                      style={{ ...cmsBtn.ghost, textDecoration: 'none' }}
+                    >
+                      Ouvrir
+                    </a>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-        </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.85 }}
-        >
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#054A57', margin: '0 0 16px' }}>
-            Activité récente
-          </h2>
-          <div
-            style={{
-              background: 'linear-gradient(135deg, #FFFFFF 0%, #FEF9E9 100%)',
-              border: '1px solid #DCD8C7',
-              borderRadius: 12,
-              padding: 20,
-              maxHeight: 460,
-              overflowY: 'auto',
-            }}
-          >
-            {activities.length === 0 ? (
-              <p style={{ fontSize: 13, color: '#6B7280', margin: 0, textAlign: 'center' }}>
-                Aucune activité récente.
-              </p>
-            ) : (
-              <AnimatePresence>
-                {activities.map((a, i) => (
-                  <ActivityRow key={a.id} activity={a} index={i} />
+          {/* RIGHT column */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            {/* Activité du jour */}
+            <div style={panelStyle}>
+              <div style={panelHeaderStyle}>
+                <h2 style={panelTitleStyle}>Activité du jour</h2>
+              </div>
+              <div>
+                {activity.length === 0 ? (
+                  <div
+                    style={{
+                      padding: '20px',
+                      textAlign: 'center',
+                      color: RM.inkSoft,
+                      fontSize: 13,
+                    }}
+                  >
+                    Aucune activité pour l&apos;instant.
+                  </div>
+                ) : (
+                  activity.map((a, idx) => (
+                    <div
+                      key={a.id}
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '48px 1fr',
+                        gap: 12,
+                        alignItems: 'start',
+                        padding: '12px 20px',
+                        borderBottom:
+                          idx === activity.length - 1 ? 'none' : `1px solid ${RM.rule}`,
+                      }}
+                    >
+                      <div
+                        style={{
+                          fontFamily: RM.fMono,
+                          fontSize: 12,
+                          color: RM.inkSoft,
+                          paddingTop: 2,
+                        }}
+                      >
+                        {a.time}
+                      </div>
+                      <div style={{ fontSize: 13, color: RM.ink, lineHeight: 1.45 }}>
+                        <span style={{ fontWeight: 600, color: RM.teal }}>{a.who}</span>{' '}
+                        {a.verb} {a.target}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Raccourcis */}
+            <div style={panelStyle}>
+              <div style={panelHeaderStyle}>
+                <h2 style={panelTitleStyle}>Raccourcis</h2>
+              </div>
+              <div
+                style={{
+                  padding: 14,
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: 10,
+                }}
+              >
+                {quickActions.map((a) => (
+                  <QuickActionTile key={a.href} action={a} />
                 ))}
-              </AnimatePresence>
-            )}
+              </div>
+            </div>
           </div>
-        </motion.div>
+        </section>
       </div>
     </div>
   )

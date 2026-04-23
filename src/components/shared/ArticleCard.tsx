@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { resolveMediaUrl } from '@/lib/mediaUrl'
 
 type ArticleCardProps = {
   post: {
@@ -38,7 +39,7 @@ export function ArticleCard({ post, locale, compact = false }: ArticleCardProps)
         <div className="relative w-24 h-24 shrink-0 bg-[#FFF5D5] overflow-hidden">
           {featuredImage ? (
             <Image
-              src={featuredImage.url}
+              src={resolveMediaUrl(featuredImage, 'thumbnail') ?? ''}
               alt={featuredImage.alt || title}
               fill
               sizes="96px"
@@ -81,7 +82,7 @@ export function ArticleCard({ post, locale, compact = false }: ArticleCardProps)
       <div className="relative aspect-video overflow-hidden bg-[#FFF5D5]">
         {featuredImage ? (
           <Image
-            src={featuredImage.url}
+            src={resolveMediaUrl(featuredImage, 'card') ?? ''}
             alt={featuredImage.alt || title}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

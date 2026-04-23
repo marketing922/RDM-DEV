@@ -1,8 +1,9 @@
 import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
-import { scanForbiddenClaims, gatePublishCompliance, createAuditLog } from '@/hooks'
+import { scanForbiddenClaims, gatePublishCompliance, createAuditLog, autoSlug } from '@/hooks'
 import { backupAfterChange } from '@/hooks/backupAfterChange'
 import { geoTab } from '@/fields/geoFields'
+import { slugify } from '@/lib/slugify'
 
 export const Benefits: CollectionConfig = {
   slug: 'benefits',
@@ -12,11 +13,16 @@ export const Benefits: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'status', 'complianceStatus', 'updatedAt'],
+    defaultColumns: ['name', '_status', 'complianceStatus', 'updatedAt'],
     group: 'Contenu',
     description: 'G\u00e9rer les bienfaits sant\u00e9 associ\u00e9s aux plantes',
     components: {
       beforeList: ['@/components/admin/ListHero.tsx#default'],
+      views: {
+        list: {
+          Component: '@/components/admin/views/BenefitsList.tsx#default',
+        },
+      },
       edit: {
         beforeDocumentControls: ['@/components/admin/DocHeaderChip.tsx#default'],
       },
@@ -52,6 +58,9 @@ export const Benefits: CollectionConfig = {
               admin: {
                 placeholder: 'Ex : Digestion',
                 description: 'Le nom du bienfait sant\u00e9',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
+                },
               },
             },
             {
@@ -59,10 +68,39 @@ export const Benefits: CollectionConfig = {
               type: 'text',
               unique: true,
               label: 'Slug (URL)',
+              hooks: {
+                beforeValidate: [autoSlug('name')],
+                beforeChange: [
+                  ({ value, data, originalDoc }) => {
+                    if (value && typeof value === 'string' && value.trim()) {
+                      return slugify(value)
+                    }
+                    const source = data?.name || data?.title || originalDoc?.name || originalDoc?.title
+                    return source ? slugify(String(source)) : value
+                  },
+                ],
+              },
               admin: {
                 placeholder: 'digestion',
-                description: 'Identifiant unique pour l\u2019URL',
+                description: 'Identifiant unique pour l\u2019URL. G\u00e9n\u00e9r\u00e9 automatiquement depuis le nom si vide.',
               },
+            },
+            {
+              name: 'bodyRegion',
+              type: 'select',
+              label: 'Région du corps',
+              admin: {
+                description:
+                  'Région anatomique associée, utilisée par l explorateur corporel sur la page d accueil.',
+              },
+              options: [
+                { label: 'Tête (migraines, sommeil...)', value: 'tete' },
+                { label: 'Gorge (toux, voix...)', value: 'gorge' },
+                { label: 'Respiration (bronches, sinus...)', value: 'respiration' },
+                { label: 'Digestion (estomac, foie...)', value: 'digestion' },
+                { label: 'Féminin (cycle, ménopause...)', value: 'feminin' },
+                { label: 'Circulation (jambes, veines...)', value: 'circulation' },
+              ],
             },
             {
               name: 'icon',
@@ -71,6 +109,9 @@ export const Benefits: CollectionConfig = {
               admin: {
                 placeholder: 'Ex : stomach, leaf, heart',
                 description: 'Nom de l\u2019ic\u00f4ne associ\u00e9e au bienfait',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
+                },
               },
             },
             {
@@ -80,6 +121,9 @@ export const Benefits: CollectionConfig = {
               label: 'Description courte',
               admin: {
                 description: 'R\u00e9sum\u00e9 affich\u00e9 dans les listes et aper\u00e7us',
+                components: {
+                  Field: '@/components/admin/fields/AIGenerateTextareaField.tsx#default',
+                },
               },
             },
             {
@@ -125,9 +169,10 @@ export const Benefits: CollectionConfig = {
               name: 'status',
               type: 'select',
               defaultValue: 'draft',
-              label: 'Statut de publication',
+              label: 'Workflow interne',
               admin: {
-                description: 'Contr\u00f4le la visibilit\u00e9 du bienfait sur le site',
+                description:
+                  '\u26a0\ufe0f Ne contr\u00f4le PAS la visibilit\u00e9 sur le site. Pour publier/d\u00e9publier, utilisez les boutons Save Draft / Publish changes en haut de la page.',
               },
               options: [
                 { label: 'Brouillon', value: 'draft' },

@@ -1,5 +1,5 @@
 import { REST_POST, REST_GET, REST_PATCH, REST_DELETE } from '@payloadcms/next/routes'
-import config from '@/payload.config'
+import config from '@payload-config'
 
 export const GET = REST_GET(config)
 export const POST = REST_POST(config)

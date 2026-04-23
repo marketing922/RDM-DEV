@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { isAdmin, isPublic } from '@/access'
+import { autoSlug } from '@/hooks'
+import { slugify } from '@/lib/slugify'
 
 export const Tags: CollectionConfig = {
   slug: 'tags',
@@ -36,9 +38,21 @@ export const Tags: CollectionConfig = {
       type: 'text',
       unique: true,
       label: 'Slug (URL)',
+      hooks: {
+        beforeValidate: [autoSlug('name')],
+        beforeChange: [
+          ({ value, data, originalDoc }) => {
+            if (value && typeof value === 'string' && value.trim()) {
+              return slugify(value)
+            }
+            const source = data?.name || data?.title || originalDoc?.name || originalDoc?.title
+            return source ? slugify(String(source)) : value
+          },
+        ],
+      },
       admin: {
         placeholder: 'anti-inflammatoire',
-        description: 'Identifiant unique utilis\u00e9 dans les URLs et filtres',
+        description: 'Identifiant unique utilis\u00e9 dans les URLs et filtres. G\u00e9n\u00e9r\u00e9 automatiquement depuis le nom si vide.',
       },
     },
   ],

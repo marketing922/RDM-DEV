@@ -1,4 +1,5 @@
 import React from 'react'
+import { unstable_cache } from 'next/cache'
 import type { BeforeListServerProps } from 'payload'
 
 import ListHeroClient from './ListHeroClient'
@@ -17,6 +18,40 @@ const ICON_BY_SLUG: Record<string, { icon: string; accent: string }> = {
   auditLog: { icon: 'activity', accent: '#6B7280' },
 }
 
+const getListHeroStats = (payload: any, slug: string, hasDrafts: boolean) =>
+  unstable_cache(
+    async () => {
+      const total = await payload
+        .count({ collection: slug, overrideAccess: true })
+        .catch(() => ({ totalDocs: 0 }))
+      let published: number | null = null
+      let drafts: number | null = null
+      if (hasDrafts) {
+        const [pub, drf] = await Promise.all([
+          payload
+            .count({
+              collection: slug,
+              where: { _status: { equals: 'published' } },
+              overrideAccess: true,
+            })
+            .catch(() => ({ totalDocs: 0 })),
+          payload
+            .count({
+              collection: slug,
+              where: { _status: { equals: 'draft' } },
+              overrideAccess: true,
+            })
+            .catch(() => ({ totalDocs: 0 })),
+        ])
+        published = pub.totalDocs ?? 0
+        drafts = drf.totalDocs ?? 0
+      }
+      return { total: total.totalDocs ?? 0, published, drafts }
+    },
+    ['list-hero-stats', slug],
+    { revalidate: 30 },
+  )()
+
 const ListHero = async (props: BeforeListServerProps) => {
   const { collectionConfig } = props
   const payload = (props as any)?.payload
@@ -30,32 +65,11 @@ const ListHero = async (props: BeforeListServerProps) => {
   let draftDocs: number | null = null
 
   if (payload) {
-    const total = await payload
-      .count({ collection: slug, overrideAccess: true })
-      .catch(() => ({ totalDocs: 0 }))
-    totalDocs = total.totalDocs ?? 0
-
     const hasDrafts = Boolean((collectionConfig as any).versions?.drafts)
-    if (hasDrafts) {
-      const [published, drafts] = await Promise.all([
-        payload
-          .count({
-            collection: slug,
-            where: { _status: { equals: 'published' } },
-            overrideAccess: true,
-          })
-          .catch(() => ({ totalDocs: 0 })),
-        payload
-          .count({
-            collection: slug,
-            where: { _status: { equals: 'draft' } },
-            overrideAccess: true,
-          })
-          .catch(() => ({ totalDocs: 0 })),
-      ])
-      publishedDocs = published.totalDocs ?? 0
-      draftDocs = drafts.totalDocs ?? 0
-    }
+    const stats = await getListHeroStats(payload, slug, hasDrafts)
+    totalDocs = stats.total
+    publishedDocs = stats.published
+    draftDocs = stats.drafts
   }
 
   const labelPlural =

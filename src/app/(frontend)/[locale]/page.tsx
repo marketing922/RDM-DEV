@@ -1,10 +1,13 @@
-import type { ReactNode } from 'react'
 import { getDictionary } from '@/i18n/server'
 import type { Locale } from '@/i18n/config'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getWikiEntries, getBlogPosts, getBenefits } from '@/lib/queries'
 import { richTextToPlain } from '@/lib/utils'
+import { resolveMediaUrl } from '@/lib/mediaUrl'
+import BodyExplorer, { type BodyRegion } from '@/components/home/BodyExplorer'
+import Reveal from '@/components/ui/Reveal'
+import NewsletterForm from '@/components/home/NewsletterForm'
 
 const DEFAULT_PLANT_IMAGE = 'https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1761295312/Chat_GPT_Image_Oct_24_2025_10_38_36_AM_1_a78649daf4.png'
 const DEFAULT_BLOG_IMAGE = 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=800&q=80'
@@ -34,55 +37,227 @@ const mockFaqItems = [
   { question: 'Les plantes médicinales remplacent-elles un traitement médical ?', answer: 'Non. Les informations sur notre site sont à visée informative uniquement et ne remplacent pas un avis médical. Consultez toujours un professionnel de santé.' },
 ]
 
-/* ─── SVG Components ─────────────────────────────────────────────── */
+/* ─── Brand assets (Cloudinary) ──────────────────────────────────── */
 
-function CertIcon({ type }: { type: string }) {
-  const icons: Record<string, ReactNode> = {
-    bio: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-[#A2211E]">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-        <path d="M8 12s1-4 4-4 4 4 4 4-1 4-4 4-4-4-4-4z" />
-        <path d="M12 8v8" />
-      </svg>
-    ),
-    pharmacopee: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-[#A2211E]">
-        <path d="M9 2h6v4H9z" />
-        <path d="M4 6h16v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6z" />
-        <path d="M12 10v6" />
-        <path d="M9 13h6" />
-      </svg>
-    ),
-    vegan: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-[#A2211E]">
-        <path d="M7 20.5C7 17 9 12 17 4" />
-        <path d="M17 4c-4 0-8 1-10.5 5.5C4 14 7 17 7 20.5" />
-        <path d="M17 4c0 4-1 8-5.5 10.5" />
-      </svg>
-    ),
-    metaux: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-[#A2211E]">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        <path d="M9 12l2 2 4-4" />
-      </svg>
-    ),
-    france: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-[#A2211E]">
-        <rect x="2" y="4" width="20" height="16" rx="2" />
-        <line x1="9" y1="4" x2="9" y2="20" />
-        <line x1="15" y1="4" x2="15" y2="20" />
-      </svg>
-    ),
-    naturel: (
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-8 h-8 text-[#A2211E]">
-        <path d="M17 8c.7-1 1.4-2.2 1.8-3.6.1-.4-.3-.8-.7-.7C16.7 4.1 15.5 4.8 14.5 5.5 13.2 3.9 11.2 3 9 3 5.1 3 2 6.1 2 10c0 5.5 7 11 7 11" />
-        <path d="M22 10c0 5.5-7 11-7 11" />
-        <path d="M22 10c0-3.9-3.1-7-7-7" />
-      </svg>
-    ),
-  }
-  return icons[type] || null
+const CLOUDINARY = 'https://res.cloudinary.com/laboratoire-calebasse/image/upload'
+
+const BRAND_VALUES = [
+  {
+    key: 'naturel',
+    label: '100 % Naturel & Pur',
+    subtitle: 'Sans additif ni conservateur',
+    num: '01',
+    src: `${CLOUDINARY}/v1761638875/100_naturel_et_pur_a729474982.png`,
+    rotate: '-1.5deg',
+  },
+  {
+    key: 'france',
+    label: 'Fabriqué en France',
+    subtitle: 'Conditionnement et expédition à Paris',
+    num: '02',
+    src: `${CLOUDINARY}/v1761638875/fabrique_en_France_c8918f0126.png`,
+    rotate: '1deg',
+  },
+  {
+    key: 'savoir',
+    label: 'Savoir-faire Ancestral',
+    subtitle: 'Recettes issues de la pharmacopée traditionnelle',
+    num: '03',
+    src: `${CLOUDINARY}/v1761638874/savoir_faire_ancestral_b831db15f3.png`,
+    rotate: '-0.5deg',
+  },
+] as const
+
+const CERTIFICATIONS = [
+  {
+    key: 'bio',
+    label: 'Agriculture Biologique',
+    num: '04',
+    src: `${CLOUDINARY}/v1759917732/bio_1_Photoroom_83979e4d37.png`,
+  },
+  {
+    key: 'pharmacopee',
+    label: 'Pharmacopée',
+    num: '05',
+    src: `${CLOUDINARY}/v1759917732/pharmacopee_1_Photoroom_f8d2c169cf.png`,
+  },
+  {
+    key: 'vegan',
+    label: 'Vegan',
+    num: '06',
+    src: `${CLOUDINARY}/v1759917732/vegan_1_Photoroom_5c36156877.png`,
+  },
+  {
+    key: 'metaux',
+    label: 'Sans Métaux Lourds',
+    num: '07',
+    src: `${CLOUDINARY}/v1759917732/metaux_lourds_1_Photoroom_6dd6ec51b6.png`,
+  },
+] as const
+
+/* ─── Body regions (interactive "Le corps & la plante") ─────────── */
+
+const BODY_REGION_DEFS = [
+  {
+    id: 'tete',
+    label: 'Tête',
+    adjective: 'pour la tête',
+    x: 175,
+    y: 55,
+    keywords: ['tête', 'crâne', 'migraine', 'céphalée', 'mémoire', 'concentration'],
+  },
+  {
+    id: 'gorge',
+    label: 'Gorge',
+    adjective: 'pour la gorge',
+    x: 160,
+    y: 105,
+    keywords: ['gorge', 'toux', 'voix', 'laryng', 'rhinit', 'pharyng'],
+  },
+  {
+    id: 'respiration',
+    label: 'Respiration',
+    adjective: 'respiratoires',
+    x: 195,
+    y: 160,
+    keywords: ['respir', 'poumon', 'bronche', 'rhume', 'nez', 'sinus', 'asthme'],
+  },
+  {
+    id: 'digestion',
+    label: 'Digestion',
+    adjective: 'digestives',
+    x: 100,
+    y: 200,
+    keywords: [
+      'digest',
+      'estomac',
+      'intestin',
+      'ballonnement',
+      'transit',
+      'nausée',
+      'foie',
+      'colon',
+    ],
+  },
+  {
+    id: 'feminin',
+    label: 'Féminin',
+    adjective: 'pour le féminin',
+    x: 195,
+    y: 240,
+    keywords: ['féminin', 'règles', 'menstru', 'ménopause', 'grossesse'],
+  },
+  {
+    id: 'circulation',
+    label: 'Circulation',
+    adjective: 'circulatoires',
+    x: 115,
+    y: 320,
+    keywords: ['circul', 'veineux', 'jambes', 'varice', 'hémorroïde', 'œdèm'],
+  },
+] as const
+
+function normalize(s: string): string {
+  return s.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')
 }
+
+function buildRegionData(entries: any[]): BodyRegion[] {
+  return BODY_REGION_DEFS.map((def) => {
+    const kws = def.keywords.map(normalize)
+
+    const matches = entries.filter((entry) => {
+      // Primary: any related benefit has bodyRegion === def.id
+      const benefits = Array.isArray(entry?.benefits) ? entry.benefits : []
+      const hasRegion = benefits.some(
+        (b: any) => typeof b === 'object' && b?.bodyRegion === def.id,
+      )
+      if (hasRegion) return true
+
+      // Fallback: keyword match on name/description/benefit names (legacy)
+      const benefitNames = benefits
+        .map((b: any) => (typeof b === 'object' ? b?.name || b?.slug || '' : ''))
+        .join(' ')
+      const haystack = normalize(
+        [entry?.name, entry?.shortDescription, entry?.directAnswer, benefitNames]
+          .filter(Boolean)
+          .join(' '),
+      )
+      return kws.some((kw) => haystack.includes(kw))
+    })
+
+    return {
+      id: def.id,
+      label: def.label,
+      adjective: def.adjective,
+      count: matches.length,
+      plants: matches.slice(0, 6).map((e: any) => ({
+        name: String(e.name || ''),
+        slug: String(e.slug || ''),
+      })),
+    }
+  })
+}
+
+const MOCK_REGIONS: BodyRegion[] = [
+  {
+    id: 'tete',
+    label: 'Tête',
+    adjective: 'pour la tête',
+    count: 14,
+    plants: [
+      { name: 'Menthe Poivrée', slug: 'menthe-poivree' },
+      { name: 'Lavande', slug: 'lavande' },
+    ],
+  },
+  {
+    id: 'gorge',
+    label: 'Gorge',
+    adjective: 'pour la gorge',
+    count: 8,
+    plants: [{ name: 'Thym', slug: 'thym' }],
+  },
+  {
+    id: 'respiration',
+    label: 'Respiration',
+    adjective: 'respiratoires',
+    count: 16,
+    plants: [
+      { name: 'Eucalyptus', slug: 'eucalyptus' },
+      { name: 'Thym', slug: 'thym' },
+    ],
+  },
+  {
+    id: 'digestion',
+    label: 'Digestion',
+    adjective: 'digestives',
+    count: 31,
+    plants: [
+      { name: 'Camomille', slug: 'camomille' },
+      { name: 'Menthe poivrée', slug: 'menthe-poivree' },
+      { name: 'Fenouil', slug: 'fenouil' },
+      { name: 'Gentiane', slug: 'gentiane' },
+      { name: 'Romarin', slug: 'romarin' },
+      { name: 'Boldo', slug: 'boldo' },
+    ],
+  },
+  {
+    id: 'feminin',
+    label: 'Féminin',
+    adjective: 'pour le féminin',
+    count: 12,
+    plants: [{ name: 'Sauge', slug: 'sauge' }],
+  },
+  {
+    id: 'circulation',
+    label: 'Circulation',
+    adjective: 'circulatoires',
+    count: 14,
+    plants: [
+      { name: 'Vigne rouge', slug: 'vigne-rouge' },
+      { name: 'Marronnier d’Inde', slug: 'marronnier-inde' },
+    ],
+  },
+]
 
 /* ─── Page ────────────────────────────────────────────────────────── */
 
@@ -90,363 +265,494 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params
   const dict = await getDictionary(locale as Locale)
 
-  // Fetch CMS data in parallel
+  // Fetch CMS data in parallel — wiki entries fetched in bulk so we can both
+  // render the top-3 herbarium plates AND feed the BodyExplorer with the full
+  // set (matched against region keywords).
   const [wikiResult, blogResult, benefitsResult] = await Promise.all([
-    getWikiEntries({ limit: 3, locale }),
+    getWikiEntries({ limit: 100, locale }),
     getBlogPosts({ limit: 3, locale }),
     getBenefits({ limit: 6, locale }),
   ])
-  const dbWikiEntries = wikiResult.docs
+  const dbAllWiki = wikiResult.docs
+  const dbWikiEntries = dbAllWiki.slice(0, 3)
   const dbBlogPosts = blogResult.docs
-  const dbBenefits = benefitsResult.docs
 
   const wikiEntries = dbWikiEntries.length > 0 ? dbWikiEntries : null
   const blogPosts = dbBlogPosts.length > 0 ? dbBlogPosts : null
-  const benefits = dbBenefits.length > 0 ? dbBenefits : null
+
+  // Real counts for the hero stats row
+  const plantsCount = wikiResult.totalDocs ?? 0
+  const benefitsCount = benefitsResult.totalDocs ?? 0
+  const articlesCount = blogResult.totalDocs ?? 0
+
+  // Body regions — use DB data if any region matches, otherwise mock fallback
+  const computedRegions = buildRegionData(dbAllWiki)
+  const bodyRegions = computedRegions.some((r) => r.count > 0)
+    ? computedRegions
+    : MOCK_REGIONS
 
   return (
     <>
-      {/* ═══════════════ 1. HERO ═══════════════ */}
-      <section className="bg-[#FEF9E9]">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 py-16 md:py-24">
-          {/* Badge above the grid */}
-          <span className="inline-block bg-[#A2211E] text-white text-xs font-bold px-3 py-1 rounded-full mb-6">
-            100% Naturel
-          </span>
+      {/* ═══════════════ 1. HERO — ALMANACH ═══════════════ */}
+      <section className="relative overflow-hidden bg-rm-cream">
+        <div className="mx-auto max-w-[1280px] px-6 md:px-10 pt-12 md:pt-[72px] pb-12 md:pb-12 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
+          {/* Left column */}
+          <div className="relative">
+            {/* Volume badge */}
+            <div className="flex items-center gap-2.5 mb-4 md:mb-[18px]">
+              <span className="block w-7 h-px bg-rm-burgundy" />
+              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+                Volume IV · Printemps 2026
+              </span>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-stretch">
-            {/* Left column */}
-            <div className="flex flex-col justify-between">
-              <div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#054A57] leading-tight">
-                  {dict.home.hero.title}
-                </h1>
-                <p className="mt-5 text-lg text-[#712E2F]/70 leading-relaxed max-w-lg">
-                  {dict.home.hero.subtitle}
-                </p>
+            {/* Display headline */}
+            <h1 className="font-display font-normal text-rm-teal leading-[1.02] tracking-[-0.02em] text-[40px] sm:text-[52px] md:text-[60px] lg:text-[62px] xl:text-[78px]">
+              <span className="block">L'almanach des</span>
+              <span className="block whitespace-nowrap">
+                <em className="italic text-rm-burgundy">plantes</em> qui soignent
+              </span>
+              <span className="block">depuis toujours.</span>
+            </h1>
+
+            {/* Serif subtitle */}
+            <p className="font-serif text-[17px] sm:text-[19px] leading-[1.55] text-rm-inkSoft mt-6 md:mt-7 max-w-[520px]">
+              Une encyclopédie botanique réunissant les savoirs de la pharmacopée française et de la médecine traditionnelle chinoise — rigoureusement sourcée, illustrée, et lisible par tous.
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-3.5 mt-7 md:mt-8 items-start sm:items-center">
+              <Link
+                href={`/${locale}/plantes`}
+                className="inline-flex items-center gap-2 font-sans text-sm font-semibold bg-rm-burgundy text-white px-[22px] py-[14px] rounded-[10px] shadow-[0_6px_16px_rgba(162,33,30,0.18)] hover:bg-rm-burgundy/90 transition-colors"
+              >
+                Parcourir l'encyclopédie
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="2" y1="8" x2="13" y2="8" />
+                  <polyline points="9,4 13,8 9,12" />
+                </svg>
+              </Link>
+              <Link
+                href={`/${locale}/a-propos`}
+                className="font-sans text-sm font-semibold text-rm-teal underline underline-offset-4 decoration-1 hover:text-rm-burgundy transition-colors py-[14px] px-[18px]"
+              >
+                Notre démarche →
+              </Link>
+            </div>
+
+            {/* Stats row — live counts from Payload */}
+            <div className="flex items-center gap-5 sm:gap-7 mt-10 md:mt-11 font-sans text-xs text-rm-inkSoft">
+              <div className="flex items-baseline gap-2">
+                <span className="font-display text-[26px] sm:text-[28px] text-rm-teal leading-none">{plantsCount}</span>
+                <span>{plantsCount > 1 ? 'plantes' : 'plante'}</span>
               </div>
-              <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                <Link
-                  href={`/${locale}/plantes`}
-                  className="inline-flex items-center justify-center bg-[#A2211E] hover:bg-[#712E2F] text-white font-semibold py-3.5 px-8 rounded-lg transition-colors text-base"
-                >
-                  {dict.home.hero.cta}
-                </Link>
-                <Link
-                  href={`/${locale}/a-propos`}
-                  className="inline-flex items-center justify-center border-2 border-[#A2211E] text-[#A2211E] hover:bg-[#A2211E] hover:text-white font-semibold py-3.5 px-8 rounded-lg transition-colors text-base"
-                >
-                  {dict.home.hero.ctaSecondary}
-                </Link>
+              <span className="block w-px h-6 bg-rm-ruleStrong" />
+              <div className="flex items-baseline gap-2">
+                <span className="font-display text-[26px] sm:text-[28px] text-rm-teal leading-none">{benefitsCount}</span>
+                <span>{benefitsCount > 1 ? 'bienfaits' : 'bienfait'}</span>
+              </div>
+              <span className="block w-px h-6 bg-rm-ruleStrong" />
+              <div className="flex items-baseline gap-2">
+                <span className="font-display text-[26px] sm:text-[28px] text-rm-teal leading-none">{articlesCount}</span>
+                <span>{articlesCount > 1 ? 'articles' : 'article'}</span>
               </div>
             </div>
-            {/* Right column — image: aligned top with h1, bottom with buttons */}
-            <div className="relative rounded-2xl overflow-hidden min-h-[350px]">
+          </div>
+
+          {/* Right column — circular herbarium plates (PNG with built-in gray halo) */}
+          <div className="relative h-[520px] sm:h-[600px] lg:h-[680px] hidden md:block">
+            {/* Plate 1 — Camomille (top-left) */}
+            <div className="absolute top-0 left-0 w-[240px] h-[240px] lg:w-[270px] lg:h-[270px]">
               <Image
-                src="https://images.unsplash.com/photo-1514733670139-4d87a1941d55?w=1200&q=85"
-                alt="Plantes médicinales et tisanes naturelles"
+                src="/assets/plates/camomille.png"
+                alt="Camomille — Matricaria recutita"
                 fill
-                className="object-cover"
+                className="object-contain"
+                sizes="270px"
                 priority
-                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
+            {/* Plate 2 — Tilleul (middle-right) */}
+            <div className="absolute top-[300px] right-0 w-[210px] h-[210px] lg:w-[240px] lg:h-[240px]">
+              <Image
+                src="/assets/plates/tilleul.png"
+                alt="Tilleul — Tilia cordata"
+                fill
+                className="object-contain"
+                sizes="240px"
+              />
+            </div>
+            {/* Plate 3 — Bleuet (bottom-left) */}
+            <div className="absolute bottom-0 left-[30px] w-[180px] h-[180px] lg:w-[200px] lg:h-[200px]">
+              <Image
+                src="/assets/plates/bleuet.png"
+                alt="Bleuet — Centaurea cyanus"
+                fill
+                className="object-contain"
+                sizes="200px"
+              />
+            </div>
+
+            {/* Herbarium label N° 014 — near camomille top-right */}
+            <div className="absolute top-12 right-4 lg:right-8 bg-rm-creamSoft border border-rm-ruleStrong px-3.5 py-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.06)] rotate-[3deg] z-10">
+              <div className="font-sans text-[9px] tracking-[0.2em] text-rm-teal/60 uppercase">N° 014</div>
+              <div className="font-display italic text-[15px] text-rm-burgundy mt-0.5 leading-tight">
+                Matricaria recutita
+              </div>
+            </div>
+
+            {/* Herbarium label N° 027 — near tilleul left side */}
+            <div className="absolute top-[420px] lg:top-[470px] right-[200px] lg:right-[220px] bg-rm-creamSoft border border-rm-ruleStrong px-3.5 py-2.5 shadow-[0_4px_12px_rgba(0,0,0,0.06)] rotate-[-2deg] z-10">
+              <div className="font-sans text-[9px] tracking-[0.2em] text-rm-teal/60 uppercase">N° 027</div>
+              <div className="font-display italic text-[15px] text-rm-burgundy mt-0.5 leading-tight">
+                Tilia cordata
+              </div>
+            </div>
+
+            {/* Decorative sprig */}
+            <svg
+              width="140" height="140" viewBox="0 0 140 140" fill="none"
+              className="absolute -bottom-5 -right-5 opacity-40 text-rm-ochre pointer-events-none"
+              aria-hidden="true"
+            >
+              <path d="M70 15 C 80 40, 85 70, 80 110" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+              <path d="M72 35 C 82 32, 92 28, 98 22" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none" />
+              <path d="M75 55 C 65 52, 55 48, 48 42" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none" />
+              <path d="M78 75 C 88 72, 98 68, 105 62" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none" />
+              <path d="M80 95 C 70 92, 60 88, 53 82" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none" />
+              <ellipse cx="100" cy="22" rx="7" ry="3.5" transform="rotate(-20 100 22)" fill="currentColor" fillOpacity="0.5" />
+              <ellipse cx="46" cy="42" rx="7" ry="3.5" transform="rotate(20 46 42)" fill="currentColor" fillOpacity="0.5" />
+              <ellipse cx="107" cy="62" rx="7" ry="3.5" transform="rotate(-20 107 62)" fill="currentColor" fillOpacity="0.5" />
+              <ellipse cx="51" cy="82" rx="7" ry="3.5" transform="rotate(20 51 82)" fill="currentColor" fillOpacity="0.5" />
+            </svg>
           </div>
         </div>
       </section>
 
-      {/* ═══════════════ 2. CERTIFICATIONS BAR ═══════════════ */}
-      <section className="py-12 bg-white">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.08)] p-8">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-              {(
-                [
-                  { key: 'bio', type: 'bio' },
-                  { key: 'pharmacopee', type: 'pharmacopee' },
-                  { key: 'vegan', type: 'vegan' },
-                  { key: 'metaux', type: 'metaux' },
-                  { key: 'france', type: 'france' },
-                  { key: 'naturel', type: 'naturel' },
-                ] as const
-              ).map((cert) => (
-                <div
-                  key={cert.key}
-                  className="flex flex-col items-center gap-2 text-center"
-                >
-                  <CertIcon type={cert.type} />
-                  <span className="text-sm text-[#054A57] font-medium leading-snug">
-                    {dict.home.certifications[cert.key]}
-                  </span>
-                </div>
-              ))}
+      {/* ═══════════════ 2. CERTIFICATIONS & ENGAGEMENTS ═══════════════ */}
+      <section className="bg-rm-paper border-t border-dashed border-rm-rule">
+        <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-10 md:py-12">
+          {/* Header */}
+          <Reveal className="text-center mb-7 md:mb-9">
+            <div className="flex items-center justify-center gap-2.5 mb-3">
+              <span className="block w-6 h-px bg-rm-burgundy" />
+              <span className="font-sans text-[10px] tracking-[0.25em] text-rm-burgundy uppercase">
+                Nos engagements
+              </span>
+              <span className="block w-6 h-px bg-rm-burgundy" />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ 3. ENGAGEMENTS ═══════════════ */}
-      <section className="bg-[#FFF5D5] py-10">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="flex items-center gap-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-[#FEF9E9] rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[#A2211E]">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                  <path d="M9 12l2 2 4-4" />
-                </svg>
-              </div>
-              <div>
-                <p className="font-semibold text-[#054A57]">Sources vérifiées</p>
-                <p className="text-sm text-[#712E2F]/70">Conformes à la pharmacopée chinoise</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-[#FEF9E9] rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[#A2211E]">
-                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                </svg>
-              </div>
-              <div>
-                <p className="font-semibold text-[#054A57]">Encyclopédie complète</p>
-                <p className="text-sm text-[#712E2F]/70">Fiches plantes détaillées et illustrées</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex-shrink-0 w-12 h-12 bg-[#FEF9E9] rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-[#A2211E]">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="12" y1="16" x2="12" y2="12" />
-                  <line x1="12" y1="8" x2="12.01" y2="8" />
-                </svg>
-              </div>
-              <div>
-                <p className="font-semibold text-[#054A57]">Contenu accessible</p>
-                <p className="text-sm text-[#712E2F]/70">Informations claires pour tous</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════ 4. PLANTS WIKI ═══════════════ */}
-      <section className="py-16 md:py-24 bg-[#FEF9E9]">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#054A57]">
-              {dict.home.wiki.title}
+            <h2 className="font-display text-[22px] md:text-[28px] leading-[1.1] text-rm-teal tracking-[-0.01em]">
+              Une <em className="italic text-rm-burgundy">exigence</em> à chaque étape
             </h2>
-            <p className="mt-3 text-lg text-[#712E2F]/70 max-w-xl mx-auto">
+          </Reveal>
+
+          {/* Brand values — 3 compact cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-5 mb-8 md:mb-10">
+            {BRAND_VALUES.map((v, idx) => (
+              <Reveal key={v.key} delay={idx * 90}>
+              <article
+                className="relative bg-rm-cream border border-rm-rule shadow-[0_4px_14px_rgba(0,0,0,0.04)] px-4 pt-4 pb-4 text-center flex items-center gap-4 md:flex-col md:gap-2 md:pt-5 md:pb-4 transition-[transform,box-shadow] duration-300 hover:shadow-[0_8px_20px_rgba(0,0,0,0.07)] hover:-translate-y-0.5"
+                style={{ transform: `rotate(${v.rotate})` }}
+              >
+                <span className="absolute top-2 left-2 font-mono text-[8px] tracking-[0.25em] uppercase text-rm-inkSoft/60">
+                  N° {v.num}
+                </span>
+
+                <div className="relative w-[64px] h-[64px] md:w-[84px] md:h-[84px] shrink-0">
+                  <Image
+                    src={v.src}
+                    alt={v.label}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 768px) 64px, 84px"
+                  />
+                </div>
+
+                <div className="text-left md:text-center">
+                  <h3 className="font-display text-[15px] md:text-[16px] text-rm-teal leading-tight tracking-[-0.01em]">
+                    {v.label}
+                  </h3>
+                  <p className="font-serif italic text-[11px] md:text-[12px] leading-[1.4] text-rm-inkSoft mt-0.5 md:mt-1">
+                    {v.subtitle}
+                  </p>
+                </div>
+              </article>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Inline divider with certifications label */}
+          <Reveal className="flex items-center gap-3 mb-5 md:mb-6">
+            <span className="flex-1 border-t border-dashed border-rm-rule" />
+            <span className="font-sans text-[9px] tracking-[0.3em] text-rm-inkSoft/70 uppercase">
+              Certifications
+            </span>
+            <span className="flex-1 border-t border-dashed border-rm-rule" />
+          </Reveal>
+
+          {/* Certifications — 4 compact circular badges */}
+          <div className="grid grid-cols-4 gap-3 md:gap-6">
+            {CERTIFICATIONS.map((c, idx) => (
+              <Reveal key={c.key} delay={idx * 70} className="flex flex-col items-center text-center group">
+                <div className="relative w-[60px] h-[60px] md:w-[72px] md:h-[72px] mb-2">
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 rounded-full border border-dashed border-rm-ruleStrong transition-colors group-hover:border-rm-burgundy"
+                  />
+                  <div className="absolute inset-1.5">
+                    <Image
+                      src={c.src}
+                      alt={c.label}
+                      fill
+                      className="object-contain"
+                      sizes="72px"
+                    />
+                  </div>
+                </div>
+                <span className="font-sans text-[10px] md:text-[11px] tracking-[0.02em] text-rm-teal leading-tight max-w-[120px]">
+                  {c.label}
+                </span>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════ 3. PLANTS WIKI ═══════════════ */}
+      <section className="bg-rm-cream border-t border-dashed border-rm-rule">
+        <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-16 md:py-24">
+          <Reveal className="text-center mb-12 md:mb-14 max-w-2xl mx-auto">
+            <div className="flex items-center justify-center gap-2.5 mb-4">
+              <span className="block w-7 h-px bg-rm-burgundy" />
+              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+                Planches d&apos;herbier
+              </span>
+              <span className="block w-7 h-px bg-rm-burgundy" />
+            </div>
+            <h2 className="font-display text-[34px] md:text-[44px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
+              Les <em className="italic text-rm-burgundy">plantes</em> à découvrir
+            </h2>
+            <p className="font-serif italic text-[16px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-4">
               {dict.home.wiki.subtitle}
             </p>
-          </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {(wikiEntries || mockPlants).map((plant: any) => {
-              const imgSrc = plant.image || (plant.images?.[0] as any)?.image?.url || DEFAULT_PLANT_IMAGE
-              const desc = typeof plant.description === 'string' ? plant.description : richTextToPlain(plant.description)
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {(wikiEntries || mockPlants).map((plant: any, idx: number) => {
+              const imgSrc =
+                plant.image ||
+                resolveMediaUrl((plant.images?.[0] as any)?.image, 'card') ||
+                resolveMediaUrl(plant.heroImage, 'card') ||
+                DEFAULT_PLANT_IMAGE
+              const desc =
+                (typeof plant.shortDescription === 'string' && plant.shortDescription) ||
+                (typeof plant.description === 'string'
+                  ? plant.description
+                  : richTextToPlain(plant.description)) ||
+                plant.directAnswer ||
+                ''
+              const num = String(idx + 1).padStart(3, '0')
               return (
+                <Reveal key={plant.slug} delay={idx * 100}>
                 <Link
-                  key={plant.slug}
                   href={`/${locale}/plantes/${plant.slug}`}
-                  className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden group hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300"
+                  className="group bg-rm-paper border border-rm-rule overflow-hidden flex flex-col hover:border-rm-ruleStrong transition-colors h-full"
                 >
-                  <div className="relative h-48 bg-[#DCD8C7] overflow-hidden">
+                  <div className="relative aspect-[4/3] bg-rm-creamSoft overflow-hidden">
                     <Image
                       src={imgSrc}
                       alt={plant.name}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
+                    <span className="absolute top-3 left-3 font-mono text-[10px] tracking-[0.2em] uppercase text-rm-teal/70 bg-rm-cream/90 border border-rm-rule px-2 py-1">
+                      N° {num}
+                    </span>
                   </div>
-                  <div className="p-5">
-                    <p className="text-lg font-semibold text-[#054A57]">
+                  <div className="p-5 md:p-6 text-center">
+                    <h3 className="font-display text-[22px] leading-[1.15] text-rm-teal group-hover:text-rm-burgundy transition-colors">
                       {plant.name}
-                    </p>
-                    <p className="text-sm text-[#D0802C] italic">
-                      {plant.latinName}
-                    </p>
+                    </h3>
+                    {plant.latinName && (
+                      <p className="font-serif italic text-[14px] text-rm-ochre mt-1">
+                        {plant.latinName}
+                      </p>
+                    )}
                     {desc && (
-                      <p className="text-sm text-[#712E2F]/70 mt-2 line-clamp-2">
+                      <p className="font-serif italic text-[15px] leading-[1.55] text-rm-inkSoft mt-3 line-clamp-2">
                         {desc}
                       </p>
                     )}
-                    <p className="text-sm font-semibold text-[#A2211E] mt-3 hover:underline">
-                      {dict.common.learnMore} &rarr;
-                    </p>
+                    <span className="inline-block mt-4 font-sans text-sm font-semibold text-rm-burgundy">
+                      {dict.common.learnMore} →
+                    </span>
                   </div>
                 </Link>
+                </Reveal>
               )
             })}
           </div>
 
-          <div className="text-center mt-12">
+          <Reveal className="text-center mt-12 md:mt-14" delay={150}>
             <Link
               href={`/${locale}/plantes`}
-              className="inline-flex items-center justify-center border-2 border-[#A2211E] text-[#A2211E] hover:bg-[#A2211E] hover:text-white font-semibold py-3 px-8 rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 font-sans text-sm font-semibold bg-rm-burgundy text-white px-6 py-3.5 hover:bg-rm-burgundy/90 transition-colors"
             >
               {dict.home.wiki.viewAll}
+              <span aria-hidden="true">→</span>
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* ═══════════════ 4.5 BENEFITS ═══════════════ */}
-      {benefits && (
-        <section className="py-16 md:py-24 bg-[#FFF5D5]">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#054A57]">
-                {dict.benefits.title}
-              </h2>
-              <p className="mt-3 text-lg text-[#712E2F]/70 max-w-xl mx-auto">
-                {dict.benefits.subtitle}
-              </p>
+      {/* ═══════════════ 4. LE CORPS & LA PLANTE ═══════════════ */}
+      <section className="bg-rm-paper border-t border-dashed border-rm-rule">
+        <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-16 md:py-24">
+          <Reveal className="text-center mb-12 md:mb-14 max-w-2xl mx-auto">
+            <div className="flex items-center justify-center gap-2.5 mb-4">
+              <span className="block w-7 h-px bg-rm-burgundy" />
+              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+                Chapitre II · Le corps &amp; la plante
+              </span>
+              <span className="block w-7 h-px bg-rm-burgundy" />
             </div>
+            <h2 className="font-display text-[34px] md:text-[44px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
+              Où <em className="italic text-rm-burgundy">avez-vous</em> besoin d&apos;aide&nbsp;?
+            </h2>
+            <p className="font-serif italic text-[16px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-4">
+              Touchez une région pour découvrir les plantes qui la soulagent traditionnellement.
+            </p>
+          </Reveal>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {benefits.map((b: any) => {
-                const desc =
-                  typeof b.shortDescription === 'string'
-                    ? b.shortDescription
-                    : b.directAnswer ||
-                      (b.description && richTextToPlain(b.description))
-                return (
-                  <Link
-                    key={b.slug}
-                    href={`/${locale}/bienfaits/${b.slug}`}
-                    className="group bg-white rounded-2xl p-5 border border-[#DCD8C7] hover:border-[#A2211E] hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(162,33,30,0.08)] transition-all duration-300 flex flex-col"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-[#FEF9E9] flex items-center justify-center mb-3 group-hover:bg-[#A2211E] transition-colors">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="w-6 h-6 text-[#A2211E] group-hover:text-white transition-colors"
-                      >
-                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-                      </svg>
-                    </div>
-                    <p className="font-semibold text-[#054A57] text-sm leading-snug group-hover:text-[#A2211E] transition-colors">
-                      {b.name}
-                    </p>
-                    {desc && (
-                      <p className="mt-2 text-xs text-[#712E2F]/70 line-clamp-2">
-                        {desc}
-                      </p>
-                    )}
-                  </Link>
-                )
-              })}
-            </div>
-
-            <div className="text-center mt-12">
-              <Link
-                href={`/${locale}/bienfaits`}
-                className="inline-flex items-center justify-center border-2 border-[#A2211E] text-[#A2211E] hover:bg-[#A2211E] hover:text-white font-semibold py-3 px-8 rounded-lg transition-colors"
-              >
-                Voir tous les bienfaits
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
+          <Reveal delay={120}>
+            <BodyExplorer regions={bodyRegions} locale={locale} />
+          </Reveal>
+        </div>
+      </section>
 
       {/* ═══════════════ 5. BLOG ═══════════════ */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#054A57]">
-              {dict.home.blog.title}
+      <section className="bg-rm-cream border-t border-dashed border-rm-rule">
+        <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-16 md:py-24">
+          <Reveal className="text-center mb-12 md:mb-14 max-w-2xl mx-auto">
+            <div className="flex items-center justify-center gap-2.5 mb-4">
+              <span className="block w-7 h-px bg-rm-burgundy" />
+              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+                Journal
+              </span>
+              <span className="block w-7 h-px bg-rm-burgundy" />
+            </div>
+            <h2 className="font-display text-[34px] md:text-[44px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
+              Le <em className="italic text-rm-burgundy">journal</em> des plantes
             </h2>
-            <p className="mt-3 text-lg text-[#712E2F]/70 max-w-xl mx-auto">
+            <p className="font-serif italic text-[16px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-4">
               {dict.home.blog.subtitle}
             </p>
-          </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
             {(() => {
               const posts = blogPosts || mockBlogPosts
               const featured = posts[0] as any
               const side = posts.slice(1) as any[]
-              const getImg = (p: any) => p.image || p.featuredImage?.url || DEFAULT_BLOG_IMAGE
+              const getImg = (p: any) =>
+                p.image || resolveMediaUrl(p.featuredImage, 'card') || DEFAULT_BLOG_IMAGE
               const getCat = (p: any) => p.category?.name || p.category || ''
-              const getDate = (p: any) => p.date || (p.publishedAt ? new Date(p.publishedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '')
+              const getDate = (p: any) =>
+                p.date ||
+                (p.publishedAt
+                  ? new Date(p.publishedAt).toLocaleDateString('fr-FR', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                    })
+                  : '')
               return (
                 <>
-                  {/* Featured article (2/3) */}
+                  {/* Featured (2/3) */}
+                  <Reveal className="lg:col-span-2">
                   <Link
                     href={`/${locale}/blog/${featured.slug}`}
-                    className="lg:col-span-2 bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden group hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] transition-all duration-300"
+                    className="group bg-rm-paper border border-rm-rule overflow-hidden flex flex-col hover:border-rm-ruleStrong transition-colors h-full"
                   >
-                    <div className="aspect-video relative overflow-hidden">
+                    <div className="aspect-[16/9] relative overflow-hidden bg-rm-creamSoft">
                       <Image
                         src={getImg(featured)}
                         alt={featured.title}
                         fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                         sizes="(max-width: 1024px) 100vw, 66vw"
                       />
                       {getCat(featured) && (
-                        <span className="absolute top-4 left-4 bg-[#D0802C] text-white text-xs font-bold px-3 py-1 rounded-full">
+                        <span className="absolute top-4 left-4 bg-rm-cream/95 border border-rm-ruleStrong text-rm-ochre font-sans text-[10px] tracking-[0.22em] uppercase px-3 py-1.5">
                           {getCat(featured)}
                         </span>
                       )}
                     </div>
-                    <div className="p-6">
-                      <div className="flex items-center gap-3 text-sm text-[#DCD8C7] mb-2">
+                    <div className="p-6 md:p-8">
+                      <div className="font-mono text-[11px] tracking-wide text-rm-inkSoft/80 uppercase mb-3 flex items-center gap-2">
                         <span>{getDate(featured)}</span>
-                        <span>&middot;</span>
-                        <span>{featured.readingTime} {dict.blog.readingTime}</span>
+                        {featured.readingTime && (
+                          <>
+                            <span className="text-rm-ruleStrong">·</span>
+                            <span>
+                              {featured.readingTime} {dict.blog.readingTime}
+                            </span>
+                          </>
+                        )}
                       </div>
-                      <h3 className="text-xl font-bold text-[#054A57] group-hover:text-[#A2211E] transition-colors">
+                      <h3 className="font-display text-[26px] md:text-[30px] leading-[1.12] text-rm-teal tracking-[-0.01em] group-hover:text-rm-burgundy transition-colors">
                         {featured.title}
                       </h3>
-                      <p className="mt-2 text-[#712E2F]/70 line-clamp-2">
-                        {featured.excerpt}
-                      </p>
+                      {featured.excerpt && (
+                        <p className="font-serif italic text-[16px] leading-[1.55] text-rm-inkSoft mt-3 line-clamp-3">
+                          {featured.excerpt}
+                        </p>
+                      )}
                     </div>
                   </Link>
+                  </Reveal>
 
-                  {/* Side articles (1/3) */}
-                  <div className="flex flex-col gap-6">
-                    {side.map((post: any) => (
+                  {/* Side (1/3) */}
+                  <div className="flex flex-col gap-6 md:gap-8">
+                    {side.map((post: any, sIdx: number) => (
+                      <Reveal key={post.slug} delay={120 + sIdx * 110} className="flex-1">
                       <Link
-                        key={post.slug}
                         href={`/${locale}/blog/${post.slug}`}
-                        className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.08)] overflow-hidden group hover:shadow-[0_8px_16px_rgba(0,0,0,0.1)] transition-all duration-300 flex-1"
+                        className="group bg-rm-paper border border-rm-rule overflow-hidden flex flex-col h-full hover:border-rm-ruleStrong transition-colors"
                       >
-                        <div className="aspect-video relative overflow-hidden">
+                        <div className="aspect-[16/9] relative overflow-hidden bg-rm-creamSoft">
                           <Image
                             src={getImg(post)}
                             alt={post.title}
                             fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                             sizes="(max-width: 1024px) 100vw, 33vw"
                           />
                           {getCat(post) && (
-                            <span className="absolute top-3 left-3 bg-[#D0802C] text-white text-xs font-bold px-3 py-1 rounded-full">
+                            <span className="absolute top-3 left-3 bg-rm-cream/95 border border-rm-ruleStrong text-rm-ochre font-sans text-[10px] tracking-[0.22em] uppercase px-2.5 py-1">
                               {getCat(post)}
                             </span>
                           )}
                         </div>
-                        <div className="p-4">
-                          <div className="flex items-center gap-2 text-xs text-[#DCD8C7] mb-1">
+                        <div className="p-4 md:p-5">
+                          <div className="font-mono text-[10px] tracking-wide text-rm-inkSoft/80 uppercase mb-2 flex items-center gap-2">
                             <span>{getDate(post)}</span>
-                            <span>&middot;</span>
-                            <span>{post.readingTime} {dict.blog.readingTime}</span>
+                            {post.readingTime && (
+                              <>
+                                <span className="text-rm-ruleStrong">·</span>
+                                <span>
+                                  {post.readingTime} {dict.blog.readingTime}
+                                </span>
+                              </>
+                            )}
                           </div>
-                          <h3 className="text-base font-bold text-[#054A57] group-hover:text-[#A2211E] transition-colors line-clamp-2">
+                          <h3 className="font-display text-[18px] leading-[1.15] text-rm-teal group-hover:text-rm-burgundy transition-colors line-clamp-2">
                             {post.title}
                           </h3>
                         </div>
                       </Link>
+                      </Reveal>
                     ))}
                   </div>
                 </>
@@ -454,94 +760,112 @@ export default async function HomePage({ params }: Props) {
             })()}
           </div>
 
-          <div className="text-center mt-12">
+          <Reveal className="text-center mt-12 md:mt-14" delay={150}>
             <Link
               href={`/${locale}/blog`}
-              className="inline-flex items-center justify-center border-2 border-[#A2211E] text-[#A2211E] hover:bg-[#A2211E] hover:text-white font-semibold py-3 px-8 rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 font-sans text-sm font-semibold bg-rm-burgundy text-white px-6 py-3.5 hover:bg-rm-burgundy/90 transition-colors"
             >
               {dict.home.blog.viewAll}
+              <span aria-hidden="true">→</span>
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
 
-      {/* ═══════════════ 6. NEWSLETTER CTA ═══════════════ */}
-      <section className="bg-[#A2211E] py-16 md:py-24">
-        <div className="mx-auto max-w-2xl px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white">
-            {dict.home.newsletter.title}
+      {/* ═══════════════ 6. NEWSLETTER ═══════════════ */}
+      <section className="bg-rm-paper border-t border-dashed border-rm-rule">
+        <Reveal className="mx-auto max-w-2xl px-6 md:px-10 py-16 md:py-24 text-center">
+          <div className="flex items-center justify-center gap-2.5 mb-4">
+            <span className="block w-7 h-px bg-rm-burgundy" />
+            <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+              Courrier saisonnier
+            </span>
+            <span className="block w-7 h-px bg-rm-burgundy" />
+          </div>
+          <h2 className="font-display text-[32px] md:text-[42px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
+            <em className="italic text-rm-burgundy">Recevez</em> notre newsletter
           </h2>
-          <p className="mt-4 text-lg text-white/80 leading-relaxed">
+          <p className="font-serif italic text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-4">
             {dict.home.newsletter.subtitle}
           </p>
 
-          <form className="mt-8 flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
-            <input
-              type="email"
-              placeholder={dict.home.newsletter.placeholder}
-              className="flex-1 h-12 px-5 rounded-lg text-base text-[#054A57] bg-white border-0 focus:outline-none focus:ring-2 focus:ring-white/50 placeholder:text-[#DCD8C7]"
-            />
-            <button
-              type="submit"
-              className="h-12 px-8 bg-[#054A57] hover:bg-[#054A57]/90 text-white font-semibold rounded-lg transition-colors"
-            >
-              {dict.home.newsletter.cta}
-            </button>
-          </form>
+          <NewsletterForm
+            placeholder={dict.home.newsletter.placeholder}
+            cta={dict.home.newsletter.cta}
+            locale={locale}
+          />
 
-          <p className="text-xs text-white/50 mt-5">
-            {dict.home.newsletter.privacy}
+          <p className="font-mono text-[11px] tracking-wide uppercase text-rm-inkSoft/60 mt-6">
+            En vous inscrivant, vous acceptez notre{' '}
+            <Link
+              href={`/${locale}/politique-confidentialite`}
+              className="underline underline-offset-2 decoration-rm-inkSoft/40 hover:text-rm-burgundy hover:decoration-rm-burgundy transition-colors"
+            >
+              politique de confidentialité
+            </Link>
+            .
           </p>
-        </div>
+        </Reveal>
       </section>
 
       {/* ═══════════════ 7. FAQ PREVIEW ═══════════════ */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="mx-auto max-w-3xl px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#054A57] text-center mb-12">
-            {dict.home.faq.title}
-          </h2>
+      <section className="bg-rm-cream border-t border-dashed border-rm-rule">
+        <div className="mx-auto max-w-3xl px-6 md:px-10 py-16 md:py-24">
+          <Reveal className="text-center mb-12 md:mb-14">
+            <div className="flex items-center justify-center gap-2.5 mb-4">
+              <span className="block w-7 h-px bg-rm-burgundy" />
+              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+                En marge
+              </span>
+              <span className="block w-7 h-px bg-rm-burgundy" />
+            </div>
+            <h2 className="font-display text-[32px] md:text-[42px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
+              Questions <em className="italic text-rm-burgundy">fréquentes</em>
+            </h2>
+          </Reveal>
 
-          <div className="space-y-4">
+          <Reveal className="divide-y divide-dashed divide-rm-rule border-t border-b border-dashed border-rm-rule" delay={80}>
             {mockFaqItems.map((faq, i) => (
-              <details
-                key={i}
-                className="bg-[#FEF9E9] rounded-2xl overflow-hidden group"
-              >
-                <summary className="flex w-full items-center justify-between gap-4 p-6 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                  <span className="font-semibold text-[#054A57] text-left">
-                    {faq.question}
+              <details key={i} className="group">
+                <summary className="flex w-full items-center justify-between gap-4 py-5 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <span className="flex items-baseline gap-4 flex-1 min-w-0">
+                    <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/60 shrink-0">
+                      N° {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="font-display text-[18px] md:text-[20px] leading-[1.25] text-rm-teal text-left">
+                      {faq.question}
+                    </span>
                   </span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
+                    width="18"
+                    height="18"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="2"
+                    strokeWidth="1.6"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="text-[#DCD8C7] flex-shrink-0 transition-transform duration-300 group-open:rotate-180"
+                    className="text-rm-burgundy flex-shrink-0 transition-transform duration-300 group-open:rotate-180"
                   >
                     <polyline points="6 9 12 15 18 9" />
                   </svg>
                 </summary>
-                <div className="px-6 pb-6 text-[#712E2F]/70 text-sm leading-relaxed">
+                <div className="pb-5 pl-[72px] pr-8 font-serif italic text-[15px] leading-[1.6] text-rm-inkSoft">
                   {faq.answer}
                 </div>
               </details>
             ))}
-          </div>
+          </Reveal>
 
-          <div className="text-center mt-12">
+          <Reveal className="text-center mt-10 md:mt-12" delay={150}>
             <Link
               href={`/${locale}/faq`}
-              className="inline-flex items-center justify-center text-[#A2211E] hover:text-[#712E2F] font-semibold text-base transition-colors"
+              className="inline-flex items-center gap-1.5 font-sans text-sm font-semibold text-rm-burgundy underline underline-offset-4 decoration-1 hover:text-rm-teal transition-colors"
             >
-              {dict.home.faq.viewAll} &rarr;
+              {dict.home.faq.viewAll} →
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
     </>
