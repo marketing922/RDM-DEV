@@ -6,15 +6,16 @@ export const gatePublishCompliance: CollectionBeforeChangeHook = async ({
   req,
   operation,
 }) => {
-  // Escape hatch: bulk operations with reviewed content can opt out
-  if ((req.context as any)?.skipCompliance) return data
-
-  // Only check when trying to publish
+  // Only check when trying to publish.
   if (data?.status !== 'published') return data
 
   const complianceStatus = data?.complianceStatus || originalDoc?.complianceStatus
 
-  // Auto-validation: if compliance check passed, allow publish
+  // The `skipCompliance` flag only bypasses the user-revert step in
+  // `scanForbiddenClaims`; it does NOT bypass this gate. The pipeline must
+  // still arrive here with `complianceStatus === 'approved'` (i.e. the
+  // forbidden-claim regex did not flag anything). This way pipeline-published
+  // content is gated by the same rule as human-published content.
   if (complianceStatus === 'approved') return data
 
   // Block publication if not approved

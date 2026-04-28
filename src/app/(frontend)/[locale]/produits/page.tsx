@@ -52,7 +52,7 @@ export default async function ProduitsPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[#FEF9E9]">
-      <div className="mx-auto max-w-7xl px-6 pb-6 pt-4">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 pb-6 pt-4">
         <Breadcrumb
           items={[
             { label: dict.nav.home, href: `/${locale}` },
@@ -63,26 +63,26 @@ export default async function ProduitsPage({ params }: Props) {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-7xl px-6 pb-12 pt-8 text-center sm:pb-16 sm:pt-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 pb-10 pt-6 text-center sm:pb-12 sm:pt-8 md:pb-16 md:pt-12">
           <Image
             src={BRAND.icons.natural}
             alt="100% Naturel et Pur"
             width={80}
             height={80}
-            className="mx-auto h-20 w-20"
+            className="mx-auto h-16 w-16 sm:h-20 sm:w-20"
             unoptimized
             priority
           />
-          <h1 className="mt-4 text-4xl font-bold text-[#054A57] sm:text-5xl">
+          <h1 className="mt-4 text-3xl font-bold text-[#054A57] sm:text-4xl md:text-5xl">
             Nos Produits
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-base text-[#712E2F]/80 sm:text-lg">
+          <p className="mx-auto mt-3 sm:mt-4 max-w-2xl text-sm text-[#712E2F]/80 sm:text-base md:text-lg">
             Des plantes s&eacute;lectionn&eacute;es en qualit&eacute; pharmacop&eacute;e,
             cultiv&eacute;es en bio et con&ccedil;ues pour accompagner votre bien-&ecirc;tre au
             quotidien.
           </p>
 
-          <div className="mx-auto mt-8 flex max-w-2xl flex-wrap items-center justify-center gap-6 sm:gap-10">
+          <div className="mx-auto mt-6 sm:mt-8 grid max-w-2xl grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-10">
             {[
               { src: BRAND.certifications.bio, label: 'Agriculture Bio' },
               { src: BRAND.certifications.pharmacopee, label: 'Qualit\u00e9 Pharmacop\u00e9e' },
@@ -95,25 +95,25 @@ export default async function ProduitsPage({ params }: Props) {
                   alt={cert.label}
                   width={56}
                   height={56}
-                  className="h-14 w-14"
+                  className="h-12 w-12 sm:h-14 sm:w-14"
                   unoptimized
                 />
-                <span className="text-[11px] font-medium text-[#712E2F]/70">{cert.label}</span>
+                <span className="text-[10px] sm:text-[11px] font-medium text-[#712E2F]/70 text-center">{cert.label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <LeafIcon className="pointer-events-none absolute -left-6 top-8 hidden h-28 w-28 rotate-[-20deg] text-[#A2211E]/10 sm:block" />
-        <LeafIcon className="pointer-events-none absolute -right-10 bottom-0 hidden h-36 w-36 rotate-[30deg] text-[#A2211E]/10 sm:block" />
+        <LeafIcon className="pointer-events-none absolute -left-6 top-8 hidden h-28 w-28 rotate-[-20deg] text-[#A2211E]/10 lg:block" />
+        <LeafIcon className="pointer-events-none absolute -right-10 bottom-0 hidden h-36 w-36 rotate-[30deg] text-[#A2211E]/10 lg:block" />
       </section>
 
-      <div className="mx-auto max-w-7xl px-6 pb-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 pb-12 sm:pb-16">
         {products.length > 0 ? (
           <ProductsCatalog products={products as any} />
         ) : (
-          <div className="mx-auto max-w-md rounded-2xl bg-[#FFF5D5] p-12 text-center shadow-sm ring-1 ring-[#DCD8C7]/60">
-            <p className="text-lg font-medium text-[#712E2F]">
+          <div className="mx-auto max-w-md rounded-2xl bg-[#FFF5D5] p-8 sm:p-12 text-center shadow-sm ring-1 ring-[#DCD8C7]/60">
+            <p className="text-base sm:text-lg font-medium text-[#712E2F]">
               Nos produits arrivent bient&ocirc;t
             </p>
             <p className="mt-2 text-sm text-[#712E2F]/70">

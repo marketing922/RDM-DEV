@@ -31,11 +31,14 @@ export const AIGenerateTextareaField: TextareaFieldClientComponent = (props: any
     setErr(null)
     try {
       const fullData = (form as any).getData?.() || {}
+      const docId = docInfo?.id
+      const contextWithId =
+        docId != null && fullData.id == null ? { ...fullData, id: docId } : fullData
       const res = await generateFieldValue({
         collection,
         field: String(path),
         fieldType: 'textarea',
-        context: fullData,
+        context: contextWithId,
         locale: (props.locale as string) || undefined,
         targetLength: field?.admin?.targetLength,
       })

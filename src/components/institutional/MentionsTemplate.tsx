@@ -48,7 +48,7 @@ export default function MentionsTemplate({ locale, homeLabel }: Props) {
         intro="Identité de l'éditeur, hébergeur, propriété intellectuelle et conditions d'utilisation du site www.remedes-mamie.com."
       />
 
-      <div className="max-w-[1240px] mx-auto px-6 md:px-10 py-16 md:py-20 pb-24 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10 lg:gap-12">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 md:px-10 py-10 sm:py-14 md:py-20 pb-16 sm:pb-20 md:pb-24 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6 sm:gap-8 lg:gap-12">
         <aside>
           <LegalTOC items={TOC_ITEMS} />
         </aside>

@@ -102,19 +102,19 @@ export default async function PlantesPage({ params, searchParams }: Props) {
 
         {/* Header almanach */}
         <Reveal>
-          <header className="mt-10 md:mt-14 mb-10 md:mb-14 text-center max-w-3xl mx-auto">
-            <div className="flex items-center justify-center gap-2.5 mb-5">
+          <header className="mt-8 sm:mt-10 md:mt-14 mb-8 sm:mb-10 md:mb-14 text-center max-w-3xl mx-auto">
+            <div className="flex items-center justify-center gap-2.5 mb-4 sm:mb-5">
               <span className="block w-7 h-px bg-rm-burgundy" />
-              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+              <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
                 Encyclopédie
               </span>
               <span className="block w-7 h-px bg-rm-burgundy" />
             </div>
-            <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] text-[40px] sm:text-[52px] md:text-[60px]">
+            <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] text-[32px] sm:text-[44px] md:text-[52px] lg:text-[60px]">
               L&apos;encyclopédie des{' '}
               <em className="italic text-rm-burgundy">plantes</em>
             </h1>
-            <p className="font-serif italic text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-5">
+            <p className="font-serif italic text-[15px] sm:text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-4 sm:mt-5">
               {dict.wiki.subtitle}
             </p>
           </header>
@@ -141,7 +141,7 @@ export default async function PlantesPage({ params, searchParams }: Props) {
         {entries.length > 0 ? (
           <>
             {/* Desktop: 4-col grid, Tablet: 2-col grid */}
-            <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
               {entries.map((entry, idx) => (
                 <Reveal key={entry.id} delay={(idx % 4) * 80}>
                   <WikiCard entry={entry as any} locale={locale} />
@@ -242,12 +242,12 @@ export default async function PlantesPage({ params, searchParams }: Props) {
 
         {/* Pagination */}
         {totalPages && totalPages > 1 && (
-          <nav className="mt-12 flex items-center justify-center gap-2">
+          <nav className="mt-10 sm:mt-12 flex flex-wrap items-center justify-center gap-2">
             {/* Previous */}
             {currentPage > 1 ? (
               <Link
                 href={buildPageHref(currentPage - 1)}
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-sm bg-white border border-[#DCD8C7] text-[#712E2F] hover:border-[#A2211E] hover:text-[#A2211E] transition-colors"
+                className="w-10 h-10 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-sm bg-white border border-[#DCD8C7] text-[#712E2F] hover:border-[#A2211E] hover:text-[#A2211E] transition-colors"
                 aria-label="Page précédente"
               >
                 <svg
@@ -267,7 +267,7 @@ export default async function PlantesPage({ params, searchParams }: Props) {
             ) : (
               <span
                 aria-hidden="true"
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-sm bg-white border border-[#DCD8C7] text-[#712E2F]/30"
+                className="w-10 h-10 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-sm bg-white border border-[#DCD8C7] text-[#712E2F]/30"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -291,7 +291,7 @@ export default async function PlantesPage({ params, searchParams }: Props) {
                 <span
                   key={n}
                   aria-current="page"
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-medium bg-[#A2211E] text-white"
+                  className="w-10 h-10 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-sm font-medium bg-[#A2211E] text-white"
                 >
                   {n}
                 </span>
@@ -299,7 +299,7 @@ export default async function PlantesPage({ params, searchParams }: Props) {
                 <Link
                   key={n}
                   href={buildPageHref(n)}
-                  className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-medium bg-white border border-[#DCD8C7] text-[#712E2F] hover:border-[#A2211E] hover:text-[#A2211E] transition-colors"
+                  className="w-10 h-10 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-sm font-medium bg-white border border-[#DCD8C7] text-[#712E2F] hover:border-[#A2211E] hover:text-[#A2211E] transition-colors"
                 >
                   {n}
                 </Link>
@@ -309,7 +309,7 @@ export default async function PlantesPage({ params, searchParams }: Props) {
             {currentPage < totalPages ? (
               <Link
                 href={buildPageHref(currentPage + 1)}
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-sm bg-white border border-[#DCD8C7] text-[#712E2F] hover:border-[#A2211E] hover:text-[#A2211E] transition-colors"
+                className="w-10 h-10 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-sm bg-white border border-[#DCD8C7] text-[#712E2F] hover:border-[#A2211E] hover:text-[#A2211E] transition-colors"
                 aria-label="Page suivante"
               >
                 <svg
@@ -329,7 +329,7 @@ export default async function PlantesPage({ params, searchParams }: Props) {
             ) : (
               <span
                 aria-hidden="true"
-                className="w-9 h-9 rounded-lg flex items-center justify-center text-sm bg-white border border-[#DCD8C7] text-[#712E2F]/30"
+                className="w-10 h-10 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-sm bg-white border border-[#DCD8C7] text-[#712E2F]/30"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -349,12 +349,6 @@ export default async function PlantesPage({ params, searchParams }: Props) {
           </nav>
         )}
       </div>
-
-      <footer className="mt-16 py-10 px-4 text-center bg-[#1F2937]">
-        <p className="text-sm text-[#9CA3AF]">
-          &copy; {new Date().getFullYear()} Remèdes de Mamie. Tous droits réservés.
-        </p>
-      </footer>
     </main>
   )
 }

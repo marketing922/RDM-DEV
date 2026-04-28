@@ -178,7 +178,7 @@ export default async function ProductDetailPage({ params }: Props) {
         }}
         locale={locale}
       />
-      <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-6">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 md:px-10 py-6">
         <Breadcrumb
           items={[
             { label: dict.nav.home, href: `/${locale}` },
@@ -188,7 +188,7 @@ export default async function ProductDetailPage({ params }: Props) {
         />
 
         {/* ─── Main: gallery + summary ─── */}
-        <section className="mt-8 md:mt-12 grid lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-14 items-start">
+        <section className="mt-6 sm:mt-8 md:mt-12 grid lg:grid-cols-[1.1fr_1fr] gap-8 sm:gap-10 lg:gap-14 items-start">
           {/* Gallery */}
           <Reveal>
             <ProductGallery images={images} alt={p.name} />
@@ -203,19 +203,19 @@ export default async function ProductDetailPage({ params }: Props) {
               </span>
             </div>
 
-            <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.01em] text-[34px] md:text-[44px]">
+            <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.01em] text-[28px] sm:text-[34px] md:text-[44px]">
               {p.name}
             </h1>
 
             {p.shortDescription && (
-              <p className="font-serif italic text-[17px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-4">
+              <p className="font-serif italic text-[15px] sm:text-[17px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-3 sm:mt-4">
                 {p.shortDescription}
               </p>
             )}
 
             {/* Price */}
-            <div className="mt-6 flex items-baseline gap-3 flex-wrap">
-              <span className="font-display text-[36px] md:text-[40px] text-rm-burgundy leading-none">
+            <div className="mt-5 sm:mt-6 flex items-baseline gap-3 flex-wrap">
+              <span className="font-display text-[32px] sm:text-[36px] md:text-[40px] text-rm-burgundy leading-none">
                 {price}
               </span>
               {hasPromo && (
@@ -248,13 +248,13 @@ export default async function ProductDetailPage({ params }: Props) {
                 <p className="font-sans text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/70">
                   Acheter chez
                 </p>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-3">
                   {p.amazonUrl && (
                     <a
                       href={p.amazonUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-rm-burgundy text-white font-sans text-sm font-semibold px-5 py-3 hover:bg-rm-burgundy/90 transition-colors"
+                      className="inline-flex items-center justify-center sm:justify-start gap-2 bg-rm-burgundy text-white font-sans text-sm font-semibold px-5 py-3 hover:bg-rm-burgundy/90 transition-colors"
                     >
                       Amazon
                       <span aria-hidden="true">→</span>
@@ -265,7 +265,7 @@ export default async function ProductDetailPage({ params }: Props) {
                       href={p.temuUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 bg-rm-teal text-white font-sans text-sm font-semibold px-5 py-3 hover:bg-rm-teal/90 transition-colors"
+                      className="inline-flex items-center justify-center sm:justify-start gap-2 bg-rm-teal text-white font-sans text-sm font-semibold px-5 py-3 hover:bg-rm-teal/90 transition-colors"
                     >
                       Temu
                       <span aria-hidden="true">→</span>
@@ -299,14 +299,14 @@ export default async function ProductDetailPage({ params }: Props) {
         </section>
 
         {/* ─── Description + info sidebar ─── */}
-        <section className="mt-16 md:mt-20 grid lg:grid-cols-[1fr_340px] gap-10 lg:gap-14">
+        <section className="mt-12 sm:mt-16 md:mt-20 grid lg:grid-cols-[1fr_340px] gap-8 sm:gap-10 lg:gap-14">
           <Reveal className="space-y-10">
             {descriptionText && (
               <div>
-                <h2 className="font-display text-[26px] md:text-[32px] text-rm-teal leading-tight tracking-[-0.01em]">
+                <h2 className="font-display text-[22px] sm:text-[26px] md:text-[32px] text-rm-teal leading-tight tracking-[-0.01em]">
                   À propos du produit
                 </h2>
-                <div className="mt-4 space-y-4 font-serif text-[16px] md:text-[17px] leading-[1.7] text-rm-ink">
+                <div className="mt-4 space-y-4 font-serif text-[15px] sm:text-[16px] md:text-[17px] leading-[1.7] text-rm-ink">
                   {descriptionText
                     .split('\n\n')
                     .filter(Boolean)
@@ -319,7 +319,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
             {ingredientsText && (
               <div>
-                <h2 className="font-display text-[22px] md:text-[26px] text-rm-teal leading-tight tracking-[-0.01em]">
+                <h2 className="font-display text-[20px] sm:text-[22px] md:text-[26px] text-rm-teal leading-tight tracking-[-0.01em]">
                   Ingrédients
                 </h2>
                 <p className="mt-3 font-serif italic text-[15px] leading-[1.6] text-rm-inkSoft">
@@ -330,7 +330,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
             {usageText && (
               <div>
-                <h2 className="font-display text-[22px] md:text-[26px] text-rm-teal leading-tight tracking-[-0.01em]">
+                <h2 className="font-display text-[20px] sm:text-[22px] md:text-[26px] text-rm-teal leading-tight tracking-[-0.01em]">
                   Conseils d&apos;utilisation
                 </h2>
                 <div className="mt-3 space-y-3 font-serif text-[15px] leading-[1.6] text-rm-ink">
@@ -427,9 +427,9 @@ export default async function ProductDetailPage({ params }: Props) {
 
         {/* ─── Related products ─── */}
         {relatedProducts.length > 0 && (
-          <section className="mt-20 md:mt-24 border-t border-dashed border-rm-rule pt-14 md:pt-16 pb-10">
-            <Reveal className="flex items-baseline justify-between mb-8">
-              <h2 className="font-display text-[26px] md:text-[32px] text-rm-teal leading-tight tracking-[-0.01em]">
+          <section className="mt-16 sm:mt-20 md:mt-24 border-t border-dashed border-rm-rule pt-10 sm:pt-14 md:pt-16 pb-10">
+            <Reveal className="flex items-baseline justify-between mb-6 sm:mb-8 gap-4">
+              <h2 className="font-display text-[22px] sm:text-[26px] md:text-[32px] text-rm-teal leading-tight tracking-[-0.01em]">
                 Produits <em className="italic text-rm-burgundy">similaires</em>
               </h2>
               <Link

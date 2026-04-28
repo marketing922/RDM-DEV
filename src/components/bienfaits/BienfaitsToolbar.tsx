@@ -127,25 +127,27 @@ export default function BienfaitsToolbar({
         </div>
       )}
 
-      <div className="flex flex-wrap justify-center gap-2">
-        {regions.map((r) => {
-          const isActive = r.key === initialRegion || (r.key === 'all' && !initialRegion)
-          return (
-            <button
-              key={r.key}
-              suppressHydrationWarning
-              type="button"
-              onClick={() => setRegion(r.key)}
-              className={`inline-flex items-center h-9 px-4 rounded-full font-sans text-[12px] font-semibold tracking-[0.02em] transition-colors whitespace-nowrap ${
-                isActive
-                  ? 'bg-rm-burgundy text-white border border-rm-burgundy'
-                  : 'bg-rm-paper text-rm-teal border border-rm-rule hover:border-rm-burgundy hover:text-rm-burgundy'
-              }`}
-            >
-              {r.label}
-            </button>
-          )
-        })}
+      <div className="-mx-4 sm:mx-0 px-4 sm:px-0 overflow-x-auto scrollbar-hide">
+        <div className="flex sm:flex-wrap sm:justify-center gap-2 min-w-max sm:min-w-0">
+          {regions.map((r) => {
+            const isActive = r.key === initialRegion || (r.key === 'all' && !initialRegion)
+            return (
+              <button
+                key={r.key}
+                suppressHydrationWarning
+                type="button"
+                onClick={() => setRegion(r.key)}
+                className={`inline-flex items-center h-10 sm:h-9 px-4 rounded-full font-sans text-[12px] font-semibold tracking-[0.02em] transition-colors whitespace-nowrap ${
+                  isActive
+                    ? 'bg-rm-burgundy text-white border border-rm-burgundy'
+                    : 'bg-rm-paper text-rm-teal border border-rm-rule hover:border-rm-burgundy hover:text-rm-burgundy'
+                }`}
+              >
+                {r.label}
+              </button>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

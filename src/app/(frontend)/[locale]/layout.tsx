@@ -7,7 +7,7 @@ import { locales, type Locale } from '@/i18n/config'
 import { getDictionary } from '@/i18n/server'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
-import { MobileNav } from '@/components/layout/MobileNav'
+import { CookieBanner } from '@/components/cookies/CookieBanner'
 import { loadNavigation, loadFooter } from '@/lib/layoutGlobals'
 
 import { OrganizationJsonLd } from '@/components/seo'
@@ -68,7 +68,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <Navbar dict={dict} locale={locale} navigation={navigation} />
         <main id="main-content" className="min-h-screen">{children}</main>
         <Footer dict={dict} locale={locale} footer={footer} />
-        <MobileNav dict={dict} locale={locale} />
+        <CookieBanner />
       </body>
     </html>
   )

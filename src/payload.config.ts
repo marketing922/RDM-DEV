@@ -20,6 +20,9 @@ import {
   SitePages,
   Users,
   AuditLog,
+  ErrorLog,
+  Notifications,
+  ProductionRun,
 } from './collections'
 import { SiteSettings } from './globals/SiteSettings'
 import { Navigation } from './globals/Navigation'
@@ -59,7 +62,6 @@ export default buildConfig({
         Icon: '@/components/admin/Icon.tsx#default',
       },
       Nav: '@/components/admin/Nav.tsx#default',
-      beforeLogin: ['@/components/admin/BeforeLogin.tsx#default'],
       views: {
         dashboard: {
           Component: '@/components/admin/Dashboard.tsx#default',
@@ -67,11 +69,38 @@ export default buildConfig({
         account: {
           Component: '@/components/admin/Account.tsx#default',
         },
+        login: {
+          Component: '@/components/admin/views/Login.tsx#default',
+        },
         settings: {
           Component: '@/components/admin/views/Settings.tsx#default',
           path: '/settings',
           exact: true,
           meta: { title: 'Paramètres' },
+        },
+        aiUsage: {
+          Component: '@/components/admin/views/AIUsage.tsx#default',
+          path: '/ai-usage',
+          exact: true,
+          meta: { title: 'IA — Consommation' },
+        },
+        errors: {
+          Component: '@/components/admin/views/Errors.tsx#default',
+          path: '/errors',
+          exact: true,
+          meta: { title: 'Erreurs système' },
+        },
+        notifications: {
+          Component: '@/components/admin/views/NotificationsList.tsx#default',
+          path: '/notifications',
+          exact: true,
+          meta: { title: 'Notifications' },
+        },
+        aiWorkshop: {
+          Component: '@/components/admin/views/AIWorkshop.tsx#default',
+          path: '/ai-workshop',
+          exact: true,
+          meta: { title: 'Atelier IA' },
         },
       },
     },
@@ -89,6 +118,9 @@ export default buildConfig({
     SitePages,
     Users,
     AuditLog,
+    ErrorLog,
+    Notifications,
+    ProductionRun,
   ],
   globals: [SiteSettings, Navigation, Footer],
   editor: lexicalEditor(),
@@ -97,6 +129,7 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URI,
     },
     push: process.env.PAYLOAD_PUSH !== 'false',
+    migrationDir: path.resolve(dirname, 'migrations'),
   }),
   localization: {
     locales: ['fr', 'en'],
@@ -107,7 +140,7 @@ export default buildConfig({
       ? [vercelBlobStorage({ collections: { media: true }, token: process.env.BLOB_READ_WRITE_TOKEN })]
       : []),
     seoPlugin({
-      collections: ['benefits', 'wikiEntries', 'blogPosts', 'pages', 'sitePages'],
+      collections: ['benefits', 'wikiEntries', 'blogPosts', 'pages', 'sitePages', 'products'],
       generateTitle: ({ doc, collectionSlug }) => {
         const d = doc as any
         const base = String(d?.name || d?.title || '')
@@ -130,6 +163,7 @@ export default buildConfig({
           wikiEntries: '/plantes',
           blogPosts: '/blog',
           benefits: '/bienfaits',
+          products: '/produits',
           pages: '', // Pages live at the root: /{locale}/{slug}
           sitePages: '', // Static site pages live at the root: /{locale}/{slug}
         }

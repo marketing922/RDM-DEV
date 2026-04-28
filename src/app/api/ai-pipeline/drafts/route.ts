@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { verifyHMAC } from '@/lib/hmac'
+import { checkAiRateLimit } from '@/lib/rate-limit'
+import { captureError } from '@/lib/error-tracker'
 import { z } from 'zod'
 
 // Schemas Zod pour chaque type de draft
@@ -34,24 +36,8 @@ const DraftSchema = z.discriminatedUnion('collection', [
   BenefitDraftSchema,
 ])
 
-// Rate limit simple in-memory (pour Phase 1 sans Upstash)
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
-const RATE_LIMIT = 60 // requests per minute
-const DAILY_LIMIT = 1000
-
-function checkRateLimit(apiKey: string): boolean {
-  const now = Date.now()
-  const entry = rateLimitMap.get(apiKey)
-  if (!entry || entry.resetAt < now) {
-    rateLimitMap.set(apiKey, { count: 1, resetAt: now + 60_000 })
-    return true
-  }
-  if (entry.count >= RATE_LIMIT) return false
-  entry.count++
-  return true
-}
-
 export async function POST(request: NextRequest) {
+  let apiKeyIdentifier: string | undefined
   try {
     // 1. Check API Key
     const apiKey = request.headers.get('x-api-key')
@@ -65,9 +51,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid API key' }, { status: 401 })
     }
 
-    // 2. Rate limit
-    if (!checkRateLimit(apiKey)) {
-      return NextResponse.json({ error: 'Rate limit exceeded (60/min)' }, { status: 429 })
+    // 2. Rate limit (Upstash-backed unified helper)
+    apiKeyIdentifier = apiKey.substring(0, 8)
+    const rl = await checkAiRateLimit({
+      userId: 'apikey:' + apiKeyIdentifier,
+      endpoint: 'ai-pipeline/drafts',
+    })
+    if (!rl.ok) {
+      return NextResponse.json(
+        { error: 'rate_limit_exceeded', scope: rl.scope, retryAfterSec: rl.retryAfterSec },
+        { status: 429, headers: { 'Retry-After': String(rl.retryAfterSec) } },
+      )
     }
 
     // 3. Read body + verify HMAC signature
@@ -101,35 +95,52 @@ export async function POST(request: NextRequest) {
     // 6. Create draft via Payload
     const payload = await getPayload({ config: configPromise })
 
-    const doc = await payload.create({
-      collection: collection as any,
-      data: {
-        ...fields,
-        name: fields.title, // map title to name for wiki/benefits
-        status: 'draft', // FORCED server-side
-        complianceStatus: 'pending', // FORCED — will be auto-processed by scanForbiddenClaims hook
-      },
-      locale: parsed.locale,
-    })
+    try {
+      const doc = await payload.create({
+        collection: collection as any,
+        data: {
+          ...fields,
+          name: fields.title, // map title to name for wiki/benefits
+          status: 'draft', // FORCED server-side
+          complianceStatus: 'pending', // FORCED — will be auto-processed by scanForbiddenClaims hook
+        },
+        locale: parsed.locale,
+      })
 
-    // 7. Log to AuditLog
-    await payload.create({
-      collection: 'auditLog',
-      data: {
-        action: 'ai_pipeline_create',
-        collection,
-        documentId: doc.id,
-        after: { apiKey: apiKey.substring(0, 8) + '...', collection, title: fields.title },
-        timestamp: new Date().toISOString(),
-      },
-    })
+      // 7. Log to AuditLog
+      await payload.create({
+        collection: 'auditLog',
+        data: {
+          action: 'ai_pipeline_create',
+          collection,
+          documentId: doc.id,
+          after: { apiKey: apiKey.substring(0, 8) + '...', collection, title: fields.title },
+          timestamp: new Date().toISOString(),
+        },
+      })
 
-    return NextResponse.json(
-      { success: true, id: doc.id, collection, status: 'draft', complianceStatus: doc.complianceStatus || 'pending' },
-      { status: 201 }
-    )
+      return NextResponse.json(
+        { success: true, id: doc.id, collection, status: 'draft', complianceStatus: doc.complianceStatus || 'pending' },
+        { status: 201 }
+      )
+    } catch (pipelineErr: any) {
+      await captureError(pipelineErr, {
+        subsystem: 'ai-pipeline',
+        level: 'error',
+        route: 'POST /api/ai-pipeline/drafts',
+        userId: apiKeyIdentifier ? `apikey:${apiKeyIdentifier}` : undefined,
+        context: { collection, title: fields.title },
+      })
+      throw pipelineErr
+    }
   } catch (error: any) {
     console.error('AI Pipeline error:', error)
+    await captureError(error, {
+      subsystem: 'ai-pipeline',
+      level: 'critical',
+      route: 'POST /api/ai-pipeline/drafts',
+      userId: apiKeyIdentifier ? `apikey:${apiKeyIdentifier}` : undefined,
+    })
     return NextResponse.json(
       { error: 'Internal server error', message: error.message },
       { status: 500 }

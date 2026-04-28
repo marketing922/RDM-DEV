@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { coerceUploadIdsGlobal } from '@/hooks/coerceUploadIds'
 
 export const Navigation: GlobalConfig = {
   slug: 'navigation',
@@ -11,6 +12,9 @@ export const Navigation: GlobalConfig = {
   admin: {
     group: 'Pages du site',
     description: 'Contenu de la barre de navigation : liens principaux, bouton CTA.',
+  },
+  hooks: {
+    beforeValidate: [coerceUploadIdsGlobal],
   },
   fields: [
     {

@@ -191,39 +191,81 @@ export default function FAQTemplate({ locale, homeLabel }: Props) {
         intro="Nous avons regroupé ici les questions les plus fréquentes. Si la vôtre n'y figure pas, écrivez-nous — nous enrichissons cette page chaque mois."
       />
 
-      <div className="max-w-[1240px] mx-auto px-6 md:px-10 py-16 md:py-20 pb-24 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10 lg:gap-12">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 md:px-10 py-10 sm:py-14 md:py-20 pb-16 sm:pb-20 md:pb-24 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6 sm:gap-8 lg:gap-12">
         {/* TOC sidebar */}
         <aside className="lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto">
-          <div className="font-mono text-[10px] tracking-[0.2em] text-rm-burgundy mb-3.5 uppercase">
-            Sommaire
-          </div>
-          <ol className="list-none m-0 p-0">
-            {groups.map((g, i) => (
-              <li
-                key={g.id}
-                className="py-[7px] pl-3 font-serif text-[13px] leading-[1.4] border-l-2 border-transparent hover:border-rm-burgundy transition-colors"
+          {/* Mobile/tablet : collapsible details */}
+          <details className="lg:hidden border border-rm-rule bg-rm-paper group">
+            <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden flex items-center justify-between px-4 py-3 font-mono text-[11px] tracking-[0.18em] text-rm-burgundy uppercase">
+              <span>Sommaire · {groups.length} sections</span>
+              <svg
+                className="text-rm-burgundy flex-shrink-0 transition-transform group-open:rotate-180"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
               >
-                <a
-                  href={`#${g.id}`}
-                  className="text-rm-inkSoft hover:text-rm-burgundy transition-colors inline-flex items-baseline gap-1.5"
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </summary>
+            <ol className="list-none m-0 p-0 px-3 pb-3 pt-1 border-t border-rm-rule">
+              {groups.map((g, i) => (
+                <li
+                  key={g.id}
+                  className="py-1.5 pl-3 font-serif text-[13px] leading-[1.4] border-l-2 border-transparent hover:border-rm-burgundy transition-colors"
                 >
-                  <span className="font-mono text-[10px] text-rm-burgundy">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span>{g.title}</span>
-                </a>
-              </li>
-            ))}
-          </ol>
+                  <a
+                    href={`#${g.id}`}
+                    className="text-rm-inkSoft hover:text-rm-burgundy transition-colors inline-flex items-baseline gap-1.5"
+                  >
+                    <span className="font-mono text-[10px] text-rm-burgundy">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span>{g.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </details>
+
+          {/* Desktop : full sidebar */}
+          <div className="hidden lg:block">
+            <div className="font-mono text-[10px] tracking-[0.2em] text-rm-burgundy mb-3.5 uppercase">
+              Sommaire
+            </div>
+            <ol className="list-none m-0 p-0">
+              {groups.map((g, i) => (
+                <li
+                  key={g.id}
+                  className="py-[7px] pl-3 font-serif text-[13px] leading-[1.4] border-l-2 border-transparent hover:border-rm-burgundy transition-colors"
+                >
+                  <a
+                    href={`#${g.id}`}
+                    className="text-rm-inkSoft hover:text-rm-burgundy transition-colors inline-flex items-baseline gap-1.5"
+                  >
+                    <span className="font-mono text-[10px] text-rm-burgundy">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span>{g.title}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
         </aside>
 
         {/* Groups with Q/A */}
         <div>
           {groups.map((g, gi) => (
             <Reveal key={g.id}>
-              <section id={g.id} className="mb-14 scroll-mt-24">
-                <h2 className="font-display text-[28px] md:text-[34px] text-rm-teal mb-6 font-normal tracking-[-0.01em] border-b border-rm-rule pb-3.5">
-                  <span className="font-mono text-[14px] text-rm-burgundy mr-3">
+              <section id={g.id} className="mb-10 sm:mb-14 scroll-mt-20 sm:scroll-mt-24">
+                <h2 className="font-display text-[22px] sm:text-[28px] md:text-[34px] text-rm-teal mb-4 sm:mb-6 font-normal tracking-[-0.01em] border-b border-rm-rule pb-3 sm:pb-3.5 leading-[1.2]">
+                  <span className="font-mono text-[12px] sm:text-[14px] text-rm-burgundy mr-2 sm:mr-3">
                     § {String(gi + 1).padStart(2, '0')}
                   </span>
                   {g.title}
@@ -231,15 +273,15 @@ export default function FAQTemplate({ locale, homeLabel }: Props) {
                 {g.qs.map((qa, qi) => (
                   <details
                     key={qi}
-                    className="border-b border-rm-rule py-5 group"
+                    className="border-b border-rm-rule py-4 sm:py-5 group"
                     {...(gi === 0 && qi === 0 ? { open: true } : {})}
                   >
-                    <summary className="flex justify-between items-baseline gap-5 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                      <span className="font-display text-[20px] md:text-[22px] text-rm-teal font-normal flex-1 leading-[1.25] tracking-[-0.01em]">
+                    <summary className="flex justify-between items-start sm:items-baseline gap-3 sm:gap-5 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                      <span className="font-display text-[17px] sm:text-[20px] md:text-[22px] text-rm-teal font-normal flex-1 leading-[1.3] sm:leading-[1.25] tracking-[-0.01em]">
                         {qa.q}
                       </span>
                       <svg
-                        className="text-rm-burgundy flex-shrink-0 transition-transform group-open:rotate-180"
+                        className="text-rm-burgundy flex-shrink-0 mt-1 sm:mt-0 transition-transform group-open:rotate-180"
                         width="20"
                         height="20"
                         viewBox="0 0 24 24"
@@ -253,7 +295,7 @@ export default function FAQTemplate({ locale, homeLabel }: Props) {
                         <polyline points="6 9 12 15 18 9" />
                       </svg>
                     </summary>
-                    <div className="font-serif text-[15px] md:text-[16px] leading-[1.7] text-rm-inkSoft mt-3">
+                    <div className="font-serif text-[14px] sm:text-[15px] md:text-[16px] leading-[1.65] sm:leading-[1.7] text-rm-inkSoft mt-2.5 sm:mt-3">
                       {qa.a}
                     </div>
                   </details>
@@ -264,18 +306,18 @@ export default function FAQTemplate({ locale, homeLabel }: Props) {
 
           {/* CTA card */}
           <Reveal>
-            <div className="mt-10 bg-rm-paper border border-rm-rule px-8 py-7 flex justify-between items-center gap-6 flex-wrap">
+            <div className="mt-8 sm:mt-10 bg-rm-paper border border-rm-rule px-5 sm:px-8 py-5 sm:py-7 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 sm:gap-6 flex-wrap">
               <div>
-                <div className="font-display text-[24px] md:text-[28px] text-rm-teal tracking-[-0.01em] font-normal">
+                <div className="font-display text-[20px] sm:text-[24px] md:text-[28px] text-rm-teal tracking-[-0.01em] font-normal leading-[1.2]">
                   Votre question n'y est pas ?
                 </div>
-                <div className="font-serif italic text-[15px] text-rm-inkSoft mt-1.5">
+                <div className="font-serif italic text-[14px] sm:text-[15px] text-rm-inkSoft mt-1.5">
                   Écrivez-nous — nous répondons personnellement sous 48 h ouvrées.
                 </div>
               </div>
               <Link
                 href={`/${locale}/contact`}
-                className="inline-flex items-center gap-2 bg-rm-burgundy text-white font-sans text-[13px] font-semibold px-5 py-3.5 hover:bg-rm-burgundy/90 transition-colors"
+                className="inline-flex items-center justify-center gap-2 bg-rm-burgundy text-white font-sans text-[13px] font-semibold px-5 py-3.5 hover:bg-rm-burgundy/90 transition-colors w-full sm:w-auto"
               >
                 Nous écrire
                 <span aria-hidden="true">→</span>

@@ -27,14 +27,14 @@ export default function ContactTemplate({ locale, homeLabel }: Props) {
         intro="Question botanique, suggestion de plante, demande presse — nous lisons tout, nous répondons sous 48h."
       />
 
-      <div className="max-w-[1240px] mx-auto px-6 md:px-10 py-16 md:py-20 pb-24 grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-16">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 md:px-10 py-10 sm:py-14 md:py-20 pb-16 sm:pb-20 md:pb-24 grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-8 sm:gap-10 lg:gap-16">
         {/* ── Formulaire ── */}
         <Reveal>
           <div>
-            <div className="font-mono text-[11px] text-rm-burgundy tracking-[0.15em] mb-2">
+            <div className="font-mono text-[10px] sm:text-[11px] text-rm-burgundy tracking-[0.15em] mb-2">
               FORMULAIRE · N° 01
             </div>
-            <h2 className="font-display text-[32px] md:text-[38px] text-rm-teal font-normal m-0 mb-7 tracking-[-0.01em]">
+            <h2 className="font-display text-[24px] sm:text-[32px] md:text-[38px] text-rm-teal font-normal m-0 mb-5 sm:mb-7 tracking-[-0.01em] leading-[1.15]">
               Votre message
             </h2>
             <ContactFormAlmanach locale={locale} />
@@ -43,11 +43,11 @@ export default function ContactTemplate({ locale, homeLabel }: Props) {
 
         {/* ── Card coordonnées ── */}
         <Reveal delay={150}>
-          <aside className="bg-rm-paper border border-rm-rule px-7 md:px-8 py-8 md:py-9 h-fit">
-            <div className="font-mono text-[11px] text-rm-burgundy tracking-[0.15em] mb-2">
+          <aside className="bg-rm-paper border border-rm-rule px-5 sm:px-7 md:px-8 py-6 sm:py-8 md:py-9 h-fit">
+            <div className="font-mono text-[10px] sm:text-[11px] text-rm-burgundy tracking-[0.15em] mb-2">
               COORDONNÉES
             </div>
-            <h3 className="font-display text-[24px] md:text-[28px] text-rm-teal font-normal m-0 mb-6">
+            <h3 className="font-display text-[20px] sm:text-[24px] md:text-[28px] text-rm-teal font-normal m-0 mb-5 sm:mb-6 leading-[1.2]">
               La maison d'édition
             </h3>
 
@@ -55,12 +55,12 @@ export default function ContactTemplate({ locale, homeLabel }: Props) {
               {COORDS.map((r) => (
                 <div
                   key={r.k}
-                  className="py-3 border-b border-dashed border-rm-rule flex justify-between items-baseline gap-4"
+                  className="py-3 border-b border-dashed border-rm-rule flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 sm:gap-4"
                 >
-                  <dt className="text-[11px] tracking-[0.12em] text-rm-inkSoft uppercase font-semibold">
+                  <dt className="text-[10px] sm:text-[11px] tracking-[0.12em] text-rm-inkSoft uppercase font-semibold">
                     {r.k}
                   </dt>
-                  <dd className="font-serif text-[14px] text-rm-teal text-right">
+                  <dd className="font-serif text-[14px] text-rm-teal sm:text-right break-all sm:break-normal">
                     <a
                       href={r.href}
                       className="hover:text-rm-burgundy transition-colors"

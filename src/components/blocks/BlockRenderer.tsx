@@ -57,7 +57,7 @@ function HeroBlock({ block }: { block: BlockDoc }) {
   const img = resolveMediaUrl(block.image, 'original')
   return (
     <Reveal>
-      <section className="relative overflow-hidden bg-rm-paper border border-rm-rule px-6 py-16 md:px-12 md:py-20">
+      <section className="relative overflow-hidden bg-rm-paper border border-rm-rule px-5 py-10 sm:px-6 sm:py-16 md:px-12 md:py-20">
         {img && (
           <Image
             src={img}
@@ -85,19 +85,19 @@ function HeroBlock({ block }: { block: BlockDoc }) {
 
         <div className="relative z-10 mx-auto max-w-3xl text-center">
           {block.heading && (
-            <h2 className="font-display text-[30px] md:text-[40px] leading-[1.1] text-rm-teal tracking-[-0.01em]">
+            <h2 className="font-display text-[24px] sm:text-[30px] md:text-[40px] leading-[1.15] sm:leading-[1.1] text-rm-teal tracking-[-0.01em] break-words">
               {block.heading}
             </h2>
           )}
           {block.subheading && (
-            <p className="font-serif italic text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-4">
+            <p className="font-serif italic text-[15px] sm:text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-3 sm:mt-4">
               {block.subheading}
             </p>
           )}
           {block.ctaLabel && block.ctaLink && (
             <Link
               href={block.ctaLink}
-              className="mt-7 inline-flex items-center gap-2 bg-rm-burgundy text-white font-sans text-sm font-semibold px-[22px] py-[14px] rounded-[10px] shadow-[0_6px_16px_rgba(162,33,30,0.18)] hover:bg-rm-burgundy/90 transition-colors"
+              className="mt-5 sm:mt-7 inline-flex items-center gap-2 bg-rm-burgundy text-white font-sans text-sm font-semibold px-5 sm:px-[22px] py-3 sm:py-[14px] rounded-[10px] shadow-[0_6px_16px_rgba(162,33,30,0.18)] hover:bg-rm-burgundy/90 transition-colors"
             >
               {block.ctaLabel}
               <span aria-hidden="true">→</span>
@@ -123,14 +123,14 @@ function ContentBlock({ block, index }: { block: BlockDoc; index: number }) {
   return (
     <Reveal>
       <article className="mx-auto max-w-3xl">
-        <div className="space-y-5 font-serif text-[17px] md:text-[18px] leading-[1.75] text-rm-ink">
+        <div className="space-y-4 sm:space-y-5 font-serif text-[15px] sm:text-[17px] md:text-[18px] leading-[1.7] sm:leading-[1.75] text-rm-ink">
           {paragraphs.map((para, i) => {
             // H2 heuristic: lines starting with "### " or "## "
             if (/^###\s+/.test(para)) {
               return (
                 <h3
                   key={i}
-                  className="font-display text-[22px] md:text-[26px] text-rm-teal leading-tight tracking-[-0.01em] mt-8 mb-2"
+                  className="font-display text-[19px] sm:text-[22px] md:text-[26px] text-rm-teal leading-tight tracking-[-0.01em] mt-6 sm:mt-8 mb-2"
                 >
                   {para.replace(/^###\s+/, '')}
                 </h3>
@@ -140,7 +140,7 @@ function ContentBlock({ block, index }: { block: BlockDoc; index: number }) {
               return (
                 <h2
                   key={i}
-                  className="font-display text-[26px] md:text-[32px] text-rm-teal leading-tight tracking-[-0.01em] mt-10 mb-3"
+                  className="font-display text-[22px] sm:text-[26px] md:text-[32px] text-rm-teal leading-tight tracking-[-0.01em] mt-8 sm:mt-10 mb-2.5 sm:mb-3"
                 >
                   {para.replace(/^##\s+/, '')}
                 </h2>
@@ -155,7 +155,7 @@ function ContentBlock({ block, index }: { block: BlockDoc; index: number }) {
               return (
                 <ul
                   key={i}
-                  className="list-none space-y-2 my-4 border-l-2 border-rm-ochre pl-5"
+                  className="list-none space-y-2 my-4 border-l-2 border-rm-ochre pl-4 sm:pl-5"
                 >
                   {items.map((it, j) => (
                     <li key={j} className="font-serif leading-[1.65]">
@@ -170,7 +170,7 @@ function ContentBlock({ block, index }: { block: BlockDoc; index: number }) {
               return (
                 <p
                   key={i}
-                  className="font-serif italic text-[19px] md:text-[20px] leading-[1.65] text-rm-burgundy/90 first-letter:font-display first-letter:text-[52px] first-letter:text-rm-burgundy first-letter:float-left first-letter:mr-2 first-letter:leading-[0.9] first-letter:mt-1"
+                  className="font-serif italic text-[17px] sm:text-[19px] md:text-[20px] leading-[1.65] text-rm-burgundy/90 first-letter:font-display first-letter:text-[42px] sm:first-letter:text-[52px] first-letter:text-rm-burgundy first-letter:float-left first-letter:mr-2 first-letter:leading-[0.9] first-letter:mt-1"
                 >
                   {para}
                 </p>
@@ -189,7 +189,7 @@ function ContentBlock({ block, index }: { block: BlockDoc; index: number }) {
 function CtaBlock({ block }: { block: BlockDoc }) {
   return (
     <Reveal>
-      <section className="mx-auto max-w-4xl bg-rm-burgundy text-white px-8 py-12 md:px-12 md:py-14 border border-rm-burgundy text-center relative overflow-hidden">
+      <section className="mx-auto max-w-4xl bg-rm-burgundy text-white px-5 py-9 sm:px-8 sm:py-12 md:px-12 md:py-14 border border-rm-burgundy text-center relative overflow-hidden">
         {/* Subtle decorative sprig */}
         <svg
           aria-hidden="true"
@@ -206,19 +206,19 @@ function CtaBlock({ block }: { block: BlockDoc }) {
 
         <div className="relative">
           {block.heading && (
-            <h2 className="font-display text-[26px] md:text-[36px] leading-[1.1] tracking-[-0.01em]">
+            <h2 className="font-display text-[22px] sm:text-[26px] md:text-[36px] leading-[1.15] sm:leading-[1.1] tracking-[-0.01em] break-words">
               {block.heading}
             </h2>
           )}
           {block.description && (
-            <p className="font-serif italic text-[16px] md:text-[17px] leading-[1.55] text-white/90 mt-3 max-w-xl mx-auto">
+            <p className="font-serif italic text-[14px] sm:text-[16px] md:text-[17px] leading-[1.55] text-white/90 mt-2.5 sm:mt-3 max-w-xl mx-auto">
               {block.description}
             </p>
           )}
           {block.buttonLabel && block.buttonLink && (
             <Link
               href={block.buttonLink}
-              className="mt-7 inline-flex items-center gap-2 bg-rm-cream text-rm-burgundy font-sans text-sm font-semibold px-6 py-3 hover:bg-white transition-colors"
+              className="mt-5 sm:mt-7 inline-flex items-center gap-2 bg-rm-cream text-rm-burgundy font-sans text-sm font-semibold px-5 sm:px-6 py-3 hover:bg-white transition-colors"
             >
               {block.buttonLabel}
               <span aria-hidden="true">→</span>
@@ -239,15 +239,15 @@ function FaqBlock({ block }: { block: BlockDoc }) {
     <Reveal>
       <section className="mx-auto max-w-3xl">
         {block.heading && (
-          <div className="text-center mb-8 md:mb-10">
-            <div className="flex items-center justify-center gap-2.5 mb-4">
-              <span className="block w-6 h-px bg-rm-burgundy" />
+          <div className="text-center mb-6 sm:mb-8 md:mb-10">
+            <div className="flex items-center justify-center gap-2 sm:gap-2.5 mb-3 sm:mb-4">
+              <span className="block w-5 sm:w-6 h-px bg-rm-burgundy" />
               <span className="font-sans text-[10px] tracking-[0.25em] text-rm-burgundy uppercase">
                 Questions
               </span>
-              <span className="block w-6 h-px bg-rm-burgundy" />
+              <span className="block w-5 sm:w-6 h-px bg-rm-burgundy" />
             </div>
-            <h2 className="font-display text-[28px] md:text-[36px] leading-tight text-rm-teal tracking-[-0.01em]">
+            <h2 className="font-display text-[22px] sm:text-[28px] md:text-[36px] leading-tight text-rm-teal tracking-[-0.01em] break-words">
               {block.heading}
             </h2>
           </div>
@@ -255,12 +255,12 @@ function FaqBlock({ block }: { block: BlockDoc }) {
         <div className="divide-y divide-dashed divide-rm-rule border-t border-b border-dashed border-rm-rule">
           {items.map((item: any, i: number) => (
             <details key={i} className="group">
-              <summary className="flex w-full items-center justify-between gap-4 py-5 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                <span className="flex items-baseline gap-4 flex-1 min-w-0">
-                  <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/60 shrink-0">
+              <summary className="flex w-full items-start sm:items-center justify-between gap-3 sm:gap-4 py-4 sm:py-5 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                <span className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 flex-1 min-w-0">
+                  <span className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/60 shrink-0">
                     N° {String(i + 1).padStart(2, '0')}
                   </span>
-                  <span className="font-display text-[17px] md:text-[19px] leading-[1.25] text-rm-teal text-left">
+                  <span className="font-display text-[16px] sm:text-[17px] md:text-[19px] leading-[1.3] sm:leading-[1.25] text-rm-teal text-left">
                     {item.question}
                   </span>
                 </span>
@@ -274,12 +274,12 @@ function FaqBlock({ block }: { block: BlockDoc }) {
                   strokeWidth="1.6"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="text-rm-burgundy flex-shrink-0 transition-transform duration-300 group-open:rotate-180"
+                  className="text-rm-burgundy flex-shrink-0 mt-1 sm:mt-0 transition-transform duration-300 group-open:rotate-180"
                 >
                   <polyline points="6 9 12 15 18 9" />
                 </svg>
               </summary>
-              <div className="pb-5 pl-[72px] pr-8 font-serif italic text-[15px] leading-[1.65] text-rm-inkSoft">
+              <div className="pb-4 sm:pb-5 pl-0 sm:pl-[72px] pr-0 sm:pr-8 font-serif italic text-[14px] sm:text-[15px] leading-[1.65] text-rm-inkSoft">
                 {richTextToPlain(item.answer)}
               </div>
             </details>
@@ -298,32 +298,32 @@ function ContactInfoBlock({ block, locale }: { block: BlockDoc; locale: string }
     <Reveal>
       <section className="mx-auto max-w-3xl bg-rm-paper border border-rm-rule">
         {block.heading && (
-          <div className="border-b border-dashed border-rm-rule px-6 md:px-8 py-4">
-            <h2 className="font-display text-[22px] md:text-[26px] text-rm-teal leading-tight">
+          <div className="border-b border-dashed border-rm-rule px-5 sm:px-6 md:px-8 py-3.5 sm:py-4">
+            <h2 className="font-display text-[18px] sm:text-[22px] md:text-[26px] text-rm-teal leading-tight">
               {block.heading}
             </h2>
           </div>
         )}
         <dl className="divide-y divide-dashed divide-rm-rule">
           {block.address && (
-            <div className="grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] px-6 md:px-8 py-4 gap-4">
-              <dt className="font-sans text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/70 self-start pt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] px-5 sm:px-6 md:px-8 py-3.5 sm:py-4 gap-1.5 sm:gap-4">
+              <dt className="font-sans text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/70 self-start pt-0 sm:pt-1">
                 Adresse
               </dt>
-              <dd className="font-serif text-[15px] leading-[1.6] text-rm-ink whitespace-pre-line">
+              <dd className="font-serif text-[14px] sm:text-[15px] leading-[1.6] text-rm-ink whitespace-pre-line">
                 {block.address}
               </dd>
             </div>
           )}
           {block.email && (
-            <div className="grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] px-6 md:px-8 py-4 gap-4">
-              <dt className="font-sans text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/70 self-start pt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] px-5 sm:px-6 md:px-8 py-3.5 sm:py-4 gap-1.5 sm:gap-4">
+              <dt className="font-sans text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/70 self-start pt-0 sm:pt-1">
                 Email
               </dt>
               <dd>
                 <a
                   href={`mailto:${block.email}`}
-                  className="font-serif text-[15px] text-rm-burgundy underline underline-offset-2 decoration-rm-burgundy/40 hover:decoration-rm-burgundy transition-colors"
+                  className="font-serif text-[14px] sm:text-[15px] text-rm-burgundy underline underline-offset-2 decoration-rm-burgundy/40 hover:decoration-rm-burgundy transition-colors break-all"
                 >
                   {block.email}
                 </a>
@@ -331,14 +331,14 @@ function ContactInfoBlock({ block, locale }: { block: BlockDoc; locale: string }
             </div>
           )}
           {block.phone && (
-            <div className="grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] px-6 md:px-8 py-4 gap-4">
-              <dt className="font-sans text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/70 self-start pt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] px-5 sm:px-6 md:px-8 py-3.5 sm:py-4 gap-1.5 sm:gap-4">
+              <dt className="font-sans text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/70 self-start pt-0 sm:pt-1">
                 Téléphone
               </dt>
               <dd>
                 <a
                   href={`tel:${block.phone}`}
-                  className="font-serif text-[15px] text-rm-burgundy hover:underline"
+                  className="font-serif text-[14px] sm:text-[15px] text-rm-burgundy hover:underline"
                 >
                   {block.phone}
                 </a>
@@ -346,11 +346,11 @@ function ContactInfoBlock({ block, locale }: { block: BlockDoc; locale: string }
             </div>
           )}
           {hasHours && (
-            <div className="grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] px-6 md:px-8 py-4 gap-4">
-              <dt className="font-sans text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/70 self-start pt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] px-5 sm:px-6 md:px-8 py-3.5 sm:py-4 gap-1.5 sm:gap-4">
+              <dt className="font-sans text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/70 self-start pt-0 sm:pt-1">
                 Horaires
               </dt>
-              <dd className="font-serif text-[15px] leading-[1.7] text-rm-ink">
+              <dd className="font-serif text-[14px] sm:text-[15px] leading-[1.7] text-rm-ink">
                 <ul className="space-y-0.5">
                   {block.openingHours.map((oh: any, i: number) => (
                     <li key={i} className="flex justify-between gap-4 max-w-xs">

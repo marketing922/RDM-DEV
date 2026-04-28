@@ -133,25 +133,27 @@ export default function PlantesToolbar({
       </div>
 
       {/* Filter tabs */}
-      <div className="mb-10 flex flex-wrap justify-center gap-2 overflow-x-auto">
-        {filters.map((f) => {
-          const isActive = f.key === initialFilter
-          return (
-            <button
-              key={f.key}
-              suppressHydrationWarning
-              type="button"
-              onClick={() => setFilter(f.key)}
-              className={`inline-flex items-center h-9 px-5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                isActive
-                  ? 'bg-[#A2211E] text-white shadow-sm'
-                  : 'bg-white text-[#712E2F] border border-[#DCD8C7] hover:bg-[#FFF5D5] hover:text-[#A2211E] hover:border-[#A2211E]'
-              }`}
-            >
-              {f.label}
-            </button>
-          )
-        })}
+      <div className="mb-8 sm:mb-10 -mx-4 sm:mx-0 px-4 sm:px-0 overflow-x-auto scrollbar-hide">
+        <div className="flex sm:flex-wrap sm:justify-center gap-2 min-w-max sm:min-w-0">
+          {filters.map((f) => {
+            const isActive = f.key === initialFilter
+            return (
+              <button
+                key={f.key}
+                suppressHydrationWarning
+                type="button"
+                onClick={() => setFilter(f.key)}
+                className={`inline-flex items-center h-10 sm:h-9 px-4 sm:px-5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+                  isActive
+                    ? 'bg-[#A2211E] text-white shadow-sm'
+                    : 'bg-white text-[#712E2F] border border-[#DCD8C7] hover:bg-[#FFF5D5] hover:text-[#A2211E] hover:border-[#A2211E]'
+                }`}
+              >
+                {f.label}
+              </button>
+            )
+          })}
+        </div>
       </div>
     </>
   )

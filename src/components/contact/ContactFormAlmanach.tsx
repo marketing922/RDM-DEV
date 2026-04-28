@@ -204,12 +204,12 @@ export default function ContactFormAlmanach({ locale }: Props) {
           suppressHydrationWarning
           required
           disabled={isLocked}
-          rows={7}
+          rows={6}
           maxLength={5000}
           value={form.message}
           onChange={set('message')}
           placeholder="Bonjour, je me demandais si la camomille romaine pouvait se substituer à la matricaire pour les digestions difficiles…"
-          className="w-full bg-rm-paper border border-rm-ruleStrong px-[18px] py-4 text-[16px] font-serif leading-[1.6] text-rm-ink placeholder:text-rm-inkSoft placeholder:italic focus:outline-none focus:border-rm-burgundy transition-colors resize-vertical disabled:opacity-60"
+          className="w-full bg-rm-paper border border-rm-ruleStrong px-3.5 sm:px-[18px] py-3 sm:py-4 text-[15px] sm:text-[16px] font-serif leading-[1.55] sm:leading-[1.6] text-rm-ink placeholder:text-rm-inkSoft placeholder:italic focus:outline-none focus:border-rm-burgundy transition-colors resize-vertical disabled:opacity-60"
         />
       </div>
 
@@ -237,12 +237,12 @@ export default function ContactFormAlmanach({ locale }: Props) {
       </label>
 
       {/* Submit + feedback */}
-      <div className="flex items-center gap-4 flex-wrap">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 flex-wrap">
         <button
           suppressHydrationWarning
           type="submit"
           disabled={isLocked}
-          className="inline-flex items-center gap-2 bg-rm-burgundy text-white font-sans text-[14px] font-semibold px-[26px] py-3.5 hover:bg-rm-burgundy/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className="inline-flex items-center justify-center gap-2 bg-rm-burgundy text-white font-sans text-[14px] font-semibold px-6 sm:px-[26px] py-3.5 hover:bg-rm-burgundy/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed w-full sm:w-auto"
         >
           {status === 'loading' ? 'Envoi…' : 'Envoyer le message'}
           <span aria-hidden="true">→</span>
@@ -252,7 +252,7 @@ export default function ContactFormAlmanach({ locale }: Props) {
           <p
             role="status"
             aria-live="polite"
-            className={`text-[14px] font-serif italic ${feedbackColor}`}
+            className={`text-[13px] sm:text-[14px] font-serif italic ${feedbackColor}`}
           >
             {feedback}
           </p>

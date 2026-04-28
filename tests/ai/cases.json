@@ -1,0 +1,86 @@
+[
+  {
+    "id": "wiki.shortDescription.camomille",
+    "kind": "ai-generate",
+    "input": {
+      "collection": "wikiEntries",
+      "field": "shortDescription",
+      "fieldType": "textarea",
+      "context": {
+        "name": "Camomille",
+        "latinName": "Matricaria chamomilla",
+        "family": "Astéracées",
+        "shortDescription": ""
+      },
+      "locale": "fr",
+      "targetLength": { "min": 60, "max": 200 }
+    },
+    "assertions": {
+      "lengthMin": 50,
+      "lengthMax": 250,
+      "noForbiddenClaims": true
+    }
+  },
+  {
+    "id": "wiki.shortDescription.lavande",
+    "kind": "ai-generate",
+    "input": {
+      "collection": "wikiEntries",
+      "field": "shortDescription",
+      "fieldType": "textarea",
+      "context": {
+        "name": "Lavande vraie",
+        "latinName": "Lavandula angustifolia",
+        "family": "Lamiacées"
+      },
+      "locale": "fr",
+      "targetLength": { "min": 60, "max": 200 }
+    },
+    "assertions": {
+      "lengthMin": 50,
+      "lengthMax": 250,
+      "noForbiddenClaims": true
+    }
+  },
+  {
+    "id": "moderate.block.soulager",
+    "kind": "ai-moderate",
+    "input": { "text": "Cette tisane soigne l'insomnie chronique et guérit l'anxiété." },
+    "assertions": { "verdict": "block" }
+  },
+  {
+    "id": "moderate.ok.tradition",
+    "kind": "ai-moderate",
+    "input": {
+      "text": "La camomille est traditionnellement utilisée pour le confort digestif et la détente."
+    },
+    "assertions": { "verdict": "ok" }
+  },
+  {
+    "id": "moderate.ok.botanic",
+    "kind": "ai-moderate",
+    "input": {
+      "text": "Le thym (Thymus vulgaris) est une plante aromatique de la famille des Lamiacées, originaire du bassin méditerranéen."
+    },
+    "assertions": { "verdict": "ok" }
+  },
+  {
+    "id": "geo.directAnswer.camomille.fr",
+    "kind": "geo-generate",
+    "input": {
+      "field": "directAnswer",
+      "locale": "fr",
+      "ctx": {
+        "kind": "plant",
+        "name": "Camomille",
+        "latinName": "Matricaria chamomilla",
+        "shortDescription": "Plante herbacée aux fleurs blanches et jaunes, traditionnellement employée en infusion."
+      }
+    },
+    "assertions": {
+      "lengthMin": 100,
+      "lengthMax": 600,
+      "noForbiddenClaims": true
+    }
+  }
+]

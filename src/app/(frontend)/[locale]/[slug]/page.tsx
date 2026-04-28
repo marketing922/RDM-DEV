@@ -74,14 +74,14 @@ export default async function DynamicPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[#FEF9E9]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <Breadcrumb
           items={[
             { label: dict.nav.home, href: `/${locale}` },
             { label: p.title },
           ]}
         />
-        <div className="mt-6">
+        <div className="mt-5 sm:mt-6 space-y-7 sm:space-y-10 md:space-y-14">
           <BlockRenderer blocks={blocks} locale={locale} />
         </div>
       </div>

@@ -92,7 +92,7 @@ export default function AccessibilityTemplate({ locale, homeLabel }: Props) {
         intro="Notre engagement pour rendre le site www.remedes-mamie.com accessible à toutes et à tous, conformément au RGAA 4.1 et à la WCAG 2.2 niveau AA."
       />
 
-      <div className="max-w-[1240px] mx-auto px-6 md:px-10 py-16 md:py-20 pb-24 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10 lg:gap-12">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 md:px-10 py-10 sm:py-14 md:py-20 pb-16 sm:pb-20 md:pb-24 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6 sm:gap-8 lg:gap-12">
         <aside>
           <LegalTOC items={TOC_ITEMS} />
         </aside>
@@ -140,20 +140,20 @@ export default function AccessibilityTemplate({ locale, homeLabel }: Props) {
                   <strong> conformité partielle</strong> avec le RGAA 4.1.
                 </p>
 
-                <div className="bg-rm-paper border border-rm-rule px-7 py-6 grid grid-cols-[auto_1fr] gap-7 items-center my-4">
-                  <div className="text-center">
-                    <div className="font-display text-[56px] md:text-[72px] text-rm-teal leading-none tracking-[-0.03em]">
-                      75<span className="text-[36px] text-rm-burgundy">%</span>
+                <div className="bg-rm-paper border border-rm-rule px-5 sm:px-7 py-5 sm:py-6 grid grid-cols-1 sm:grid-cols-[auto_1fr] gap-5 sm:gap-7 items-center my-4">
+                  <div className="text-center sm:border-r sm:border-rm-rule sm:pr-6">
+                    <div className="font-display text-[48px] sm:text-[56px] md:text-[72px] text-rm-teal leading-none tracking-[-0.03em]">
+                      75<span className="text-[28px] sm:text-[36px] text-rm-burgundy">%</span>
                     </div>
-                    <div className="text-[11px] text-rm-inkSoft mt-1 tracking-[0.12em] uppercase">
+                    <div className="text-[10px] sm:text-[11px] text-rm-inkSoft mt-1 tracking-[0.12em] uppercase">
                       Conformité estimée
                     </div>
                   </div>
                   <div>
-                    <div className="font-display text-[22px] text-rm-teal mb-1">
+                    <div className="font-display text-[18px] sm:text-[22px] text-rm-teal mb-1">
                       Partiellement conforme
                     </div>
-                    <p className="font-serif text-[14px] text-rm-inkSoft leading-[1.6]">
+                    <p className="font-serif text-[13px] sm:text-[14px] text-rm-inkSoft leading-[1.6]">
                       Déclaration initiale, basée sur une auto-évaluation. Un
                       audit externe RGAA 4.1 sera réalisé en 2026.
                     </p>

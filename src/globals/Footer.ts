@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { coerceUploadIdsGlobal } from '@/hooks/coerceUploadIds'
 
 const PLATFORMS = [
   { label: 'Instagram', value: 'instagram' },
@@ -21,6 +22,9 @@ export const Footer: GlobalConfig = {
     group: 'Pages du site',
     description:
       'Contenu du pied de page : colonnes de liens, réseaux sociaux, mentions légales, newsletter.',
+  },
+  hooks: {
+    beforeValidate: [coerceUploadIdsGlobal],
   },
   fields: [
     {

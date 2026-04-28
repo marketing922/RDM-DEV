@@ -60,8 +60,8 @@ export default function CGVTemplate({ locale, homeLabel }: Props) {
         intro="En vigueur à compter du 1er mai 2026. Régissent toute vente de produits Les Remèdes de Mamie."
       />
 
-      <div className="max-w-[1040px] mx-auto px-6 md:px-10 py-16 md:py-20 pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-10 lg:gap-14">
+      <div className="max-w-[1040px] mx-auto px-4 sm:px-6 md:px-10 py-10 sm:py-14 md:py-20 pb-16 sm:pb-20 md:pb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 sm:gap-8 lg:gap-14">
           {/* ── Sidebar TOC ── */}
           <aside>
             <LegalTOC items={TOC_ITEMS} />

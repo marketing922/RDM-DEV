@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useSearchParams, usePathname } from 'next/navigation'
 import { ChevronRight, ChevronLeft, Search, X, Plus } from 'lucide-react'
+import { useListDrawerContext } from '@payloadcms/ui'
 import { RM, cmsBtn, cmsInput, Sprig, PageHeader } from '../primitives'
 
 export type KindKey = 'all' | 'photo' | 'doc' | 'video' | 'archive'
@@ -179,6 +180,17 @@ const MediaListClient: React.FC<Props> = ({
   const sp = useSearchParams()
   const pathname = usePathname()
 
+  // Drawer context: when this list is rendered inside Payload's upload-picker
+  // drawer (e.g. selecting an image from a wikiEntry's hero field), we MUST
+  // delegate clicks to `onSelect` provided by the drawer. Defaulting to
+  // router.replace('?selected=...') — as the rich full-page UI does — would
+  // freeze the editor with a 1.3s RSC refresh and never resolve the selection.
+  // `useListDrawerContext()` is safe to call outside a drawer: the default
+  // context is `{}`, so `isInDrawer` is simply falsy on full-page lists.
+  const drawerCtx = useListDrawerContext()
+  const isInDrawer = Boolean(drawerCtx?.isInDrawer)
+  const drawerOnSelect = drawerCtx?.onSelect
+
   const [searchValue, setSearchValue] = useState(initialSearch)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lastPushedRef = useRef(initialSearch)
@@ -263,6 +275,320 @@ const MediaListClient: React.FC<Props> = ({
 
   const uploadHref = '/admin/collections/media/create'
 
+  // ── Drawer mode ────────────────────────────────────────────────────────────
+  // Minimal grid: thumbnails + filename + search + filters + pagination.
+  // Click delegates to `drawerOnSelect` which closes the drawer and writes the
+  // selected media into the parent field's value (handled by Payload's
+  // Upload/Relationship Input).
+  if (isInDrawer) {
+    return (
+      <div
+        style={{
+          padding: '20px 24px 32px',
+          fontFamily: RM.fSans,
+          color: RM.ink,
+          background: RM.cream,
+          minHeight: '100%',
+        }}
+      >
+        {/* Compact toolbar — filter chips + search */}
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: 10,
+            marginBottom: 16,
+          }}
+        >
+          <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+            {FILTERS.map((f) => {
+              const isActive = f.key === initialKind
+              const style: React.CSSProperties = isActive
+                ? { ...cmsBtn.dark }
+                : { ...cmsBtn.ghost }
+              return (
+                <button
+                  key={f.key}
+                  type="button"
+                  style={style}
+                  onClick={() => setParam('kind', f.key === 'all' ? null : f.key)}
+                >
+                  {f.label}
+                </button>
+              )
+            })}
+          </div>
+
+          <div
+            style={{
+              position: 'relative',
+              flex: '1 1 200px',
+              minWidth: 180,
+              maxWidth: 360,
+            }}
+          >
+            <Search
+              size={14}
+              style={{
+                position: 'absolute',
+                top: '50%',
+                left: 12,
+                transform: 'translateY(-50%)',
+                color: RM.inkSoft,
+                pointerEvents: 'none',
+              }}
+            />
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder="Rechercher…"
+              style={{
+                ...cmsInput.base,
+                paddingLeft: 34,
+                paddingRight: searchValue ? 34 : 12,
+              }}
+            />
+            {searchValue && (
+              <button
+                type="button"
+                onClick={clearSearch}
+                aria-label="Effacer la recherche"
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  right: 8,
+                  transform: 'translateY(-50%)',
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: RM.inkSoft,
+                  padding: 4,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+
+          <div
+            style={{
+              marginLeft: 'auto',
+              fontSize: 11,
+              color: RM.inkSoft,
+              fontFamily: RM.fSans,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {totalDocs === 0
+              ? 'Aucun résultat'
+              : `${start}–${end} / ${totalDocs}`}
+          </div>
+        </div>
+
+        {/* Grid of thumbnails — click delegates to drawer's onSelect */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+            gap: 12,
+          }}
+        >
+          {rows.length === 0 ? (
+            <div
+              style={{
+                gridColumn: '1 / -1',
+                padding: '40px 16px',
+                textAlign: 'center',
+                color: RM.inkSoft,
+                fontSize: 13,
+                fontFamily: RM.fSerif,
+                background: RM.paper,
+                border: `1px solid ${RM.rule}`,
+                borderRadius: 8,
+              }}
+            >
+              {dbEmpty ? (
+                <div style={{ fontStyle: 'italic' }}>Médiathèque vide.</div>
+              ) : isFiltered ? (
+                <>
+                  <div style={{ fontStyle: 'italic', marginBottom: 10 }}>
+                    Aucun média ne correspond.
+                  </div>
+                  <button
+                    type="button"
+                    onClick={clearAllFilters}
+                    style={{ ...cmsBtn.ghost, cursor: 'pointer' }}
+                  >
+                    Effacer les filtres →
+                  </button>
+                </>
+              ) : (
+                <div style={{ fontStyle: 'italic' }}>Aucun média.</div>
+              )}
+            </div>
+          ) : (
+            rows.map((row) => (
+              <button
+                key={row.id}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (typeof drawerOnSelect === 'function') {
+                    drawerOnSelect({
+                      collectionSlug: 'media',
+                      doc: { id: row.id },
+                      docID: row.id,
+                    })
+                  }
+                }}
+                title={row.alt || row.filename}
+                style={{
+                  display: 'block',
+                  background: RM.paper,
+                  border: `1px solid ${RM.rule}`,
+                  borderRadius: 8,
+                  overflow: 'hidden',
+                  padding: 0,
+                  textAlign: 'left',
+                  cursor: 'pointer',
+                  transition: 'border-color 120ms ease, box-shadow 120ms ease',
+                  fontFamily: 'inherit',
+                  color: RM.ink,
+                }}
+                onMouseEnter={(e) => {
+                  ;(e.currentTarget as HTMLButtonElement).style.borderColor = RM.burgundy
+                  ;(e.currentTarget as HTMLButtonElement).style.boxShadow = `0 0 0 2px ${RM.burgundy}22`
+                }}
+                onMouseLeave={(e) => {
+                  ;(e.currentTarget as HTMLButtonElement).style.borderColor = RM.rule
+                  ;(e.currentTarget as HTMLButtonElement).style.boxShadow = 'none'
+                }}
+              >
+                <div
+                  style={{
+                    aspectRatio: '1 / 1',
+                    background: RM.creamSoft,
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {row.isImage && row.url ? (
+                    <Image
+                      src={row.url}
+                      alt={row.alt}
+                      fill
+                      sizes="(max-width: 600px) 50vw, 200px"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <Sprig size={50} color={RM.teal} style={{ opacity: 0.35 }} />
+                  )}
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: 6,
+                      left: 6,
+                      fontSize: 9,
+                      letterSpacing: 1,
+                      textTransform: 'uppercase',
+                      color: RM.inkSoft,
+                      background: 'rgba(255,255,255,0.78)',
+                      padding: '2px 6px',
+                      borderRadius: 3,
+                      fontWeight: 600,
+                      fontFamily: RM.fSans,
+                    }}
+                  >
+                    {row.badge}
+                  </span>
+                </div>
+                <div style={{ padding: '6px 8px 8px' }}>
+                  <div
+                    style={{
+                      fontFamily: RM.fMono,
+                      fontSize: 10,
+                      color: RM.ink,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {row.filename}
+                  </div>
+                </div>
+              </button>
+            ))
+          )}
+        </div>
+
+        {/* Pagination */}
+        {totalDocs > 0 && totalPages > 1 && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginTop: 16,
+              padding: '10px 14px',
+              background: RM.paper,
+              border: `1px solid ${RM.rule}`,
+              borderRadius: 8,
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => goToPage(page - 1)}
+              disabled={!canPrev}
+              style={{
+                ...cmsBtn.ghost,
+                opacity: canPrev ? 1 : 0.4,
+                cursor: canPrev ? 'pointer' : 'not-allowed',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+              }}
+            >
+              <ChevronLeft size={14} /> Précédent
+            </button>
+            <span
+              style={{
+                fontSize: 11,
+                color: RM.inkSoft,
+                fontFamily: RM.fSans,
+              }}
+            >
+              Page {page} sur {totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={() => goToPage(page + 1)}
+              disabled={!canNext}
+              style={{
+                ...cmsBtn.ghost,
+                opacity: canNext ? 1 : 0.4,
+                cursor: canNext ? 'pointer' : 'not-allowed',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+              }}
+            >
+              Suivant <ChevronRight size={14} />
+            </button>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // ── Full-page mode (rich UI: stat cards + grid + sticky detail panel) ──────
   return (
     <div
       style={{

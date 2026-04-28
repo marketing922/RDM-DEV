@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
 import { createAuditLog, autoSlug } from '@/hooks'
+import { coerceUploadIds } from '@/hooks/coerceUploadIds'
 import { slugify } from '@/lib/slugify'
 
 const adminOnlyField = {
@@ -42,6 +43,7 @@ export const Pages: CollectionConfig = {
     delete: isAdmin,
   },
   hooks: {
+    beforeValidate: [coerceUploadIds],
     afterChange: [createAuditLog],
   },
   fields: [

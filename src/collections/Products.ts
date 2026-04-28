@@ -2,6 +2,14 @@ import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
 import { scanForbiddenClaims, gatePublishCompliance, createAuditLog, autoSlug } from '@/hooks'
 import { backupAfterChange } from '@/hooks/backupAfterChange'
+import { coerceUploadIds } from '@/hooks/coerceUploadIds'
+import { makeEmbedHook } from '@/hooks/embedAfterChange'
+import { productsExtractor } from '@/hooks/embedExtractors'
+import { makeModerateContentHook } from '@/hooks/moderateContentHook'
+import { suggestedRelationsField } from '@/components/admin/fields/suggestedRelationsField'
+import { complianceCheckField } from '@/components/admin/fields/complianceCheckField'
+import { seoGenerateField } from '@/components/admin/fields/seoGenerateField'
+import { aiHistoryField } from '@/components/admin/fields/aiHistoryField'
 import { slugify } from '@/lib/slugify'
 
 export const Products: CollectionConfig = {
@@ -33,9 +41,12 @@ export const Products: CollectionConfig = {
     delete: isAdmin,
   },
   hooks: {
-    beforeValidate: [scanForbiddenClaims],
-    beforeChange: [gatePublishCompliance],
-    afterChange: [createAuditLog, backupAfterChange],
+    beforeValidate: [coerceUploadIds, scanForbiddenClaims],
+    beforeChange: [
+      gatePublishCompliance,
+      makeModerateContentHook({ collection: 'products', fields: ['shortDescription', 'ingredients'] }),
+    ],
+    afterChange: [createAuditLog, backupAfterChange, makeEmbedHook('products', productsExtractor)],
   },
   fields: [
     {
@@ -343,9 +354,42 @@ export const Products: CollectionConfig = {
                 description: 'L\u2019utilisateur qui a effectu\u00e9 la v\u00e9rification',
               },
             },
+            {
+              name: 'complianceLLM',
+              type: 'group',
+              label: 'Vérification LLM (auto)',
+              admin: {
+                readOnly: true,
+                description:
+                  'Résultat de la modération automatique par IA (référence). Le statut humain prime.',
+              },
+              fields: [
+                {
+                  name: 'verdict',
+                  type: 'select',
+                  options: [
+                    { label: 'OK', value: 'ok' },
+                    { label: 'Risque', value: 'risk' },
+                    { label: 'Bloqué', value: 'block' },
+                  ],
+                },
+                { name: 'confidence', type: 'number', min: 0, max: 1 },
+                {
+                  name: 'matchedClaims',
+                  type: 'array',
+                  fields: [{ name: 'claim', type: 'text' }],
+                },
+                { name: 'reason', type: 'textarea' },
+                { name: 'at', type: 'date' },
+              ],
+            },
           ],
         },
       ],
     },
+    suggestedRelationsField({ name: 'suggestedBenefits', target: 'benefits', label: 'Bienfaits suggérés', targetField: 'benefits' }),
+    complianceCheckField({ collection: 'products', fields: ['shortDescription', 'ingredients'] }),
+    seoGenerateField({ collection: 'products' }),
+    aiHistoryField(),
   ],
 }

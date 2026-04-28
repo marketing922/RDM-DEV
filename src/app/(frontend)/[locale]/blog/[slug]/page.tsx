@@ -23,7 +23,7 @@ import {
 } from '@/lib/queries'
 import { resolveMediaUrl } from '@/lib/mediaUrl'
 import NewsletterForm from '@/components/home/NewsletterForm'
-import { ShareButtons } from '@/components/blog/ShareButtons'
+import BlogActions from '@/components/blog/BlogActions'
 import { siteMetadataBase } from '@/lib/metadata'
 
 export const revalidate = 3600
@@ -69,11 +69,23 @@ function splitTitleForEmphasis(title: string): { head: string; tail: string } {
   return { head, tail }
 }
 
-/** Extract h2 section titles from Lexical richText, fallback when none. */
-function extractSections(
-  content: unknown,
-): Array<{ id: string; title: string; paragraphs: string[] }> {
-  const sections: Array<{ id: string; title: string; paragraphs: string[] }> = []
+type SectionImage = {
+  url: string
+  alt?: string
+  width?: number
+  height?: number
+}
+
+type ExtractedSection = {
+  id: string
+  title: string
+  paragraphs: string[]
+  images: SectionImage[]
+}
+
+/** Extract section titles from Lexical richText (h2/h3/h4), fallback when none. */
+function extractSections(content: unknown): ExtractedSection[] {
+  const sections: ExtractedSection[] = []
   if (!content || typeof content !== 'object' || !('root' in (content as any))) {
     return sections
   }
@@ -87,30 +99,116 @@ function extractSections(
     return ''
   }
 
-  let current: { id: string; title: string; paragraphs: string[] } | null = null
+  // Lexical can serialize headings with `tag: 'h2'` (string) or `tag: 2` (number),
+  // depending on plugin/version. We accept h1..h4 as a section break (some
+  // editors mis-use h1 for sub-titles inside the body).
+  const isHeadingNode = (node: any): boolean => {
+    if (!node || node.type !== 'heading') return false
+    const t = node.tag
+    return (
+      t === 'h1' || t === 'h2' || t === 'h3' || t === 'h4' ||
+      t === 1 || t === 2 || t === 3 || t === 4
+    )
+  }
+
+  // Heuristic fallback: a paragraph that *looks* like a heading
+  // ("1. La tisane de thym", "Conseils pratiques", etc.) when the editor
+  // didn't apply a real heading style. Bold is a hint but not required.
+  const looksLikeHeadingParagraph = (node: any): boolean => {
+    if (!node || node.type !== 'paragraph') return false
+    const kids: any[] = Array.isArray(node.children) ? node.children : []
+    if (kids.length === 0) return false
+    const text = textOf(node).trim()
+    if (!text) return false
+    // Pattern A: numbered prefix ("1. ", "2) ", "12. ") — very strong signal,
+    // accept up to 120 chars even without bold.
+    const numbered = /^\d+\s*[.)]\s+\S/.test(text)
+    if (numbered && text.length <= 120) return true
+    // Pattern B: short non-numbered paragraph without terminal punctuation
+    // (likely a heading like "Conseils pratiques pour vos tisanes d'hiver").
+    // Tighter length cap to avoid swallowing legitimate short paragraphs.
+    const noTerminalPunct = !/[.!?…»"”]$/.test(text) && !/:$/.test(text)
+    if (noTerminalPunct && text.length <= 80 && text.length >= 8) {
+      // Reject sentences containing connectives that suggest mid-sentence content.
+      if (/^(et|mais|or|donc|car|puis|alors)\b/i.test(text)) return false
+      return true
+    }
+    return false
+  }
+
+  // Pull a populated upload node into a SectionImage. With Payload's depth>=1,
+  // `value` is a populated media doc; otherwise it's a raw id (skip).
+  const imageFromUploadNode = (node: any): SectionImage | null => {
+    if (!node || node.type !== 'upload') return null
+    const v = node.value
+    if (!v || typeof v !== 'object') return null
+    const url = typeof v.url === 'string' ? v.url : ''
+    if (!url) return null
+    return {
+      url,
+      alt: typeof v.alt === 'string' ? v.alt : undefined,
+      width: typeof v.width === 'number' ? v.width : undefined,
+      height: typeof v.height === 'number' ? v.height : undefined,
+    }
+  }
+
+  // Detect the legacy "Photo : … (URL)" italic-paragraph caption that older
+  // pipeline runs left in the body so we can drop it from rendering.
+  const isLegacyPhotoCaption = (node: any): boolean => {
+    if (!node || node.type !== 'paragraph') return false
+    const text = textOf(node).trim()
+    if (!text) return false
+    return /^Photo\s*:/i.test(text) && /unsplash|wikimedia|wikipedia|commons/i.test(text)
+  }
+
+  let current: ExtractedSection | null = null
+  const seenIds = new Set<string>()
+  const slugify = (raw: string, fallbackIdx: number): string => {
+    const base = raw
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
+    let id = base || `section-${fallbackIdx}`
+    let n = 2
+    while (seenIds.has(id)) {
+      id = `${base || 'section'}-${n++}`
+    }
+    seenIds.add(id)
+    return id
+  }
 
   for (const node of children) {
-    const isH2 =
-      node?.type === 'heading' && (node?.tag === 'h2' || node?.tag === 2)
-
-    if (isH2) {
+    if (isHeadingNode(node) || looksLikeHeadingParagraph(node)) {
       if (current) sections.push(current)
       const title = textOf(node).trim()
-      const id = title
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[̀-ͯ]/g, '')
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '')
-        || `section-${sections.length + 1}`
-      current = { id, title, paragraphs: [] }
+      const id = slugify(title, sections.length + 1)
+      current = { id, title, paragraphs: [], images: [] }
       continue
     }
+
+    // Inline images (upload nodes) — attach to the current section. If we
+    // encounter one before any heading, open an Introduction section so the
+    // image still renders in the body.
+    const img = imageFromUploadNode(node)
+    if (img) {
+      if (!current) {
+        current = { id: 'introduction', title: 'Introduction', paragraphs: [], images: [] }
+        seenIds.add('introduction')
+      }
+      current.images.push(img)
+      continue
+    }
+
+    // Drop legacy URL-included photo captions left by older pipeline runs.
+    if (isLegacyPhotoCaption(node)) continue
 
     const para = textOf(node).trim()
     if (!para) continue
     if (!current) {
-      current = { id: 'introduction', title: 'Introduction', paragraphs: [] }
+      current = { id: 'introduction', title: 'Introduction', paragraphs: [], images: [] }
+      seenIds.add('introduction')
     }
     current.paragraphs.push(para)
   }
@@ -206,7 +304,7 @@ export default async function BlogDetailPage({ params }: Props) {
   const readingMinutes: number =
     p.readingTime || Math.max(1, Math.ceil(wordCount / 200))
 
-  // Break rich content into editorial sections (by h2)
+  // Break rich content into editorial sections (by h1..h4 or numbered/short paragraphs)
   let sections = extractSections(p.content)
   if (sections.length === 0 && bodyPlain) {
     const paragraphs = bodyPlain
@@ -218,6 +316,7 @@ export default async function BlogDetailPage({ params }: Props) {
         id: 'article',
         title: 'L’article',
         paragraphs: paragraphs.length ? paragraphs : [bodyPlain],
+        images: [],
       },
     ]
   }
@@ -379,7 +478,9 @@ export default async function BlogDetailPage({ params }: Props) {
 
         {/* ═══════════════ HERO ÉDITORIAL ═══════════════ */}
         <Reveal>
-          <header className="mt-10 md:mt-14 max-w-[1100px] mx-auto">
+          <header className="mt-8 sm:mt-10 md:mt-14 max-w-[1100px] mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(300px,400px)] gap-6 sm:gap-8 lg:gap-12 items-start">
+            <div className="min-w-0">
             {/* Eyebrow */}
             <p className="font-mono text-[11px] tracking-[0.25em] text-rm-burgundy uppercase mb-6">
               Dossier <span className="text-rm-ruleStrong mx-1">·</span>{' '}
@@ -393,7 +494,7 @@ export default async function BlogDetailPage({ params }: Props) {
             </p>
 
             {/* Title display — tail in burgundy italic */}
-            <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] text-[40px] sm:text-[56px] md:text-[68px] lg:text-[76px]">
+            <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] text-[36px] sm:text-[44px] md:text-[52px] lg:text-[58px]">
               {titleHead ? (
                 <>
                   {titleHead}{' '}
@@ -410,13 +511,36 @@ export default async function BlogDetailPage({ params }: Props) {
 
             {/* Subtitle / excerpt */}
             {p.excerpt && (
-              <p className="mt-6 md:mt-8 font-serif italic text-[19px] md:text-[22px] leading-[1.55] text-rm-inkSoft max-w-[760px]">
+              <p className="mt-6 md:mt-8 font-serif italic text-[18px] md:text-[20px] leading-[1.55] text-rm-inkSoft">
                 {p.excerpt}
               </p>
             )}
+            </div>
+
+            {/* Hero image — side column on desktop, below title on mobile */}
+            <figure className="lg:sticky lg:top-20">
+              <div className="relative aspect-[4/3] lg:aspect-square overflow-hidden rounded-[10px] border border-rm-rule bg-rm-creamSoft">
+                {featuredUrl && (
+                  <Image
+                    src={featuredUrl}
+                    alt={featuredAlt}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 400px"
+                    className="object-cover object-center"
+                    priority
+                  />
+                )}
+              </div>
+              {p.featuredImage?.caption && (
+                <figcaption className="mt-3 font-serif italic text-[12px] text-rm-inkSoft/80 text-center">
+                  {p.featuredImage.caption}
+                </figcaption>
+              )}
+            </figure>
+            </div>
 
             {/* Author strip */}
-            <div className="mt-10 border-y border-rm-rule py-5 flex flex-wrap items-center gap-5">
+            <div className="mt-8 sm:mt-10 border-y border-rm-rule py-4 sm:py-5 flex flex-wrap items-center gap-4 sm:gap-5">
               {/* Avatar */}
               <div className="flex items-center gap-3 flex-1 min-w-[220px]">
                 <div className="w-12 h-12 rounded-full bg-rm-ochre overflow-hidden shrink-0 flex items-center justify-center">
@@ -466,62 +590,14 @@ export default async function BlogDetailPage({ params }: Props) {
               </div>
 
               {/* Right — action buttons */}
-              <div className="flex items-center gap-2 font-sans text-[11px]">
-                <button
-                  type="button"
-                  aria-label="J’aime"
-                  className="inline-flex items-center gap-1.5 border border-rm-rule rounded-full px-3 py-1.5 text-rm-burgundy hover:bg-rm-creamSoft transition-colors"
-                >
-                  <span aria-hidden>♥</span>
-                  <span className="hidden sm:inline">J’aime</span>
-                </button>
-                <div className="inline-flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 font-sans text-[11px] text-rm-inkSoft/70">
-                    <span aria-hidden>↗</span>
-                    Partager
-                  </span>
-                  <ShareButtons
-                    title={articleTitle}
-                    locale={locale}
-                    slug={slug}
-                  />
-                </div>
-                <a
-                  href="#"
-                  aria-label="Télécharger en PDF"
-                  className="inline-flex items-center gap-1.5 border border-rm-rule rounded-full px-3 py-1.5 text-rm-teal hover:bg-rm-creamSoft transition-colors"
-                >
-                  <span aria-hidden>↓</span>
-                  <span className="hidden sm:inline">PDF</span>
-                </a>
-              </div>
+              <BlogActions locale={locale} slug={slug} title={articleTitle} />
             </div>
 
-            {/* Hero image */}
-            <figure className="mt-10">
-              <div className="relative aspect-[16/9] overflow-hidden rounded-[10px] border border-rm-rule bg-gradient-to-br from-rm-creamSoft via-rm-cream to-rm-paper">
-                {featuredUrl && (
-                  <Image
-                    src={featuredUrl}
-                    alt={featuredAlt}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 1100px"
-                    className="object-cover"
-                    priority
-                  />
-                )}
-              </div>
-              {p.featuredImage?.caption && (
-                <figcaption className="mt-3 font-serif italic text-[13px] text-rm-inkSoft/80 text-center">
-                  {p.featuredImage.caption}
-                </figcaption>
-              )}
-            </figure>
           </header>
         </Reveal>
 
         {/* ═══════════════ BODY 3-COLUMN GRID ═══════════════ */}
-        <div className="mt-14 md:mt-16 max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-[220px_1fr_300px] gap-10 lg:gap-14">
+        <div className="mt-10 sm:mt-14 md:mt-16 max-w-[1100px] mx-auto grid grid-cols-1 lg:grid-cols-[220px_1fr_300px] gap-8 sm:gap-10 lg:gap-14">
           {/* LEFT — STICKY SOMMAIRE */}
           <aside className="hidden lg:block lg:sticky lg:top-20 lg:self-start">
             <p className="font-mono text-[11px] tracking-[0.25em] text-rm-burgundy uppercase mb-4">
@@ -564,6 +640,67 @@ export default async function BlogDetailPage({ params }: Props) {
                 </ul>
               </div>
             )}
+
+            {relatedProducts.length > 0 && (
+              <div className="mt-6 bg-rm-paper border border-rm-rule rounded-[10px] p-4">
+                <div className="flex items-center justify-between mb-3 pb-2 border-b border-rm-rule">
+                  <span className="font-display text-[15px] text-rm-teal">
+                    Produits associés
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-rm-ochre">
+                    {relatedProducts.length}
+                  </span>
+                </div>
+                <ul className="space-y-3 list-none pl-0 max-h-[320px] overflow-y-auto pr-1 -mr-1">
+                  {relatedProducts.map((rp: any) => {
+                    const img =
+                      resolveMediaUrl((rp.images?.[0] as any)?.image, 'thumbnail') ||
+                      rp.externalImageUrl ||
+                      null
+                    const price =
+                      typeof rp.price === 'number'
+                        ? new Intl.NumberFormat('fr-FR', {
+                            style: 'currency',
+                            currency: 'EUR',
+                          }).format(rp.price)
+                        : null
+                    return (
+                      <li
+                        key={rp.slug || rp.id}
+                        className="border-b border-rm-rule pb-3 last:border-b-0 last:pb-0"
+                      >
+                        <Link
+                          href={`/${locale}/produits/${rp.slug}`}
+                          className="grid grid-cols-[40px_1fr] gap-3 group"
+                        >
+                          <div className="relative w-10 h-10 bg-rm-creamSoft border border-rm-rule overflow-hidden rounded">
+                            {img ? (
+                              <Image
+                                src={img}
+                                alt={rp.name || ''}
+                                fill
+                                sizes="40px"
+                                className="object-cover"
+                              />
+                            ) : null}
+                          </div>
+                          <div className="min-w-0">
+                            <div className="font-serif text-[13px] text-rm-ink leading-snug group-hover:text-rm-burgundy transition-colors line-clamp-2">
+                              {rp.name}
+                            </div>
+                            {price && (
+                              <div className="font-mono text-[11px] text-rm-ochre mt-0.5">
+                                {price}
+                              </div>
+                            )}
+                          </div>
+                        </Link>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )}
           </aside>
 
           {/* CENTER — ARTICLE */}
@@ -585,6 +722,25 @@ export default async function BlogDetailPage({ params }: Props) {
                   num={num}
                   title={section.title}
                 >
+                  {section.images.length > 0 && (
+                    <div className="not-prose mb-6 space-y-4">
+                      {section.images.map((img, iIdx) => (
+                        <figure
+                          key={`${section.id}-img-${iIdx}`}
+                          className="relative w-full overflow-hidden rounded-[8px] border border-rm-rule"
+                        >
+                          <Image
+                            src={img.url}
+                            alt={img.alt || section.title}
+                            width={img.width || 1200}
+                            height={img.height || 800}
+                            className="w-full h-auto object-cover"
+                            sizes="(max-width: 768px) 100vw, 720px"
+                          />
+                        </figure>
+                      ))}
+                    </div>
+                  )}
                   <div className="font-serif text-[17px] md:text-[18px] leading-[1.75] text-rm-inkSoft space-y-5">
                     {section.paragraphs.map((para, pIdx) => {
                       const isFirstOfFirst = sIdx === 0 && pIdx === 0
@@ -594,7 +750,7 @@ export default async function BlogDetailPage({ params }: Props) {
                         return (
                           <p key={pIdx} className="clearfix">
                             <span
-                              className="font-display text-[72px] leading-[0.9] text-rm-burgundy float-left pr-3 pt-1"
+                              className="font-display text-[52px] sm:text-[64px] md:text-[72px] leading-[0.9] text-rm-burgundy float-left pr-2 sm:pr-3 pt-1"
                               aria-hidden="true"
                             >
                               {first}
@@ -618,72 +774,6 @@ export default async function BlogDetailPage({ params }: Props) {
                 </EditorialSection>
               )
             })}
-
-            {/* Inline product cards block */}
-            {relatedProducts.length > 0 && (
-              <Reveal>
-                <section className="mt-14 bg-rm-paper border border-rm-rule rounded-[10px] p-6 md:p-8">
-                  <div className="flex items-baseline justify-between mb-6 pb-3 border-b border-rm-rule">
-                    <h3 className="font-display text-[22px] text-rm-teal m-0">
-                      Produits cités
-                    </h3>
-                    <span className="font-mono text-[11px] text-rm-burgundy">
-                      {relatedProducts.length}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                    {relatedProducts.slice(0, 6).map((rp: any, i: number) => {
-                      const prodImg =
-                        resolveMediaUrl(rp.images?.[0]?.image, 'card') ??
-                        rp.externalImageUrl
-                      const sku = `N°${String(i + 1).padStart(2, '0')}`
-                      return (
-                        <Link
-                          key={rp.id || rp.slug || i}
-                          href={`/${locale}/produits/${rp.slug || ''}`}
-                          className="group block bg-rm-cream border border-rm-rule rounded-[8px] overflow-hidden hover:border-rm-burgundy transition-colors"
-                        >
-                          <div className="relative aspect-[4/3] bg-rm-creamSoft overflow-hidden">
-                            {prodImg ? (
-                              <Image
-                                src={prodImg}
-                                alt={rp.name || ''}
-                                fill
-                                sizes="(max-width: 768px) 100vw, 300px"
-                                className="object-cover"
-                              />
-                            ) : null}
-                          </div>
-                          <div className="p-4">
-                            <div className="flex items-baseline justify-between mb-1">
-                              <span className="font-mono text-[10px] tracking-[0.2em] text-rm-burgundy">
-                                {sku}
-                              </span>
-                              <span className="font-sans text-[11px] text-rm-ochre">
-                                ★
-                              </span>
-                            </div>
-                            <p className="font-display text-[16px] text-rm-teal leading-tight group-hover:text-rm-burgundy transition-colors">
-                              {rp.name}
-                            </p>
-                            <div className="mt-2 flex items-center justify-between">
-                              {typeof rp.price === 'number' && (
-                                <span className="font-sans text-[14px] font-semibold text-rm-burgundy">
-                                  {formatPrice(rp.price)}
-                                </span>
-                              )}
-                              <span className="font-sans text-[11px] tracking-[0.12em] uppercase text-rm-teal group-hover:text-rm-burgundy">
-                                + Panier
-                              </span>
-                            </div>
-                          </div>
-                        </Link>
-                      )
-                    })}
-                  </div>
-                </section>
-              </Reveal>
-            )}
 
             {/* Author box */}
             {authorName && (
@@ -750,7 +840,7 @@ export default async function BlogDetailPage({ params }: Props) {
           </article>
 
           {/* RIGHT — STICKY SIDEBAR */}
-          <aside className="hidden lg:block lg:sticky lg:top-20 lg:self-start space-y-5">
+          <aside className="lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:pr-1 space-y-5">
             {relatedPlants.length > 0 && (
               <CrossCard title="Plantes citées" badge={relatedPlants.length}>
                 <ul className="space-y-3">
@@ -775,93 +865,6 @@ export default async function BlogDetailPage({ params }: Props) {
               </CrossCard>
             )}
 
-            {relatedProducts.length > 0 && (
-              <CrossCard
-                title="Nos produits"
-                badge={relatedProducts.length}
-                accent
-              >
-                <ul className="space-y-3 list-none pl-0">
-                  {relatedProducts.slice(0, 4).map((rp: any) => {
-                    const img =
-                      resolveMediaUrl((rp.images?.[0] as any)?.image, 'thumbnail') ||
-                      rp.externalImageUrl ||
-                      null
-                    const price =
-                      typeof rp.price === 'number'
-                        ? new Intl.NumberFormat('fr-FR', {
-                            style: 'currency',
-                            currency: 'EUR',
-                          }).format(rp.price)
-                        : null
-                    return (
-                      <li
-                        key={rp.slug || rp.id}
-                        className="border-b border-rm-rule pb-3 last:border-b-0 last:pb-0"
-                      >
-                        <Link
-                          href={`/${locale}/produits/${rp.slug}`}
-                          className="grid grid-cols-[48px_1fr] gap-3 group"
-                        >
-                          <div className="relative w-12 h-12 bg-rm-creamSoft border border-rm-rule overflow-hidden rounded">
-                            {img ? (
-                              <Image
-                                src={img}
-                                alt={rp.name}
-                                fill
-                                sizes="48px"
-                                className="object-contain p-1"
-                              />
-                            ) : (
-                              <span className="absolute inset-0 flex items-center justify-center">
-                                <svg
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="1.3"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  className="text-rm-teal opacity-50"
-                                  aria-hidden="true"
-                                >
-                                  <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 17 3.5s2.5 3.5.5 9.2A7 7 0 0 1 11 20Z" />
-                                </svg>
-                              </span>
-                            )}
-                          </div>
-                          <div className="min-w-0">
-                            <div className="font-display text-[14px] text-rm-teal group-hover:text-rm-burgundy transition-colors leading-[1.2] truncate">
-                              {rp.name}
-                            </div>
-                            <div className="flex items-baseline gap-2 mt-1">
-                              {price && (
-                                <span className="font-mono text-[12px] text-rm-burgundy font-semibold">
-                                  {price}
-                                </span>
-                              )}
-                              {rp.inStock === false && (
-                                <span className="font-sans text-[10px] text-rm-inkSoft italic">
-                                  Rupture
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-                <Link
-                  href={`/${locale}/produits`}
-                  className="mt-3 inline-flex items-center gap-1 font-sans text-[12px] font-semibold text-rm-burgundy hover:underline"
-                >
-                  Voir tous les produits
-                  <span aria-hidden="true">→</span>
-                </Link>
-              </CrossCard>
-            )}
 
             {benefits.length > 0 && (
               <CrossCard title="Bienfaits liés" badge={benefits.length}>
@@ -933,10 +936,10 @@ export default async function BlogDetailPage({ params }: Props) {
       {/* ═══════════════ "ON EN PARLE" STRIP ═══════════════ */}
       {allProducts.length > 0 && (
         <Reveal>
-          <section className="mt-20 bg-rm-creamSoft border-t border-rm-rule py-14 md:py-20">
+          <section className="mt-14 sm:mt-20 bg-rm-creamSoft border-t border-rm-rule py-10 sm:py-14 md:py-20">
             <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
-              <div className="flex items-baseline justify-between mb-10">
-                <h2 className="font-display italic text-rm-teal text-[32px] md:text-[44px] tracking-[-0.01em]">
+              <div className="flex items-baseline justify-between mb-8 sm:mb-10 gap-4">
+                <h2 className="font-display italic text-rm-teal text-[26px] sm:text-[32px] md:text-[44px] tracking-[-0.01em]">
                   On en parle
                 </h2>
                 <Link

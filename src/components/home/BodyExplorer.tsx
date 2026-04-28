@@ -38,10 +38,10 @@ export default function BodyExplorer({ regions, locale }: Props) {
   const [active, setActive] = useState<BodyRegion>(initial)
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center">
       {/* ── Silhouette + hotspots ── */}
       <div
-        className="relative mx-auto w-full max-w-[480px] aspect-[400/580]"
+        className="relative mx-auto w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[480px] aspect-[400/580]"
         aria-label="Silhouette humaine interactive pour explorer les plantes par région"
       >
         {/* Body outline */}
@@ -118,13 +118,13 @@ export default function BodyExplorer({ regions, locale }: Props) {
 
       {/* ── Selected region panel ── */}
       <div>
-        <div className="font-mono text-[11px] tracking-[0.2em] text-rm-burgundy uppercase mb-2">
+        <div className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-rm-burgundy uppercase mb-2">
           Région sélectionnée
         </div>
-        <h3 className="font-display text-[44px] md:text-[52px] text-rm-teal leading-[1] tracking-[-0.015em]">
+        <h3 className="font-display text-[32px] sm:text-[40px] md:text-[52px] text-rm-teal leading-[1] tracking-[-0.015em]">
           {active.label}
         </h3>
-        <p className="font-serif italic text-[16px] md:text-[18px] text-rm-burgundy mt-1">
+        <p className="font-serif italic text-[15px] sm:text-[16px] md:text-[18px] text-rm-burgundy mt-1">
           {active.count > 0
             ? `${active.count} ${active.count > 1 ? 'plantes répertoriées' : 'plante répertoriée'}`
             : 'Encyclopédie en cours d’enrichissement'}
@@ -136,7 +136,7 @@ export default function BodyExplorer({ regions, locale }: Props) {
         )}
 
         {active.plants.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-5 sm:mt-6">
             {active.plants.slice(0, 6).map((p) => (
               <Link
                 key={p.slug}

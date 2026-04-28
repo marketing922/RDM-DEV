@@ -20,6 +20,7 @@ import {
   FAQList,
 } from '@/components/editorial/primitives'
 import Reveal from '@/components/ui/Reveal'
+import PlantActions from '@/components/plantes/PlantActions'
 
 export const revalidate = 3600
 
@@ -333,7 +334,6 @@ export default async function PlantDetailPage({ params }: Props) {
       show: keyTakeaways.length > 0 || Boolean(directAnswer),
     },
     { num: '09', id: 'faq', label: 'FAQ', show: faqItems.length > 0 },
-    { num: '10', id: 'sources', label: 'Nos sources', show: sources.length > 0 },
   ]
   const activeSommaire = sommaire.filter((s) => s.show)
 
@@ -382,22 +382,22 @@ export default async function PlantDetailPage({ params }: Props) {
       {/* ═════════ Title block ═════════ */}
       <section className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8 pt-4 pb-7 border-b border-rm-rule">
         <Reveal>
-          <div className="grid lg:grid-cols-[1fr_360px] gap-10 lg:gap-14 items-start">
+          <div className="grid lg:grid-cols-[1fr_360px] gap-6 sm:gap-10 lg:gap-14 items-start">
             {/* Left — text */}
             <div>
               <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-rm-burgundy">
                 N° {fiche} · Fiche botanique
               </p>
-              <h1 className="mt-4 font-display text-[56px] md:text-[72px] lg:text-[88px] leading-[0.95] tracking-[-0.02em] text-rm-teal font-normal">
+              <h1 className="mt-3 sm:mt-4 font-display text-[36px] sm:text-[48px] md:text-[64px] lg:text-[88px] leading-[0.95] tracking-[-0.02em] text-rm-teal font-normal">
                 {titleLead && <span>{titleLead} </span>}
                 <span className="italic text-rm-burgundy">{titleTail}</span>
               </h1>
               {e.latinName && (
-                <p className="mt-4 font-serif italic text-[20px] md:text-[22px] text-rm-burgundy/90">
+                <p className="mt-3 sm:mt-4 font-serif italic text-[16px] sm:text-[20px] md:text-[22px] text-rm-burgundy/90">
                   {e.latinName}
                 </p>
               )}
-              <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 font-sans text-[12px] text-rm-inkSoft">
+              <div className="mt-4 sm:mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 font-sans text-[12px] text-rm-inkSoft">
                 {updatedLabel && <span>Mis à jour le {updatedLabel}</span>}
                 {authorName && (
                   <>
@@ -424,7 +424,7 @@ export default async function PlantDetailPage({ params }: Props) {
             </div>
 
             {/* Right — square image */}
-            <div className="relative aspect-square w-full max-w-[360px] justify-self-start lg:justify-self-end overflow-hidden rounded-[4px] border border-rm-rule bg-rm-creamSoft">
+            <div className="relative aspect-square w-full max-w-[280px] sm:max-w-[360px] justify-self-start lg:justify-self-end overflow-hidden rounded-[4px] border border-rm-rule bg-rm-creamSoft">
               {heroSrc ? (
                 <Image
                   src={heroSrc}
@@ -445,14 +445,38 @@ export default async function PlantDetailPage({ params }: Props) {
       </section>
 
       {/* ═════════ Body 3-column ═════════ */}
-      <section className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
-        <div className="grid lg:grid-cols-[220px_1fr_300px] gap-10 lg:gap-14">
+      <section className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-14">
+        <div className="grid lg:grid-cols-[220px_1fr_300px] gap-8 sm:gap-10 lg:gap-14">
           {/* ── Left sticky sommaire ───────────────────────────── */}
-          <aside className="lg:sticky lg:top-20 lg:self-start">
-            <div className="font-mono text-[11px] uppercase tracking-[0.2em] text-rm-burgundy mb-4">
+          <aside className="order-2 lg:order-1 lg:sticky lg:top-20 lg:self-start">
+            <details className="lg:hidden mb-4 border border-rm-rule rounded-[8px] bg-rm-paper [&_summary::-webkit-details-marker]:hidden">
+              <summary className="flex items-center justify-between cursor-pointer px-4 py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-rm-burgundy">
+                <span>Sommaire ({activeSommaire.length})</span>
+                <span aria-hidden className="text-rm-ochre">+</span>
+              </summary>
+              <ol className="border-t border-rm-rule px-4 pb-2">
+                {activeSommaire.map((s, i) => (
+                  <li key={s.id} className="border-b border-rm-rule last:border-b-0">
+                    <a
+                      href={`#${s.id}`}
+                      className={`flex items-baseline gap-3 py-2.5 font-sans text-[13px] transition-colors hover:text-rm-burgundy ${
+                        i === 0 ? 'text-rm-burgundy font-semibold' : 'text-rm-inkSoft'
+                      }`}
+                    >
+                      <span className="font-mono text-[11px] text-rm-ochre w-6 flex-shrink-0">
+                        {s.num}
+                      </span>
+                      <span>{s.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </details>
+
+            <div className="hidden lg:block font-mono text-[11px] uppercase tracking-[0.2em] text-rm-burgundy mb-4">
               Sommaire
             </div>
-            <ol className="border-t border-rm-rule">
+            <ol className="hidden lg:block border-t border-rm-rule">
               {activeSommaire.map((s, i) => (
                 <li
                   key={s.id}
@@ -493,24 +517,76 @@ export default async function PlantDetailPage({ params }: Props) {
               </div>
             )}
 
-            <div className="mt-5 flex flex-col gap-2">
-              <button
-                type="button"
-                className="w-full font-sans text-[12px] text-rm-ink border border-rm-rule rounded-full px-4 py-2 hover:border-rm-burgundy hover:text-rm-burgundy transition-colors"
-              >
-                Télécharger le PDF
-              </button>
-              <button
-                type="button"
-                className="w-full font-sans text-[12px] text-rm-ink border border-rm-rule rounded-full px-4 py-2 hover:border-rm-burgundy hover:text-rm-burgundy transition-colors"
-              >
-                Partager la fiche
-              </button>
-            </div>
+            <PlantActions
+              title={`${e.name || 'Fiche plante'} — Les Remèdes de Mamie`}
+              description={shortText || directAnswer || undefined}
+              printUrl={`/${locale}/plantes/${slug}/print`}
+            />
+
+            {relatedProducts.length > 0 && (
+              <div className="mt-6 bg-rm-paper border border-rm-rule rounded-[10px] p-4 print:hidden">
+                <div className="flex items-center justify-between mb-3 pb-2 border-b border-rm-rule">
+                  <span className="font-display text-[15px] text-rm-teal">
+                    Produits associés
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-rm-ochre">
+                    {relatedProducts.length}
+                  </span>
+                </div>
+                <ul className="space-y-3 list-none pl-0 max-h-[320px] overflow-y-auto pr-1 -mr-1">
+                  {relatedProducts.map((p: any) => {
+                    const img =
+                      resolveMediaUrl((p.images?.[0] as any)?.image, 'thumbnail') ||
+                      p.externalImageUrl ||
+                      null
+                    const price =
+                      typeof p.price === 'number'
+                        ? new Intl.NumberFormat('fr-FR', {
+                            style: 'currency',
+                            currency: 'EUR',
+                          }).format(p.price)
+                        : null
+                    return (
+                      <li
+                        key={p.slug || p.id}
+                        className="border-b border-rm-rule pb-3 last:border-b-0 last:pb-0"
+                      >
+                        <Link
+                          href={`/${locale}/produits/${p.slug}`}
+                          className="grid grid-cols-[40px_1fr] gap-3 group"
+                        >
+                          <div className="relative w-10 h-10 bg-rm-creamSoft border border-rm-rule overflow-hidden rounded">
+                            {img ? (
+                              <Image
+                                src={img}
+                                alt={p.name || ''}
+                                fill
+                                sizes="40px"
+                                className="object-cover"
+                              />
+                            ) : null}
+                          </div>
+                          <div className="min-w-0">
+                            <div className="font-serif text-[13px] text-rm-ink leading-snug group-hover:text-rm-burgundy transition-colors line-clamp-2">
+                              {p.name}
+                            </div>
+                            {price && (
+                              <div className="font-mono text-[11px] text-rm-ochre mt-0.5">
+                                {price}
+                              </div>
+                            )}
+                          </div>
+                        </Link>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )}
           </aside>
 
           {/* ── Center article ─────────────────────────────────── */}
-          <article className="min-w-0">
+          <article className="order-1 lg:order-2 min-w-0">
             {/* Chapô */}
             {(shortText || directAnswer) && (
               <Reveal>
@@ -722,7 +798,7 @@ export default async function PlantDetailPage({ params }: Props) {
             {(keyTakeaways.length > 0 || directAnswer) && (
               <Reveal>
                 <EditorialSection id="a-retenir" num="08" title="À retenir">
-                  <div className="bg-rm-teal text-rm-cream rounded-[12px] p-7 md:p-9">
+                  <div className="bg-rm-teal text-rm-cream rounded-[12px] p-5 sm:p-7 md:p-9">
                     <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-rm-cream/70 mb-4">
                       L’essentiel
                     </div>
@@ -773,47 +849,10 @@ export default async function PlantDetailPage({ params }: Props) {
               </Reveal>
             )}
 
-            {/* § 10 — Nos sources */}
-            {sources.length > 0 && (
-              <Reveal>
-                <EditorialSection id="sources" num="10" title="Nos sources">
-                  <ol className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 list-none pl-0 font-serif text-[14px] leading-[1.55] text-rm-inkSoft">
-                    {sources.map((src, i) => (
-                      <li key={i} className="flex gap-2.5">
-                        <span className="font-mono text-[12px] text-rm-burgundy flex-shrink-0">
-                          [{i + 1}]
-                        </span>
-                        <span>
-                          {src.url ? (
-                            <a
-                              href={src.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-rm-ink hover:text-rm-burgundy transition-colors"
-                            >
-                              {src.title || src.url}
-                            </a>
-                          ) : (
-                            <span className="text-rm-ink">
-                              {src.title || 'Source'}
-                            </span>
-                          )}
-                          {(src.publisher || src.year) && (
-                            <span className="text-rm-inkSoft italic">
-                              {' '}— {[src.publisher, src.year].filter(Boolean).join(', ')}
-                            </span>
-                          )}
-                        </span>
-                      </li>
-                    ))}
-                  </ol>
-                </EditorialSection>
-              </Reveal>
-            )}
           </article>
 
-          {/* ── Right sticky sidebar ───────────────────────────── */}
-          <aside className="lg:sticky lg:top-20 lg:self-start space-y-5">
+          {/* ── Right sticky sidebar (avec scroll interne si trop longue) ───────────────────────────── */}
+          <aside className="order-3 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:pr-1 space-y-5">
             {/* Ses bienfaits */}
             <CrossCard
               title="Ses bienfaits"
@@ -841,95 +880,6 @@ export default async function PlantDetailPage({ params }: Props) {
                 </p>
               )}
             </CrossCard>
-
-            {/* Produits associés (via benefits partagés) */}
-            {relatedProducts.length > 0 && (
-              <CrossCard
-                title="Nos produits"
-                badge={relatedProducts.length}
-                accent
-              >
-                <ul className="space-y-3 list-none pl-0">
-                  {relatedProducts.map((p: any) => {
-                    const img =
-                      resolveMediaUrl((p.images?.[0] as any)?.image, 'thumbnail') ||
-                      p.externalImageUrl ||
-                      null
-                    const price =
-                      typeof p.price === 'number'
-                        ? new Intl.NumberFormat('fr-FR', {
-                            style: 'currency',
-                            currency: 'EUR',
-                          }).format(p.price)
-                        : null
-                    return (
-                      <li
-                        key={p.slug || p.id}
-                        className="border-b border-rm-rule pb-3 last:border-b-0 last:pb-0"
-                      >
-                        <Link
-                          href={`/${locale}/produits/${p.slug}`}
-                          className="grid grid-cols-[48px_1fr] gap-3 group"
-                        >
-                          <div className="relative w-12 h-12 bg-rm-creamSoft border border-rm-rule overflow-hidden rounded">
-                            {img ? (
-                              <Image
-                                src={img}
-                                alt={p.name}
-                                fill
-                                sizes="48px"
-                                className="object-contain p-1"
-                              />
-                            ) : (
-                              <span className="absolute inset-0 flex items-center justify-center">
-                                <svg
-                                  width="24"
-                                  height="24"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="1.3"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  className="text-rm-teal opacity-50"
-                                  aria-hidden="true"
-                                >
-                                  <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 17 3.5s2.5 3.5.5 9.2A7 7 0 0 1 11 20Z" />
-                                </svg>
-                              </span>
-                            )}
-                          </div>
-                          <div className="min-w-0">
-                            <div className="font-display text-[14px] text-rm-teal group-hover:text-rm-burgundy transition-colors leading-[1.2] truncate">
-                              {p.name}
-                            </div>
-                            <div className="flex items-baseline gap-2 mt-1">
-                              {price && (
-                                <span className="font-mono text-[12px] text-rm-burgundy font-semibold">
-                                  {price}
-                                </span>
-                              )}
-                              {p.inStock === false && (
-                                <span className="font-sans text-[10px] text-rm-inkSoft italic">
-                                  Rupture
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-                <Link
-                  href={`/${locale}/produits`}
-                  className="mt-3 inline-flex items-center gap-1 font-sans text-[12px] font-semibold text-rm-burgundy hover:underline"
-                >
-                  Voir tous les produits
-                  <span aria-hidden="true">→</span>
-                </Link>
-              </CrossCard>
-            )}
 
             {/* Articles associés */}
             <CrossCard title="Articles associés">
@@ -995,14 +945,14 @@ export default async function PlantDetailPage({ params }: Props) {
 
       {/* ═════════ Plantes à son chevet ═════════ */}
       {neighbourPlants.length > 0 && (
-        <section className="bg-rm-teal text-rm-cream py-16 lg:py-24">
+        <section className="bg-rm-teal text-rm-cream py-12 sm:py-16 lg:py-24">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
             <Reveal>
-              <div className="mb-10 lg:mb-14">
+              <div className="mb-8 sm:mb-10 lg:mb-14">
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-rm-cream/70">
                   Ses voisines de parcelle
                 </p>
-                <h2 className="mt-3 font-display text-[40px] md:text-[56px] leading-[1] text-rm-cream">
+                <h2 className="mt-3 font-display text-[32px] sm:text-[40px] md:text-[56px] leading-[1] text-rm-cream">
                   Plantes{' '}
                   <span className="italic text-rm-cream">à son chevet</span>
                 </h2>
@@ -1071,15 +1021,15 @@ export default async function PlantDetailPage({ params }: Props) {
 
       {/* ═════════ Articles qui la citent ═════════ */}
       {citingPosts.length > 0 && (
-        <section className="bg-rm-cream border-t border-rm-rule py-16 lg:py-24">
+        <section className="bg-rm-cream border-t border-rm-rule py-12 sm:py-16 lg:py-24">
           <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
             <Reveal>
-              <div className="mb-10 flex items-baseline justify-between gap-6">
+              <div className="mb-8 sm:mb-10 flex items-baseline justify-between gap-6">
                 <div>
                   <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-rm-burgundy">
                     Journal
                   </p>
-                  <h2 className="mt-3 font-display text-[36px] md:text-[48px] leading-[1.05] text-rm-teal">
+                  <h2 className="mt-3 font-display text-[28px] sm:text-[36px] md:text-[48px] leading-[1.05] text-rm-teal">
                     Articles qui la{' '}
                     <span className="italic text-rm-burgundy">citent</span>
                   </h2>

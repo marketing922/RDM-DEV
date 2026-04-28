@@ -30,3 +30,22 @@ export function isClaimAuthorized(claim: string): boolean {
   const lower = claim.toLowerCase().trim()
   return AUTHORIZED_CLAIM_PREFIXES.some((prefix) => lower.startsWith(prefix))
 }
+
+/**
+ * Returns the descriptions of any forbidden claim patterns matched in `text`.
+ * Empty array means the text is clean. Used to pre-filter LLM-proposed
+ * taxonomy / benefit names before they're auto-created in the DB.
+ */
+export function findForbiddenClaimMatches(text: string): string[] {
+  if (!text) return []
+  const out: string[] = []
+  for (const pattern of FORBIDDEN_CLAIM_PATTERNS) {
+    if (pattern.regex.test(text)) out.push(pattern.description)
+  }
+  return out
+}
+
+/** Convenience : true if the text contains any forbidden claim pattern. */
+export function hasForbiddenClaim(text: string): boolean {
+  return findForbiddenClaimMatches(text).length > 0
+}

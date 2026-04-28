@@ -1,0 +1,6 @@
+{
+  "crons": [
+    { "path": "/api/cron/autopilot/tick", "schedule": "0,30 * * * *" },
+    { "path": "/api/cron/purge-embeddings", "schedule": "0 4 * * 0" }
+  ]
+}

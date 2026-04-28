@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { DEFAULT_FOOTER, type FooterData } from '@/lib/layoutGlobals'
+import { CookiePreferencesButton } from '@/components/cookies/CookiePreferencesButton'
 
 type IconComponent = (p: React.SVGProps<SVGSVGElement>) => React.ReactElement
 
@@ -203,6 +204,13 @@ export function Footer({ dict, locale, footer }: FooterProps) {
                   </Link>
                 </li>
               ))}
+              <li>
+                <CookiePreferencesButton
+                  locale={locale}
+                  label={locale === 'en' ? 'Cookie preferences' : 'Preferences cookies'}
+                  className="hover:text-white transition-colors cursor-pointer"
+                />
+              </li>
             </ul>
           )}
         </div>

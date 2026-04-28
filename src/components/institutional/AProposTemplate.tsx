@@ -54,41 +54,41 @@ export default function AProposTemplate({
 
       {/* ── Hero editorial split ── */}
       <Reveal>
-        <section className="pt-14 md:pt-16 pb-10 md:pb-12">
-          <div className="max-w-[1240px] mx-auto px-6 md:px-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+        <section className="pt-10 sm:pt-14 md:pt-16 pb-8 sm:pb-10 md:pb-12">
+          <div className="max-w-[1240px] mx-auto px-4 sm:px-6 md:px-10 grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-14 items-center">
             <div>
-              <div className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase mb-3">
+              <div className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase mb-2.5 sm:mb-3">
                 La maison · Édition SAS Calebasse
               </div>
-              <h1 className="font-display font-normal text-rm-teal m-0 leading-[0.9] tracking-[-0.025em] text-[52px] sm:text-[68px] md:text-[88px]">
+              <h1 className="font-display font-normal text-rm-teal m-0 leading-[0.95] sm:leading-[0.9] tracking-[-0.02em] sm:tracking-[-0.025em] text-[36px] sm:text-[52px] md:text-[68px] lg:text-[88px] break-words">
                 Le savoir des{' '}
                 <em className="italic text-rm-burgundy">plantes</em>, tenu avec
                 rigueur.
               </h1>
-              <p className="font-serif text-[17px] md:text-[20px] leading-[1.55] text-rm-inkSoft mt-6 md:mt-7">
+              <p className="font-serif text-[15px] sm:text-[17px] md:text-[20px] leading-[1.55] text-rm-inkSoft mt-5 sm:mt-6 md:mt-7">
                 Les Remèdes de Mamie réunissent la pharmacopée française et la
                 médecine traditionnelle chinoise dans une encyclopédie
                 botanique rigoureusement sourcée — accessible à tous, utile au
                 quotidien.
               </p>
             </div>
-            <div className="relative aspect-[4/5] bg-rm-creamSoft border border-rm-rule overflow-hidden max-w-[420px] mx-auto lg:mx-0 w-full">
-              <div className="absolute inset-4 border border-rm-ruleStrong flex items-center justify-center flex-col gap-2">
+            <div className="relative aspect-[4/5] bg-rm-creamSoft border border-rm-rule overflow-hidden max-w-[320px] sm:max-w-[420px] mx-auto lg:mx-0 w-full">
+              <div className="absolute inset-3 sm:inset-4 border border-rm-ruleStrong flex items-center justify-center flex-col gap-2">
                 <svg
                   viewBox="0 0 24 24"
-                  width="140"
-                  height="140"
+                  width="100"
+                  height="100"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="text-rm-teal opacity-50"
+                  className="text-rm-teal opacity-50 sm:w-[140px] sm:h-[140px]"
                 >
                   <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 17 3.5s2.5 3.5.5 9.2A7 7 0 0 1 11 20Z" />
                   <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
                 </svg>
-                <div className="font-serif italic text-[13px] text-rm-inkSoft mt-3">
+                <div className="font-serif italic text-[12px] sm:text-[13px] text-rm-inkSoft mt-2 sm:mt-3 text-center px-2">
                   — 15 rue de la Vistule, Paris 13e
                 </div>
               </div>
@@ -99,8 +99,8 @@ export default function AProposTemplate({
 
       {/* ── Stats band (données réelles DB) ── */}
       <Reveal>
-        <section className="border-t border-b border-rm-rule bg-rm-paper py-7">
-          <div className="max-w-[1240px] mx-auto px-6 md:px-10 grid grid-cols-2 md:grid-cols-4 gap-10">
+        <section className="border-t border-b border-rm-rule bg-rm-paper py-6 sm:py-7">
+          <div className="max-w-[1240px] mx-auto px-4 sm:px-6 md:px-10 grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-6 sm:gap-10">
             {STATS.map((s, i) => (
               <div
                 key={s.l}
@@ -110,10 +110,10 @@ export default function AProposTemplate({
                     : ''
                 }
               >
-                <div className="font-display text-[40px] md:text-[48px] text-rm-teal leading-none tracking-[-0.03em]">
+                <div className="font-display text-[30px] sm:text-[40px] md:text-[48px] text-rm-teal leading-none tracking-[-0.03em]">
                   {s.n}
                 </div>
-                <div className="text-[12px] text-rm-inkSoft mt-1.5 tracking-[0.02em]">
+                <div className="text-[11px] sm:text-[12px] text-rm-inkSoft mt-1.5 tracking-[0.02em]">
                   {s.l}
                 </div>
               </div>
@@ -123,17 +123,17 @@ export default function AProposTemplate({
       </Reveal>
 
       {/* ── Notre démarche · 2 colonnes serif avec drop-cap ── */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-[1040px] mx-auto px-6 md:px-10">
+      <section className="py-10 sm:py-14 md:py-20">
+        <div className="max-w-[1040px] mx-auto px-4 sm:px-6 md:px-10">
           <Reveal>
-            <h2 className="font-display text-[36px] md:text-[48px] text-rm-teal leading-[1.05] tracking-[-0.015em] border-l-[3px] border-rm-burgundy pl-4 font-normal m-0 mb-8 md:mb-10">
+            <h2 className="font-display text-[26px] sm:text-[36px] md:text-[48px] text-rm-teal leading-[1.1] sm:leading-[1.05] tracking-[-0.015em] border-l-[3px] border-rm-burgundy pl-3 sm:pl-4 font-normal m-0 mb-6 sm:mb-8 md:mb-10">
               Notre démarche
             </h2>
           </Reveal>
           <Reveal delay={120}>
-            <div className="columns-1 md:columns-2 gap-12 font-serif text-[16px] md:text-[17px] leading-[1.75] text-rm-ink">
+            <div className="columns-1 md:columns-2 gap-8 sm:gap-12 font-serif text-[15px] sm:text-[16px] md:text-[17px] leading-[1.7] sm:leading-[1.75] text-rm-ink">
               <p className="mb-4 break-inside-avoid">
-                <span className="font-display text-[56px] md:text-[64px] float-left leading-[0.85] mr-2 mt-1.5 text-rm-burgundy">
+                <span className="font-display text-[44px] sm:text-[56px] md:text-[64px] float-left leading-[0.85] mr-2 mt-1.5 text-rm-burgundy">
                   L
                 </span>
                 es savoirs populaires sur les plantes circulent depuis toujours
@@ -162,28 +162,28 @@ export default function AProposTemplate({
       </section>
 
       {/* ── Trois principes ── */}
-      <section className="bg-rm-paper border-t border-b border-rm-rule py-16 md:py-[72px]">
-        <div className="max-w-[1240px] mx-auto px-6 md:px-10">
+      <section className="bg-rm-paper border-t border-b border-rm-rule py-10 sm:py-14 md:py-[72px]">
+        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 md:px-10">
           <Reveal>
-            <div className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase mb-3">
+            <div className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase mb-2.5 sm:mb-3">
               Chapitre II
             </div>
-            <h2 className="font-display text-[40px] md:text-[52px] text-rm-teal leading-[1.05] tracking-[-0.018em] font-normal m-0 mb-10 md:mb-12">
+            <h2 className="font-display text-[28px] sm:text-[40px] md:text-[52px] text-rm-teal leading-[1.1] sm:leading-[1.05] tracking-[-0.018em] font-normal m-0 mb-7 sm:mb-10 md:mb-12">
               Trois principes{' '}
               <em className="italic text-rm-burgundy">tenus fermes</em>.
             </h2>
           </Reveal>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {PRINCIPLES.map((p, i) => (
               <Reveal key={p.n} delay={i * 100}>
                 <div>
-                  <div className="font-mono text-[12px] text-rm-burgundy mb-3 tracking-[0.06em]">
+                  <div className="font-mono text-[11px] sm:text-[12px] text-rm-burgundy mb-2.5 sm:mb-3 tracking-[0.06em]">
                     N° {p.n}
                   </div>
-                  <div className="font-display text-[24px] md:text-[26px] text-rm-teal leading-[1.15] mb-3 tracking-[-0.01em]">
+                  <div className="font-display text-[20px] sm:text-[24px] md:text-[26px] text-rm-teal leading-[1.2] sm:leading-[1.15] mb-2.5 sm:mb-3 tracking-[-0.01em]">
                     {p.t}
                   </div>
-                  <p className="font-serif text-[15px] leading-[1.65] text-rm-inkSoft m-0">
+                  <p className="font-serif text-[14px] sm:text-[15px] leading-[1.65] text-rm-inkSoft m-0">
                     {p.b}
                   </p>
                 </div>
@@ -194,30 +194,30 @@ export default function AProposTemplate({
       </section>
 
       {/* ── L'entité ── */}
-      <section className="py-16 md:py-20">
-        <div className="max-w-[1040px] mx-auto px-6 md:px-10">
+      <section className="py-10 sm:py-14 md:py-20">
+        <div className="max-w-[1040px] mx-auto px-4 sm:px-6 md:px-10">
           <Reveal>
-            <h2 className="font-display text-[36px] md:text-[48px] text-rm-teal leading-tight font-normal m-0 mb-2 tracking-[-0.015em] border-l-[3px] border-rm-burgundy pl-4">
+            <h2 className="font-display text-[26px] sm:text-[36px] md:text-[48px] text-rm-teal leading-tight font-normal m-0 mb-2 tracking-[-0.015em] border-l-[3px] border-rm-burgundy pl-3 sm:pl-4">
               L'entité éditrice
             </h2>
-            <p className="font-serif italic text-[16px] text-rm-inkSoft ml-[19px] mb-10">
+            <p className="font-serif italic text-[14px] sm:text-[16px] text-rm-inkSoft ml-[15px] sm:ml-[19px] mb-7 sm:mb-10">
               Une SAS française, une marque éditoriale, une équipe qui signe.
             </p>
           </Reveal>
           <Reveal delay={120}>
-            <div className="bg-rm-paper border border-rm-rule p-6 md:p-8">
-              <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 md:gap-10 items-start">
-                <div className="w-20 h-20 rounded-full bg-rm-burgundy text-white text-[26px] font-semibold flex items-center justify-center font-sans">
+            <div className="bg-rm-paper border border-rm-rule p-5 sm:p-6 md:p-8">
+              <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-5 sm:gap-6 md:gap-10 items-start">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-rm-burgundy text-white text-[22px] sm:text-[26px] font-semibold flex items-center justify-center font-sans">
                   RW
                 </div>
                 <div>
-                  <div className="font-display text-[24px] md:text-[26px] text-rm-teal leading-tight">
+                  <div className="font-display text-[20px] sm:text-[24px] md:text-[26px] text-rm-teal leading-tight">
                     Ruosi WU
                   </div>
-                  <div className="font-serif italic text-[14px] text-rm-inkSoft mt-1">
+                  <div className="font-serif italic text-[13px] sm:text-[14px] text-rm-inkSoft mt-1">
                     Président · Directeur de la publication
                   </div>
-                  <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 mt-5 font-serif text-[14px]">
+                  <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 sm:gap-x-8 gap-y-3 mt-4 sm:mt-5 font-serif text-[13.5px] sm:text-[14px]">
                     <div>
                       <dt className="font-sans text-[10px] uppercase tracking-[0.15em] text-rm-inkSoft/70 mb-0.5">
                         Entité juridique
@@ -259,13 +259,13 @@ export default function AProposTemplate({
       </section>
 
       {/* ── Citation CTA ── */}
-      <section className="bg-rm-teal text-rm-cream py-14 md:py-16">
+      <section className="bg-rm-teal text-rm-cream py-10 sm:py-14 md:py-16">
         <Reveal>
-          <div className="max-w-[900px] mx-auto px-6 md:px-10 text-center">
-            <div className="font-display italic text-[28px] md:text-[40px] leading-[1.15] tracking-[-0.01em]">
+          <div className="max-w-[900px] mx-auto px-4 sm:px-6 md:px-10 text-center">
+            <div className="font-display italic text-[22px] sm:text-[28px] md:text-[40px] leading-[1.2] sm:leading-[1.15] tracking-[-0.01em]">
               « Écrire ce que l'on peut dire, avec rigueur, et le dire bien. »
             </div>
-            <div className="text-[12px] tracking-[0.15em] opacity-70 mt-5 uppercase">
+            <div className="text-[11px] sm:text-[12px] tracking-[0.15em] opacity-70 mt-4 sm:mt-5 uppercase">
               — Ligne éditoriale, Les Remèdes de Mamie
             </div>
           </div>

@@ -14,12 +14,12 @@ export function EditorialSection({
   children: React.ReactNode
 }) {
   return (
-    <section id={id} className="mt-12 scroll-mt-20">
-      <div className="flex items-baseline gap-3.5 mb-[18px] pb-2.5 border-b border-rm-rule">
-        <div className="font-mono text-[14px] text-rm-burgundy tracking-[0.12em]">
+    <section id={id} className="mt-8 sm:mt-10 md:mt-12 scroll-mt-20">
+      <div className="flex items-baseline gap-2.5 sm:gap-3.5 mb-3 sm:mb-[18px] pb-2 sm:pb-2.5 border-b border-rm-rule">
+        <div className="font-mono text-[12px] sm:text-[14px] text-rm-burgundy tracking-[0.12em] flex-shrink-0">
           § {num}
         </div>
-        <h2 className="font-display text-[28px] md:text-[36px] text-rm-teal m-0 font-normal tracking-[-0.015em]">
+        <h2 className="font-display text-[22px] sm:text-[26px] md:text-[32px] lg:text-[36px] text-rm-teal m-0 font-normal tracking-[-0.015em] leading-tight">
           {title}
         </h2>
       </div>
@@ -78,14 +78,14 @@ export function EditorialAside({
   const label = tone === 'ochre' ? 'text-rm-ochre' : 'text-rm-burgundy'
   return (
     <aside
-      className={`my-6 bg-rm-creamSoft border-l-[3px] ${bar} px-[22px] py-4 rounded-r-lg font-serif`}
+      className={`my-5 sm:my-6 bg-rm-creamSoft border-l-[3px] ${bar} px-4 sm:px-[22px] py-3.5 sm:py-4 rounded-r-lg font-serif`}
     >
       <div
-        className={`font-sans text-[10px] tracking-[0.25em] uppercase font-bold mb-2 ${label}`}
+        className={`font-sans text-[10px] tracking-[0.25em] uppercase font-bold mb-1.5 sm:mb-2 ${label}`}
       >
         {kind}
       </div>
-      <div className="text-[15px] text-rm-ink leading-[1.6]">{children}</div>
+      <div className="text-[14px] sm:text-[15px] text-rm-ink leading-[1.6]">{children}</div>
     </aside>
   )
 }
@@ -140,17 +140,17 @@ export function FAQList({
             <button
               type="button"
               onClick={() => setOpen(isOpen ? -1 : i)}
-              className={`w-full bg-transparent border-none py-[18px] px-[22px] text-left cursor-pointer flex justify-between items-center gap-4 font-display text-[18px] md:text-[19px] font-normal transition-colors ${
+              className={`w-full bg-transparent border-none py-4 px-4 sm:py-[18px] sm:px-[22px] text-left cursor-pointer flex justify-between items-center gap-3 sm:gap-4 font-display text-[16px] sm:text-[18px] md:text-[19px] font-normal transition-colors ${
                 isOpen ? 'text-rm-burgundy' : 'text-rm-teal'
               }`}
             >
-              <span className="flex-1">{it.q}</span>
+              <span className="flex-1 leading-snug">{it.q}</span>
               <span className="font-mono text-[20px] text-rm-ochre font-normal flex-shrink-0">
                 {isOpen ? '−' : '+'}
               </span>
             </button>
             {isOpen && (
-              <div className="px-[22px] pb-[22px] font-serif text-[15px] leading-[1.65] text-rm-inkSoft">
+              <div className="px-4 pb-4 sm:px-[22px] sm:pb-[22px] font-serif text-[14px] sm:text-[15px] leading-[1.65] text-rm-inkSoft">
                 {it.a}
               </div>
             )}
@@ -164,7 +164,7 @@ export function FAQList({
 // ── Chapô (intro paragraph with ochre bar) ──────────────
 export function EditorialChapo({ children }: { children: React.ReactNode }) {
   return (
-    <p className="font-serif text-[20px] md:text-[22px] leading-[1.55] text-rm-inkSoft italic m-0 mb-10 border-l-[3px] border-rm-ochre pl-5">
+    <p className="font-serif text-[16px] sm:text-[18px] md:text-[22px] leading-[1.55] text-rm-inkSoft italic m-0 mb-6 sm:mb-8 md:mb-10 border-l-[3px] border-rm-ochre pl-4 sm:pl-5">
       {children}
     </p>
   )
@@ -187,33 +187,35 @@ export function EditorialTable({
   const cols = `grid-cols-${headers.length}`
   const gridTemplate = headers.map(() => '1fr').join('_')
   return (
-    <div className="border border-rm-rule rounded-[10px] overflow-hidden font-sans text-[13px] my-5">
-      <div
-        className={`grid px-4 py-[11px] ${headerClass} text-[10px] tracking-[0.12em] uppercase font-semibold`}
-        style={{ gridTemplateColumns: `repeat(${headers.length}, 1fr)` }}
-      >
-        {headers.map((h, i) => (
-          <div key={i}>{h}</div>
-        ))}
-      </div>
-      {rows.map((row, i) => (
+    <div className="border border-rm-rule rounded-[10px] overflow-x-auto font-sans text-[12px] sm:text-[13px] my-5">
+      <div className="min-w-[480px]">
         <div
-          key={i}
-          className={`grid px-4 py-3 border-t border-rm-rule text-[13px] ${
-            i % 2 === 1 ? 'bg-rm-creamSoft' : 'bg-rm-paper'
-          }`}
+          className={`grid px-3 sm:px-4 py-2.5 sm:py-[11px] ${headerClass} text-[10px] tracking-[0.12em] uppercase font-semibold`}
           style={{ gridTemplateColumns: `repeat(${headers.length}, 1fr)` }}
         >
-          {row.map((cell, j) => (
-            <div
-              key={j}
-              className={j === 0 ? 'text-rm-burgundy font-semibold' : 'font-serif text-rm-ink'}
-            >
-              {cell}
-            </div>
+          {headers.map((h, i) => (
+            <div key={i}>{h}</div>
           ))}
         </div>
-      ))}
+        {rows.map((row, i) => (
+          <div
+            key={i}
+            className={`grid px-3 sm:px-4 py-2.5 sm:py-3 border-t border-rm-rule text-[12px] sm:text-[13px] ${
+              i % 2 === 1 ? 'bg-rm-creamSoft' : 'bg-rm-paper'
+            }`}
+            style={{ gridTemplateColumns: `repeat(${headers.length}, 1fr)` }}
+          >
+            {row.map((cell, j) => (
+              <div
+                key={j}
+                className={j === 0 ? 'text-rm-burgundy font-semibold' : 'font-serif text-rm-ink'}
+              >
+                {cell}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

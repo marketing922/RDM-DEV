@@ -12,7 +12,7 @@ export default function ProductGallery({ images, alt }: Props) {
   const active = images[activeIdx] || images[0]
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3 sm:gap-4">
       {/* Main image */}
       <div className="relative aspect-square w-full bg-rm-paper border border-rm-rule overflow-hidden">
         {active && (
@@ -21,7 +21,7 @@ export default function ProductGallery({ images, alt }: Props) {
             alt={alt}
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-contain p-6"
+            className="object-contain p-3 sm:p-5 md:p-6"
             priority
           />
         )}
@@ -29,7 +29,7 @@ export default function ProductGallery({ images, alt }: Props) {
 
       {/* Thumbnail strip */}
       {images.length > 1 && (
-        <div className="grid grid-cols-5 gap-2.5">
+        <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 sm:gap-2.5">
           {images.slice(0, 5).map((src, idx) => {
             const isActive = idx === activeIdx
             return (
@@ -50,7 +50,7 @@ export default function ProductGallery({ images, alt }: Props) {
                   alt={`${alt} — miniature ${idx + 1}`}
                   fill
                   sizes="80px"
-                  className="object-contain p-1.5"
+                  className="object-contain p-1 sm:p-1.5"
                 />
               </button>
             )

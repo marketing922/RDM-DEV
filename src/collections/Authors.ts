@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { isAdmin, isPublic } from '@/access'
 import { autoSlug } from '@/hooks'
+import { coerceUploadIds } from '@/hooks/coerceUploadIds'
 import { slugify } from '@/lib/slugify'
 
 export const Authors: CollectionConfig = {
@@ -20,6 +21,9 @@ export const Authors: CollectionConfig = {
     update: isAdmin,
     read: isPublic,
     delete: isAdmin,
+  },
+  hooks: {
+    beforeValidate: [coerceUploadIds],
   },
   fields: [
     {

@@ -100,7 +100,7 @@ export default async function BlogPage({ params, searchParams }: Props) {
 
   return (
     <main className="min-h-screen bg-rm-cream">
-      <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-6">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 md:px-10 py-6">
         <Breadcrumb
           items={[
             { label: dict.nav.home, href: `/${locale}` },
@@ -110,18 +110,18 @@ export default async function BlogPage({ params, searchParams }: Props) {
 
         {/* ─── Header almanach ─── */}
         <Reveal>
-        <header className="mt-10 md:mt-14 mb-10 md:mb-14 text-center max-w-3xl mx-auto">
-          <div className="flex items-center justify-center gap-2.5 mb-5">
+        <header className="mt-8 sm:mt-10 md:mt-14 mb-8 sm:mb-10 md:mb-14 text-center max-w-3xl mx-auto">
+          <div className="flex items-center justify-center gap-2.5 mb-4 sm:mb-5">
             <span className="block w-7 h-px bg-rm-burgundy" />
-            <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+            <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
               Journal
             </span>
             <span className="block w-7 h-px bg-rm-burgundy" />
           </div>
-          <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] text-[40px] sm:text-[52px] md:text-[60px]">
+          <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] text-[32px] sm:text-[44px] md:text-[52px] lg:text-[60px]">
             Le <em className="italic text-rm-burgundy">Journal</em> des plantes
           </h1>
-          <p className="font-serif italic text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-5">
+          <p className="font-serif italic text-[15px] sm:text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-4 sm:mt-5">
             {dict.blog.subtitle}
           </p>
         </header>
@@ -159,42 +159,42 @@ export default async function BlogPage({ params, searchParams }: Props) {
 
         {/* ─── Featured + Sidebar (page 1 only) ─── */}
         {currentPage === 1 && featuredPost && (
-          <section className="mb-16 md:mb-20">
+          <section className="mb-12 sm:mb-16 md:mb-20">
             <div className="flex items-center gap-2.5 mb-5">
               <span className="block w-7 h-px bg-rm-burgundy" />
-              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+              <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
                 {dict.blog.featured}
               </span>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 md:gap-8">
               {/* Featured article 2/3 */}
               <Reveal className="lg:col-span-2">
               <Link
                 href={`/${locale}/blog/${featuredPost.slug}`}
-                className="group bg-rm-paper border border-rm-rule overflow-hidden flex flex-col h-full transition-colors hover:border-rm-ruleStrong"
+                className="group bg-rm-paper border border-rm-rule overflow-hidden grid grid-cols-1 md:grid-cols-[40%_1fr] h-full transition-colors hover:border-rm-ruleStrong"
               >
-                <div className="relative aspect-[16/9] bg-rm-creamSoft overflow-hidden">
+                <div className="relative aspect-[4/3] md:aspect-auto md:h-full md:min-h-[260px] bg-rm-creamSoft overflow-hidden">
                   {featuredPost.featuredImage ? (
                     <Image
                       src={resolveMediaUrl(featuredPost.featuredImage, 'card') ?? ''}
                       alt={featuredPost.featuredImage.alt || featuredPost.title}
                       fill
-                      sizes="(max-width: 1024px) 100vw, 66vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                      sizes="(max-width: 768px) 100vw, 320px"
+                      className="object-contain object-center p-3 transition-transform duration-500 group-hover:scale-[1.02]"
                       priority
                     />
                   ) : (
                     <div className="w-full h-full bg-rm-creamSoft" />
                   )}
                   {featuredPost.category?.name && (
-                    <span className="absolute top-4 left-4 bg-rm-cream/95 border border-rm-ruleStrong text-rm-ochre font-sans text-[10px] tracking-[0.22em] uppercase px-3 py-1.5">
+                    <span className="absolute top-3 left-3 sm:top-4 sm:left-4 bg-rm-cream/95 border border-rm-ruleStrong text-rm-ochre font-sans text-[10px] tracking-[0.22em] uppercase px-2.5 py-1 sm:px-3 sm:py-1.5">
                       {featuredPost.category.name}
                     </span>
                   )}
                 </div>
-                <div className="p-6 md:p-8 flex flex-col">
-                  <div className="flex items-center gap-3 font-mono text-[11px] tracking-wide text-rm-inkSoft/80 uppercase mb-4">
+                <div className="p-5 sm:p-6 md:p-7 flex flex-col justify-center">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 font-mono text-[11px] tracking-wide text-rm-inkSoft/80 uppercase mb-3">
                     {featuredPost.publishedAt && (
                       <span>{formatDate(featuredPost.publishedAt, locale)}</span>
                     )}
@@ -207,15 +207,15 @@ export default async function BlogPage({ params, searchParams }: Props) {
                       </>
                     )}
                   </div>
-                  <h2 className="font-display text-[28px] md:text-[34px] leading-[1.1] text-rm-teal tracking-[-0.01em] group-hover:text-rm-burgundy transition-colors">
+                  <h2 className="font-display text-[20px] sm:text-[24px] md:text-[28px] leading-[1.15] text-rm-teal tracking-[-0.01em] group-hover:text-rm-burgundy transition-colors">
                     {featuredPost.title}
                   </h2>
                   {featuredPost.excerpt && (
-                    <p className="font-serif italic text-[16px] md:text-[17px] leading-[1.55] text-rm-inkSoft mt-4 line-clamp-3">
+                    <p className="font-serif italic text-[14px] sm:text-[15px] md:text-[16px] leading-[1.55] text-rm-inkSoft mt-3 line-clamp-3">
                       {featuredPost.excerpt}
                     </p>
                   )}
-                  <span className="mt-6 font-sans text-sm font-semibold text-rm-burgundy inline-flex items-center gap-1.5">
+                  <span className="mt-4 sm:mt-5 font-sans text-sm font-semibold text-rm-burgundy inline-flex items-center gap-1.5">
                     Lire l&apos;article
                     <span aria-hidden="true">→</span>
                   </span>
@@ -224,7 +224,7 @@ export default async function BlogPage({ params, searchParams }: Props) {
               </Reveal>
 
               {/* Sidebar 1/3 — 2-3 latest (excluding featured) */}
-              <aside className="flex flex-col gap-6">
+              <aside className="flex flex-col gap-4 sm:gap-6">
                 {posts
                   .filter((p) => p.id !== featuredPost.id)
                   .slice(0, 3)
@@ -232,9 +232,9 @@ export default async function BlogPage({ params, searchParams }: Props) {
                     <Reveal key={post.id} delay={120 + sIdx * 100}>
                     <Link
                       href={`/${locale}/blog/${post.slug}`}
-                      className="group flex gap-4 bg-rm-paper border border-rm-rule p-4 hover:border-rm-ruleStrong transition-colors h-full"
+                      className="group flex gap-3 sm:gap-4 bg-rm-paper border border-rm-rule p-3 sm:p-4 hover:border-rm-ruleStrong transition-colors h-full"
                     >
-                      <div className="relative w-24 h-24 shrink-0 bg-rm-creamSoft overflow-hidden border border-rm-rule">
+                      <div className="relative w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-rm-creamSoft overflow-hidden border border-rm-rule">
                         {post.featuredImage ? (
                           <Image
                             src={resolveMediaUrl(post.featuredImage, 'thumbnail') ?? ''}
@@ -271,18 +271,18 @@ export default async function BlogPage({ params, searchParams }: Props) {
         )}
 
         {/* ─── Dotted separator ─── */}
-        <div className="border-t border-dashed border-rm-rule mb-12 md:mb-14" />
+        <div className="border-t border-dashed border-rm-rule mb-10 sm:mb-12 md:mb-14" />
 
         {/* ─── Grid — les autres articles ─── */}
         {gridPosts.length > 0 ? (
           <>
-            <Reveal className="flex items-center gap-2.5 mb-6">
+            <Reveal className="flex items-center gap-2.5 mb-5 sm:mb-6">
               <span className="block w-7 h-px bg-rm-burgundy" />
-              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+              <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
                 Tous les articles
               </span>
             </Reveal>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 md:gap-8">
               {gridPosts.map((post: any, idx: number) => {
                 const num = String((currentPage - 1) * postsPerPage + idx + 1).padStart(3, '0')
                 return (
@@ -313,7 +313,7 @@ export default async function BlogPage({ params, searchParams }: Props) {
                       )}
                     </div>
                     <div className="p-5 md:p-6 flex flex-col flex-1">
-                      <div className="font-mono text-[11px] tracking-wide text-rm-inkSoft/80 uppercase mb-3 flex items-center gap-2">
+                      <div className="font-mono text-[11px] tracking-wide text-rm-inkSoft/80 uppercase mb-3 flex flex-wrap items-center gap-2">
                         {post.publishedAt && (
                           <span>{formatDate(post.publishedAt, locale)}</span>
                         )}
@@ -393,7 +393,7 @@ export default async function BlogPage({ params, searchParams }: Props) {
         {/* ─── Pagination ─── */}
         {(totalPages ?? 1) > 1 && (
           <nav
-            className="mt-16 flex justify-center items-center gap-3 border-t border-dashed border-rm-rule pt-10"
+            className="mt-12 sm:mt-16 flex flex-wrap justify-center items-center gap-2 sm:gap-3 border-t border-dashed border-rm-rule pt-8 sm:pt-10"
             aria-label="Pagination"
           >
             {currentPage > 1 ? (

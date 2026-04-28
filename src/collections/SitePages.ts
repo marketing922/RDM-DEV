@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
 import { createAuditLog } from '@/hooks'
+import { coerceUploadIds } from '@/hooks/coerceUploadIds'
 
 const adminOnlyField = {
   create: ({ req }: any) => req.user?.role === 'admin',
@@ -50,6 +51,7 @@ export const SitePages: CollectionConfig = {
     delete: isAdmin,
   },
   hooks: {
+    beforeValidate: [coerceUploadIds],
     afterChange: [createAuditLog],
   },
   fields: [

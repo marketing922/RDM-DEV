@@ -220,27 +220,27 @@ export default async function BienfaitDetailPage({ params }: Props) {
       </div>
 
       {/* ═══════════════ HEADER ÉDITORIAL ═══════════════ */}
-      <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pt-8 pb-10">
+      <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-8 sm:pb-10">
         <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
           <span className="font-mono">{benefitNumber}</span>
           <span className="mx-2 text-rm-ruleStrong">·</span>
           <span>{dict.benefits.title}</span>
         </p>
 
-        <div className="mt-5 flex items-center gap-4">
+        <div className="mt-4 sm:mt-5 flex items-center gap-3 sm:gap-4">
           <span
             aria-hidden
-            className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-rm-creamSoft border border-rm-stone text-rm-ochre"
+            className="inline-flex h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-full bg-rm-creamSoft border border-rm-stone text-rm-ochre"
           >
-            <Heart className="h-7 w-7" strokeWidth={1.5} />
+            <Heart className="h-5 w-5 sm:h-7 sm:w-7" strokeWidth={1.5} />
           </span>
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-rm-teal">
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-rm-teal">
             {benefitName}
           </h1>
         </div>
 
         {b.shortDescription && (
-          <p className="mt-6 font-serif italic text-xl leading-relaxed text-rm-inkSoft">
+          <p className="mt-5 sm:mt-6 font-serif italic text-lg sm:text-xl leading-relaxed text-rm-inkSoft">
             {b.shortDescription}
           </p>
         )}
@@ -295,16 +295,16 @@ export default async function BienfaitDetailPage({ params }: Props) {
             <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
               Lecture
             </p>
-            <h2 className="mt-2 font-display text-2xl md:text-3xl text-rm-teal border-l-4 border-rm-ochre pl-4">
+            <h2 className="mt-2 font-display text-xl sm:text-2xl md:text-3xl text-rm-teal border-l-4 border-rm-ochre pl-3 sm:pl-4">
               Traditionnellement utilisé pour {benefitName.toLowerCase()}
             </h2>
-            <div className="mt-6 space-y-5 font-serif text-[18px] leading-[1.75] text-rm-inkSoft">
+            <div className="mt-5 sm:mt-6 space-y-4 sm:space-y-5 font-serif text-[16px] sm:text-[18px] leading-[1.7] sm:leading-[1.75] text-rm-inkSoft">
               {descriptionParagraphs.map((paragraph, i) => (
                 <p
                   key={i}
                   className={
                     i === 0
-                      ? "first-letter:float-left first-letter:font-display first-letter:text-[56px] first-letter:leading-[0.9] first-letter:text-rm-burgundy first-letter:mr-2 first-letter:mt-1"
+                      ? "first-letter:float-left first-letter:font-display first-letter:text-[44px] sm:first-letter:text-[56px] first-letter:leading-[0.9] first-letter:text-rm-burgundy first-letter:mr-2 first-letter:mt-1"
                       : ''
                   }
                 >
@@ -332,11 +332,11 @@ export default async function BienfaitDetailPage({ params }: Props) {
       {/* ═══════════════ PLANTES ASSOCIÉES ═══════════════ */}
       {relatedPlants.length > 0 && (
         <section className="border-t border-rm-rule bg-rm-paper/40">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-14">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
             <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
               Plantes traditionnellement utilisées
             </p>
-            <h2 className="mt-2 font-display text-3xl md:text-4xl text-rm-teal">
+            <h2 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl text-rm-teal">
               Les plantes de l’almanach
             </h2>
             <div
@@ -379,11 +379,11 @@ export default async function BienfaitDetailPage({ params }: Props) {
       {/* ═══════════════ PRODUITS RECOMMANDÉS ═══════════════ */}
       {relatedProducts.length > 0 && (
         <section className="border-t border-rm-rule">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-14">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
             <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
               Dans notre boutique
             </p>
-            <h2 className="mt-2 font-display text-3xl md:text-4xl text-rm-teal">
+            <h2 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl text-rm-teal">
               Produits recommandés
             </h2>
             <div
@@ -446,11 +446,11 @@ export default async function BienfaitDetailPage({ params }: Props) {
       {/* ═══════════════ ARTICLES LIÉS ═══════════════ */}
       {relatedArticles.length > 0 && (
         <section className="border-t border-rm-rule bg-rm-paper/40">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-14">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
             <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
               En savoir plus
             </p>
-            <h2 className="mt-2 font-display text-3xl md:text-4xl text-rm-teal">
+            <h2 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl text-rm-teal">
               Articles liés
             </h2>
             <div
@@ -488,7 +488,6 @@ export default async function BienfaitDetailPage({ params }: Props) {
       {/* ═══════════════ GEO SECTIONS ═══════════════ */}
       <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
         <FaqAccordion items={b.faq} />
-        <SourcesList items={b.sources} />
       </section>
 
       {/* ═══════════════ DISCLAIMER + RETOUR ═══════════════ */}

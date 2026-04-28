@@ -45,14 +45,14 @@ function DataRow({
   duration: string
 }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-3 md:gap-6 py-3 border-b border-rm-rule last:border-b-0">
-      <div className="font-sans text-[12px] uppercase tracking-[0.1em] text-rm-burgundy md:pt-0.5">
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-1.5 sm:gap-3 md:gap-6 py-3 sm:py-3.5 border-b border-rm-rule last:border-b-0">
+      <div className="font-sans text-[11px] sm:text-[12px] uppercase tracking-[0.1em] text-rm-burgundy md:pt-0.5">
         {category}
       </div>
-      <div className="font-serif text-[14px] leading-[1.6] text-rm-ink">
+      <div className="font-serif text-[13.5px] sm:text-[14px] leading-[1.55] sm:leading-[1.6] text-rm-ink">
         {items}
       </div>
-      <div className="font-mono text-[12px] text-rm-inkSoft md:pt-1">
+      <div className="font-mono text-[11px] sm:text-[12px] text-rm-inkSoft md:pt-1">
         {duration}
       </div>
     </div>
@@ -145,10 +145,10 @@ export default function PrivacyTemplate({ locale, homeLabel }: Props) {
         intro="SAS CALEBASSE respecte la réglementation (UE) 2016/679 RGPD et la loi Informatique & Libertés du 6 janvier 1978 modifiée."
       />
 
-      <div className="max-w-[1040px] mx-auto px-6 md:px-10 py-16 md:py-20 pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-10 lg:gap-14">
+      <div className="max-w-[1040px] mx-auto px-4 sm:px-6 md:px-10 py-10 sm:py-14 md:py-20 pb-16 sm:pb-20 md:pb-24">
+        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 sm:gap-8 lg:gap-14">
           {/* ── Sommaire latéral ── */}
-          <aside className="hidden lg:block">
+          <aside>
             <LegalTOC items={TOC_ITEMS} />
           </aside>
 

@@ -37,24 +37,24 @@ export function WikiCard({ entry, locale }: WikiCardProps) {
       </div>
 
       {/* Content */}
-      <div className="px-4 py-4 text-center">
-        <h3 className="font-bold text-base text-[#054A57]">
+      <div className="px-3 py-3 sm:px-4 sm:py-4 text-center">
+        <h3 className="font-bold text-[15px] sm:text-base text-[#054A57] leading-tight">
           {name}
         </h3>
 
         {latinName && (
-          <p className="italic text-sm mt-1 text-[#D0802C]">
+          <p className="italic text-[12px] sm:text-sm mt-1 text-[#D0802C]">
             {latinName}
           </p>
         )}
 
         {shortDescription && (
-          <p className="text-sm mt-2 line-clamp-2 text-[#712E2F]/70">
+          <p className="text-[12px] sm:text-sm mt-1.5 sm:mt-2 line-clamp-2 text-[#712E2F]/70 leading-snug">
             {shortDescription}
           </p>
         )}
 
-        <span className="inline-block mt-3 text-sm font-medium text-[#A2211E]">
+        <span className="inline-block mt-2 sm:mt-3 text-[12px] sm:text-sm font-medium text-[#A2211E]">
           En savoir plus &rarr;
         </span>
       </div>

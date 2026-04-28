@@ -5,6 +5,9 @@
 //
 // Model: gemini-2.5-flash-lite. API key from GEMINI_API_KEY env var.
 
+import { sanitizeContext } from './ai/exposable-fields'
+import { getPromptWithVersion } from './ai/prompts'
+
 export type AIGenerateRequest = {
   collection: string // e.g. 'wikiEntries'
   field: string // field path, e.g. 'shortDescription' or 'description.fr'
@@ -18,6 +21,15 @@ export type AIGenerateRequest = {
 export type AIGenerateResponse = {
   text: string
   model: string
+}
+
+export type AiCallResponse = {
+  text: string
+  model: string
+  promptTokens?: number
+  completionTokens?: number
+  /** Versions of the prompts used to produce this response (for audit). */
+  promptVersion?: string
 }
 
 // ─── CLIENT-SIDE helper ─────────────────────────────────────────────
@@ -54,76 +66,102 @@ export async function generateFieldValue(req: AIGenerateRequest): Promise<AIGene
 }
 
 // ─── SERVER-SIDE Gemini call ────────────────────────────────────────
-// EU compliance constraint — same wording as src/lib/geoGenerator.ts
-const DISCLAIMER = `Contrainte éditoriale : Les Remèdes de Mamie est un site français encadré par le Règlement (CE) 1924/2006 et (UE) 432/2012. N'utilise JAMAIS d'allégations thérapeutiques. Reste descriptif et factuel. "Traditionnellement utilisé", "favorise", "contribue à" — formulations admises. "Soigne", "guérit", "traite" — INTERDIT.`
 
-export async function callAI(req: AIGenerateRequest): Promise<AIGenerateResponse> {
+function escapeXml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+}
+
+function escapeValue(v: unknown): string {
+  if (v === null || v === undefined) return ''
+  if (typeof v === 'string') return escapeXml(v)
+  if (typeof v === 'number' || typeof v === 'boolean') return String(v)
+  try {
+    return escapeXml(JSON.stringify(v))
+  } catch {
+    return ''
+  }
+}
+
+export async function callAI(req: AIGenerateRequest): Promise<AiCallResponse> {
   const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) throw new Error('GEMINI_API_KEY not configured')
 
   // Dynamic import so @google/generative-ai never ships to the client bundle
   // (this file is imported by 'use client' field components).
-  const { GoogleGenerativeAI } = await import('@google/generative-ai')
+  const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = await import('@google/generative-ai')
   const client = new GoogleGenerativeAI(apiKey)
+  const locale = req.locale === 'en' ? 'en' : 'fr'
+
+  const sysResolved = getPromptWithVersion({ kind: 'editorial', locale })
+  const fieldKey = `${req.collection}.${req.field.replace(/\..*/, '')}`
+  const fieldGuideResolved = getPromptWithVersion({ kind: 'fieldGuides', field: fieldKey })
+
+  // promptVersion is a compact triple "editorial:vN+fieldGuides:vM" so the
+  // audit log can capture both moving parts in a single string.
+  const promptVersion = `editorial:${sysResolved.version}+fieldGuides:${fieldGuideResolved.version}`
+
   const model = client.getGenerativeModel({
     model: 'gemini-2.5-flash-lite',
+    systemInstruction: sysResolved.text,
+    safetySettings: [
+      { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+      { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+      { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+      { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+    ],
     generationConfig: {
       temperature: 0.4,
       maxOutputTokens: 600,
     },
   })
 
-  const prompt = buildPrompt(req)
+  const prompt = buildPrompt(req, fieldGuideResolved.text)
   const result = await model.generateContent(prompt)
   const raw = result.response.text().trim()
   const text = raw.replace(/^['"«»]+|['"«»]+$/g, '').trim()
-  return { text, model: 'gemini-2.5-flash-lite' }
+  const usage = result.response.usageMetadata
+  return {
+    text,
+    model: 'gemini-2.5-flash-lite',
+    promptTokens: usage?.promptTokenCount,
+    completionTokens: usage?.candidatesTokenCount,
+    promptVersion,
+  }
 }
 
-function buildPrompt(req: AIGenerateRequest): string {
+function buildPrompt(req: AIGenerateRequest, fieldGuideText: string): string {
   return [
-    buildSystemBlock(req),
-    '',
-    DISCLAIMER,
-    '',
     '--- CONTEXTE DU DOCUMENT ---',
     buildContextBlock(req),
     '',
     '--- TÂCHE ---',
-    buildInstructionBlock(req),
+    buildInstructionBlock(req, fieldGuideText),
     '',
     '--- FORMAT DE SORTIE ---',
     'Génère UNIQUEMENT le contenu du champ, sans préambule, sans commentaire, sans guillemets autour. Une réponse directe, prête à insérer.',
   ].join('\n')
 }
 
-function buildSystemBlock(req: AIGenerateRequest): string {
-  const locale = req.locale || 'fr'
-  if (locale === 'en') {
-    return `You are the editorial assistant of "Les Remèdes de Mamie", a French herbal encyclopedia. Write in a sober, factual, warm style. Avoid unproven health claims.`
-  }
-  return `Tu es l'assistant éditorial des "Remèdes de Mamie", une encyclopédie botanique française. Style sobre, factuel, chaleureux. Respecte strictement la pharmacopée française et la médecine traditionnelle chinoise.`
-}
-
 function buildContextBlock(req: AIGenerateRequest): string {
-  const simple = simplifyContext(req.context)
+  const safe = sanitizeContext(req.collection, req.context || {})
   const lines: string[] = []
-  for (const [k, v] of Object.entries(simple)) {
+  for (const [k, v] of Object.entries(safe)) {
     if (v === null || v === undefined) continue
-    if (typeof v === 'object') {
-      lines.push(`${k} : ${JSON.stringify(v)}`)
-    } else {
-      lines.push(`${k} : ${String(v)}`)
-    }
+    lines.push(`${escapeXml(k)} : ${escapeValue(v)}`)
   }
-  return lines.length ? lines.join('\n') : '(document vide — utilise uniquement les indications de la tâche)'
+  const body = lines.length
+    ? lines.join('\n')
+    : '(document vide — utilise uniquement les indications de la tâche)'
+  return `<document_content locked="true">\n${body}\n</document_content>`
 }
 
-function buildInstructionBlock(req: AIGenerateRequest): string {
+function buildInstructionBlock(req: AIGenerateRequest, fieldGuideText: string): string {
   const lengthHint = req.targetLength
     ? `Longueur cible : entre ${req.targetLength.min ?? 50} et ${req.targetLength.max ?? 200} caractères.`
     : ''
-  const fieldGuide = describeField(req.collection, req.field, req.fieldType)
+  const fieldGuide = fieldGuideText && fieldGuideText.length > 0
+    ? fieldGuideText
+    : `Champ "${req.field}" de type ${req.fieldType}.`
   const extra = req.instructions ? `Instruction supplémentaire : ${req.instructions}` : ''
   return [
     `Collection : ${req.collection}`,
@@ -134,41 +172,4 @@ function buildInstructionBlock(req: AIGenerateRequest): string {
   ]
     .filter(Boolean)
     .join('\n')
-}
-
-function simplifyContext(ctx: any): any {
-  const out: any = {}
-  for (const [k, v] of Object.entries(ctx || {})) {
-    if (['id', '_id', 'createdAt', 'updatedAt', '_status', 'complianceStatus', 'complianceNotes'].includes(k)) continue
-    if (v === null || v === undefined) continue
-    if (typeof v === 'string' && v.length > 600) {
-      out[k] = v.slice(0, 600) + '…'
-      continue
-    }
-    if (Array.isArray(v) && v.length > 10) {
-      out[k] = v.slice(0, 10)
-      continue
-    }
-    out[k] = v
-  }
-  return out
-}
-
-function describeField(collection: string, field: string, type: string): string {
-  const guides: Record<string, string> = {
-    'wikiEntries.shortDescription': 'Résumé botanique en 1-2 phrases, factuel, auto-portant.',
-    'wikiEntries.longDescription': 'Paragraphe détaillé (origine, propriétés, usages traditionnels) en 4-6 phrases.',
-    'wikiEntries.description': 'Paragraphe détaillé sur la plante (origine, propriétés, usages traditionnels).',
-    'wikiEntries.name': 'Nom commun français de la plante (1-3 mots).',
-    'blogPosts.excerpt': "Chapô éditorial en 1-2 phrases qui donne envie de lire l'article.",
-    'blogPosts.title': 'Titre éditorial accrocheur, 50-70 caractères.',
-    'benefits.shortDescription': 'Description courte du bienfait en 1-2 phrases.',
-    'benefits.description': 'Explication du bienfait avec les plantes traditionnellement associées.',
-    'benefits.name': 'Nom du bienfait (1-3 mots).',
-    'products.description': 'Description produit en 2-3 phrases, ton éditorial mais clair.',
-    'products.shortDescription': 'Une phrase accroche produit.',
-    'products.name': 'Nom du produit (3-6 mots).',
-  }
-  const key = `${collection}.${field.replace(/\..*/, '')}`
-  return guides[key] || `Champ "${field}" de type ${type}.`
 }

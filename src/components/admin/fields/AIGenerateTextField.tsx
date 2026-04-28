@@ -39,11 +39,14 @@ export const AIGenerateTextField: TextFieldClientComponent = (props: any) => {
         path,
         hasData: Object.keys(fullData).length,
       })
+      const docId = docInfo?.id
+      const contextWithId =
+        docId != null && fullData.id == null ? { ...fullData, id: docId } : fullData
       const res = await generateFieldValue({
         collection,
         field: String(path),
         fieldType: 'text',
-        context: fullData,
+        context: contextWithId,
         locale: (props.locale as string) || undefined,
         targetLength: field?.admin?.targetLength,
       })

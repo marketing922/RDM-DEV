@@ -1,3 +1,4 @@
+import { default as default_19e9114c7e903ec1be4312e8aba80e38 } from '@/components/admin/views/MediaList.tsx'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { LexicalDiffComponent as LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -24,6 +25,10 @@ import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { default as default_bae2969dc63b8abd2e82f3e5ea6c54cf } from '@/components/admin/fields/AIGenerateTextField.tsx'
 import { default as default_d7ba84b88ca22a68b2b1a888f87f7d07 } from '@/components/admin/fields/AIGenerateTextareaField.tsx'
 import { default as default_af775c445b4dfd754cd6b6abaa0afc51 } from '@/components/admin/GeoGenerateButton.tsx'
+import { default as default_4754c74d817456f44de0e53d17a8e00a } from '@/components/admin/fields/SuggestedRelations.tsx'
+import { default as default_1d10adf4d958773b74d3200693f42492 } from '@/components/admin/ComplianceCheckButton.tsx'
+import { default as default_4e44263ab25222df01a6dbb5d560883c } from '@/components/admin/SeoGenerateButton.tsx'
+import { default as default_3d3d7dc426539f1ce88c145aa902f295 } from '@/components/admin/AIGeneratedHistory.tsx'
 import { OverviewComponent as OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
@@ -42,14 +47,19 @@ import { default as default_5579abbe6cbfdc12b001b41ef9479426 } from '@/component
 import { default as default_4e1e699efd22461324c9d216a74648ef } from '@/components/admin/Nav.tsx'
 import { default as default_f9bbae075ff7661688b05c4ed7480007 } from '@/components/admin/Icon.tsx'
 import { default as default_29cf8bd0dcc024aa26cbdb3a51d5d381 } from '@/components/admin/Logo.tsx'
-import { default as default_e736e0cf166dc4df2c39aa5544a2a5a3 } from '@/components/admin/BeforeLogin.tsx'
 import { default as default_8f28fbabed88008478002706780c491f } from '@/components/admin/Dashboard.tsx'
 import { default as default_06234670eecad279a4302dc99d1fe38f } from '@/components/admin/Account.tsx'
+import { default as default_d9481a17fa8953c89ee98e11f3423c3b } from '@/components/admin/views/Login.tsx'
 import { default as default_107df44219a8733c4f38034869310396 } from '@/components/admin/views/Settings.tsx'
+import { default as default_dffd72645f16c823d1e7c417783cbc4d } from '@/components/admin/views/AIUsage.tsx'
+import { default as default_f1f9c407e3f46a81e887767e36615a8f } from '@/components/admin/views/Errors.tsx'
+import { default as default_6590070224cb56e29005f931a2ae8cfe } from '@/components/admin/views/NotificationsList.tsx'
+import { default as default_243f90e493c4c35d743cba615c030d2a } from '@/components/admin/views/AIWorkshop.tsx'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@/components/admin/views/MediaList.tsx#default": default_19e9114c7e903ec1be4312e8aba80e38,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#LexicalDiffComponent": LexicalDiffComponent_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -76,6 +86,10 @@ export const importMap = {
   "@/components/admin/fields/AIGenerateTextField.tsx#default": default_bae2969dc63b8abd2e82f3e5ea6c54cf,
   "@/components/admin/fields/AIGenerateTextareaField.tsx#default": default_d7ba84b88ca22a68b2b1a888f87f7d07,
   "@/components/admin/GeoGenerateButton.tsx#default": default_af775c445b4dfd754cd6b6abaa0afc51,
+  "@/components/admin/fields/SuggestedRelations.tsx#default": default_4754c74d817456f44de0e53d17a8e00a,
+  "@/components/admin/ComplianceCheckButton.tsx#default": default_1d10adf4d958773b74d3200693f42492,
+  "@/components/admin/SeoGenerateButton.tsx#default": default_4e44263ab25222df01a6dbb5d560883c,
+  "@/components/admin/AIGeneratedHistory.tsx#default": default_3d3d7dc426539f1ce88c145aa902f295,
   "@payloadcms/plugin-seo/client#OverviewComponent": OverviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaTitleComponent": MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,
@@ -94,9 +108,13 @@ export const importMap = {
   "@/components/admin/Nav.tsx#default": default_4e1e699efd22461324c9d216a74648ef,
   "@/components/admin/Icon.tsx#default": default_f9bbae075ff7661688b05c4ed7480007,
   "@/components/admin/Logo.tsx#default": default_29cf8bd0dcc024aa26cbdb3a51d5d381,
-  "@/components/admin/BeforeLogin.tsx#default": default_e736e0cf166dc4df2c39aa5544a2a5a3,
   "@/components/admin/Dashboard.tsx#default": default_8f28fbabed88008478002706780c491f,
   "@/components/admin/Account.tsx#default": default_06234670eecad279a4302dc99d1fe38f,
+  "@/components/admin/views/Login.tsx#default": default_d9481a17fa8953c89ee98e11f3423c3b,
   "@/components/admin/views/Settings.tsx#default": default_107df44219a8733c4f38034869310396,
+  "@/components/admin/views/AIUsage.tsx#default": default_dffd72645f16c823d1e7c417783cbc4d,
+  "@/components/admin/views/Errors.tsx#default": default_f1f9c407e3f46a81e887767e36615a8f,
+  "@/components/admin/views/NotificationsList.tsx#default": default_6590070224cb56e29005f931a2ae8cfe,
+  "@/components/admin/views/AIWorkshop.tsx#default": default_243f90e493c4c35d743cba615c030d2a,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

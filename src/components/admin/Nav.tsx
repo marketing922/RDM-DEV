@@ -20,8 +20,13 @@ import {
   FileStack,
   Menu,
   PanelBottom,
+  Sparkles,
+  AlertTriangle,
+  Bell,
+  Wand2,
 } from 'lucide-react'
 import { RM } from '@/components/admin/primitives/tokens'
+import NotificationBell from '@/components/admin/NotificationBell'
 
 type NavItem = {
   id: string
@@ -62,6 +67,10 @@ const navigationGroups: NavGroup[] = [
       { id: 'utilisateurs', label: 'Utilisateurs', icon: Users, href: '/admin/collections/users', collection: 'users' },
       { id: 'auteurs', label: 'Auteurs', icon: User, href: '/admin/collections/authors', collection: 'authors' },
       { id: 'parametres', label: 'Paramètres', icon: Settings, href: '/admin/settings' },
+      { id: 'ai-workshop', label: 'Atelier IA', icon: Wand2, href: '/admin/ai-workshop' },
+      { id: 'ia-usage', label: 'IA — Consommation', icon: Sparkles, href: '/admin/ai-usage' },
+      { id: 'notifications', label: 'Notifications', icon: Bell, href: '/admin/notifications' },
+      { id: 'errors', label: 'Erreurs système', icon: AlertTriangle, href: '/admin/errors' },
       { id: 'journal', label: "Journal d'audit", icon: BookOpen, href: '/admin/collections/auditLog', collection: 'auditLog' },
     ],
   },
@@ -254,6 +263,7 @@ const Nav: React.FC = () => {
           />
           <div
             style={{
+              flex: 1,
               fontSize: 10,
               letterSpacing: 2,
               color: RM.creamSoft,
@@ -263,6 +273,7 @@ const Nav: React.FC = () => {
           >
             CMS · v2.4
           </div>
+          <NotificationBell />
         </div>
 
         {/* Groups */}

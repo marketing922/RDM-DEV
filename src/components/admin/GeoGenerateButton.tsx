@@ -108,7 +108,10 @@ const GeoGenerateButton: React.FC<Props> = ({ path }) => {
   const fieldType = fieldTypeFromPath(path)
   const { value, setValue } = useField<any>({ path })
   const [fields] = useAllFormFields()
-  const { collectionSlug } = useDocumentInfo()
+  const { collectionSlug, id: docId } = useDocumentInfo() as {
+    collectionSlug?: string
+    id?: string | number
+  }
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -129,7 +132,8 @@ const GeoGenerateButton: React.FC<Props> = ({ path }) => {
       if (!confirmed) return
     }
 
-    const context = pickContext(fields, collectionSlug)
+    const baseContext = pickContext(fields, collectionSlug)
+    const context = docId != null ? { ...baseContext, id: docId } : baseContext
     if (!context.name) {
       setError(
         'Renseigne au minimum le nom/titre du document avant de générer.',
@@ -162,7 +166,7 @@ const GeoGenerateButton: React.FC<Props> = ({ path }) => {
     } finally {
       setLoading(false)
     }
-  }, [fieldType, fields, collectionSlug, value, setValue])
+  }, [fieldType, fields, collectionSlug, docId, value, setValue])
 
   if (!fieldType) return null
 

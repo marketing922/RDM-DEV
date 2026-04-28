@@ -1,5 +1,8 @@
 'use client'
 
+import { useState } from 'react'
+import { Check, Link as LinkIcon } from 'lucide-react'
+
 type ShareButtonsProps = {
   title: string
   locale: string
@@ -7,6 +10,8 @@ type ShareButtonsProps = {
 }
 
 export function ShareButtons({ title, locale, slug }: ShareButtonsProps) {
+  const [copied, setCopied] = useState(false)
+
   const pageUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/${locale}/blog/${slug}`
     : ''
@@ -17,6 +22,8 @@ export function ShareButtons({ title, locale, slug }: ShareButtonsProps) {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(pageUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2200)
     } catch {
       // Fallback: do nothing
     }
@@ -65,13 +72,17 @@ export function ShareButtons({ title, locale, slug }: ShareButtonsProps) {
 
       {/* Copy link */}
       <button
+        type="button"
         onClick={handleCopy}
-        className="w-9 h-9 flex items-center justify-center rounded-full border border-[#DCD8C7] text-[#712E2F] hover:bg-[#A2211E] hover:text-white hover:border-[#A2211E] transition-colors"
-        aria-label="Copier le lien"
+        className={`w-9 h-9 flex items-center justify-center rounded-full border transition-colors ${
+          copied
+            ? 'bg-rm-teal text-white border-rm-teal'
+            : 'border-[#DCD8C7] text-[#712E2F] hover:bg-[#A2211E] hover:text-white hover:border-[#A2211E]'
+        }`}
+        aria-label={copied ? 'Lien copié' : 'Copier le lien'}
+        title={copied ? 'Lien copié' : 'Copier le lien'}
       >
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-        </svg>
+        {copied ? <Check className="w-4 h-4" /> : <LinkIcon className="w-4 h-4" />}
       </button>
     </div>
   )

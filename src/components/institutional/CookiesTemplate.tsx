@@ -107,7 +107,7 @@ export default function CookiesTemplate({ locale, homeLabel }: Props) {
         intro="Comment nous utilisons les cookies et traceurs sur www.remedes-mamie.com."
       />
 
-      <div className="max-w-[1240px] mx-auto px-6 md:px-10 py-16 md:py-20 pb-24 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10 lg:gap-12">
+      <div className="max-w-[1240px] mx-auto px-4 sm:px-6 md:px-10 py-10 sm:py-14 md:py-20 pb-16 sm:pb-20 md:pb-24 grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6 sm:gap-8 lg:gap-12">
         <aside>
           <LegalTOC items={TOC_ITEMS} />
         </aside>
@@ -184,16 +184,16 @@ export default function CookiesTemplate({ locale, homeLabel }: Props) {
                 {COOKIE_CATEGORIES.map((cat) => (
                   <div
                     key={cat.name}
-                    className="border border-rm-rule bg-rm-paper px-5 py-5 mb-3.5"
+                    className="border border-rm-rule bg-rm-paper px-4 sm:px-5 py-4 sm:py-5 mb-3.5"
                   >
-                    <div className="flex justify-between items-start gap-5 mb-2">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-5 mb-2">
                       <div className="flex items-center gap-2.5">
-                        <span className="block w-2.5 h-2.5 rounded-full bg-rm-teal" />
-                        <div className="font-display text-[22px] text-rm-teal font-normal">
+                        <span className="block w-2.5 h-2.5 rounded-full bg-rm-teal flex-shrink-0" />
+                        <div className="font-display text-[18px] sm:text-[22px] text-rm-teal font-normal leading-[1.2]">
                           {cat.name}
                         </div>
                       </div>
-                      <span className="text-[11px] text-rm-inkSoft uppercase tracking-[0.15em] font-semibold whitespace-nowrap">
+                      <span className="text-[10px] sm:text-[11px] text-rm-inkSoft uppercase tracking-[0.15em] font-semibold sm:whitespace-nowrap">
                         {cat.alwaysOn ? 'Toujours actifs' : 'Avec votre consentement'}
                       </span>
                     </div>
@@ -289,16 +289,16 @@ export default function CookiesTemplate({ locale, homeLabel }: Props) {
                   présent en bas de chaque page du site.
                 </p>
 
-                <div className="flex gap-3 mt-3.5 flex-wrap">
+                <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 mt-3.5 sm:flex-wrap">
                   <button
                     type="button"
-                    className="bg-rm-burgundy text-white font-sans text-[13px] font-semibold px-5 py-3 hover:bg-rm-burgundy/90 transition-colors"
+                    className="bg-rm-burgundy text-white font-sans text-[13px] font-semibold px-5 py-3 hover:bg-rm-burgundy/90 transition-colors w-full sm:w-auto"
                   >
                     Rouvrir mes préférences
                   </button>
                   <button
                     type="button"
-                    className="bg-transparent text-rm-teal border border-rm-ruleStrong font-sans text-[13px] font-semibold px-5 py-3 hover:border-rm-burgundy hover:text-rm-burgundy transition-colors"
+                    className="bg-transparent text-rm-teal border border-rm-ruleStrong font-sans text-[13px] font-semibold px-5 py-3 hover:border-rm-burgundy hover:text-rm-burgundy transition-colors w-full sm:w-auto"
                   >
                     Tout refuser
                   </button>

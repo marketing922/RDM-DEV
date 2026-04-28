@@ -122,7 +122,7 @@ export default async function BienfaitsPage({ params, searchParams }: Props) {
 
   return (
     <main className="min-h-screen bg-rm-cream">
-      <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-6">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 md:px-10 py-6">
         <Breadcrumb
           items={[
             { label: dict.nav.home, href: `/${locale}` },
@@ -132,18 +132,18 @@ export default async function BienfaitsPage({ params, searchParams }: Props) {
 
         {/* ─── Header almanach ─── */}
         <Reveal>
-        <header className="mt-10 md:mt-14 mb-12 md:mb-16 text-center max-w-3xl mx-auto">
-          <div className="flex items-center justify-center gap-2.5 mb-5">
+        <header className="mt-8 sm:mt-10 md:mt-14 mb-10 sm:mb-12 md:mb-16 text-center max-w-3xl mx-auto">
+          <div className="flex items-center justify-center gap-2.5 mb-4 sm:mb-5">
             <span className="block w-7 h-px bg-rm-burgundy" />
-            <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+            <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
               Encyclopédie
             </span>
             <span className="block w-7 h-px bg-rm-burgundy" />
           </div>
-          <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] text-[40px] sm:text-[52px] md:text-[60px]">
+          <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] text-[32px] sm:text-[44px] md:text-[52px] lg:text-[60px]">
             Les <em className="italic text-rm-burgundy">Bienfaits</em>
           </h1>
-          <p className="font-serif italic text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-5">
+          <p className="font-serif italic text-[15px] sm:text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-4 sm:mt-5">
             Traditions d&apos;usage par affection
             {isFiltered && totalCount > 0
               ? ` — ${totalCount} ${totalCount > 1 ? 'résultats' : 'résultat'}`
@@ -162,27 +162,27 @@ export default async function BienfaitsPage({ params, searchParams }: Props) {
         </Reveal>
 
         {/* ─── Dotted separator ─── */}
-        <div className="border-t border-dashed border-rm-rule mb-12 md:mb-14" />
+        <div className="border-t border-dashed border-rm-rule mb-10 sm:mb-12 md:mb-14" />
 
         {/* ─── Groups (alphabetical buckets) ─── */}
         {groups.length > 0 ? (
-          <div className="space-y-14 md:space-y-20">
+          <div className="space-y-12 sm:space-y-14 md:space-y-20">
             {groups.map((group) => (
               <section key={group.label}>
                 {/* Bucket header */}
-                <Reveal className="flex items-baseline gap-5 mb-6 md:mb-8">
-                  <span className="font-display italic text-[32px] md:text-[40px] text-rm-burgundy leading-none">
+                <Reveal className="flex items-baseline gap-3 sm:gap-5 mb-5 sm:mb-6 md:mb-8">
+                  <span className="font-display italic text-[26px] sm:text-[32px] md:text-[40px] text-rm-burgundy leading-none">
                     {group.label}
                   </span>
                   <span className="flex-1 border-t border-dashed border-rm-rule" />
-                  <span className="font-mono text-[11px] tracking-wide uppercase text-rm-inkSoft/70">
+                  <span className="font-mono text-[10px] sm:text-[11px] tracking-wide uppercase text-rm-inkSoft/70">
                     {group.items.length}{' '}
                     {group.items.length > 1 ? 'entrées' : 'entrée'}
                   </span>
                 </Reveal>
 
                 {/* Bucket grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
                   {group.items.map((b, idx) => {
                     const num = String(idx + 1).padStart(3, '0')
                     const count = plantCount(b)

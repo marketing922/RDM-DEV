@@ -295,36 +295,36 @@ export default async function HomePage({ params }: Props) {
     <>
       {/* ═══════════════ 1. HERO — ALMANACH ═══════════════ */}
       <section className="relative overflow-hidden bg-rm-cream">
-        <div className="mx-auto max-w-[1280px] px-6 md:px-10 pt-12 md:pt-[72px] pb-12 md:pb-12 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 md:px-10 pt-10 sm:pt-12 md:pt-[72px] pb-10 sm:pb-12 md:pb-12 grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-14 items-center">
           {/* Left column */}
           <div className="relative">
             {/* Volume badge */}
             <div className="flex items-center gap-2.5 mb-4 md:mb-[18px]">
               <span className="block w-7 h-px bg-rm-burgundy" />
-              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+              <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
                 Volume IV · Printemps 2026
               </span>
             </div>
 
             {/* Display headline */}
-            <h1 className="font-display font-normal text-rm-teal leading-[1.02] tracking-[-0.02em] text-[40px] sm:text-[52px] md:text-[60px] lg:text-[62px] xl:text-[78px]">
+            <h1 className="font-display font-normal text-rm-teal leading-[1.02] tracking-[-0.02em] text-[34px] sm:text-[48px] md:text-[60px] lg:text-[62px] xl:text-[78px]">
               <span className="block">L'almanach des</span>
-              <span className="block whitespace-nowrap">
+              <span className="block sm:whitespace-nowrap">
                 <em className="italic text-rm-burgundy">plantes</em> qui soignent
               </span>
               <span className="block">depuis toujours.</span>
             </h1>
 
             {/* Serif subtitle */}
-            <p className="font-serif text-[17px] sm:text-[19px] leading-[1.55] text-rm-inkSoft mt-6 md:mt-7 max-w-[520px]">
+            <p className="font-serif text-[16px] sm:text-[19px] leading-[1.55] text-rm-inkSoft mt-5 sm:mt-6 md:mt-7 max-w-[520px]">
               Une encyclopédie botanique réunissant les savoirs de la pharmacopée française et de la médecine traditionnelle chinoise — rigoureusement sourcée, illustrée, et lisible par tous.
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-3.5 mt-7 md:mt-8 items-start sm:items-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-3.5 mt-6 sm:mt-7 md:mt-8 items-stretch sm:items-center">
               <Link
                 href={`/${locale}/plantes`}
-                className="inline-flex items-center gap-2 font-sans text-sm font-semibold bg-rm-burgundy text-white px-[22px] py-[14px] rounded-[10px] shadow-[0_6px_16px_rgba(162,33,30,0.18)] hover:bg-rm-burgundy/90 transition-colors"
+                className="inline-flex items-center justify-center gap-2 font-sans text-sm font-semibold bg-rm-burgundy text-white px-[22px] py-[14px] rounded-[10px] shadow-[0_6px_16px_rgba(162,33,30,0.18)] hover:bg-rm-burgundy/90 transition-colors"
               >
                 Parcourir l'encyclopédie
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
@@ -334,26 +334,26 @@ export default async function HomePage({ params }: Props) {
               </Link>
               <Link
                 href={`/${locale}/a-propos`}
-                className="font-sans text-sm font-semibold text-rm-teal underline underline-offset-4 decoration-1 hover:text-rm-burgundy transition-colors py-[14px] px-[18px]"
+                className="font-sans text-sm font-semibold text-rm-teal underline underline-offset-4 decoration-1 hover:text-rm-burgundy transition-colors py-[14px] px-[18px] text-center sm:text-left"
               >
                 Notre démarche →
               </Link>
             </div>
 
             {/* Stats row — live counts from Payload */}
-            <div className="flex items-center gap-5 sm:gap-7 mt-10 md:mt-11 font-sans text-xs text-rm-inkSoft">
+            <div className="flex items-center flex-wrap gap-x-5 gap-y-3 sm:gap-x-7 mt-8 sm:mt-10 md:mt-11 font-sans text-xs text-rm-inkSoft">
               <div className="flex items-baseline gap-2">
-                <span className="font-display text-[26px] sm:text-[28px] text-rm-teal leading-none">{plantsCount}</span>
+                <span className="font-display text-[24px] sm:text-[28px] text-rm-teal leading-none">{plantsCount}</span>
                 <span>{plantsCount > 1 ? 'plantes' : 'plante'}</span>
               </div>
               <span className="block w-px h-6 bg-rm-ruleStrong" />
               <div className="flex items-baseline gap-2">
-                <span className="font-display text-[26px] sm:text-[28px] text-rm-teal leading-none">{benefitsCount}</span>
+                <span className="font-display text-[24px] sm:text-[28px] text-rm-teal leading-none">{benefitsCount}</span>
                 <span>{benefitsCount > 1 ? 'bienfaits' : 'bienfait'}</span>
               </div>
               <span className="block w-px h-6 bg-rm-ruleStrong" />
               <div className="flex items-baseline gap-2">
-                <span className="font-display text-[26px] sm:text-[28px] text-rm-teal leading-none">{articlesCount}</span>
+                <span className="font-display text-[24px] sm:text-[28px] text-rm-teal leading-none">{articlesCount}</span>
                 <span>{articlesCount > 1 ? 'articles' : 'article'}</span>
               </div>
             </div>
@@ -431,7 +431,7 @@ export default async function HomePage({ params }: Props) {
 
       {/* ═══════════════ 2. CERTIFICATIONS & ENGAGEMENTS ═══════════════ */}
       <section className="bg-rm-paper border-t border-dashed border-rm-rule">
-        <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-10 md:py-12">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 md:px-10 py-10 md:py-12">
           {/* Header */}
           <Reveal className="text-center mb-7 md:mb-9">
             <div className="flex items-center justify-center gap-2.5 mb-3">
@@ -520,24 +520,24 @@ export default async function HomePage({ params }: Props) {
 
       {/* ═══════════════ 3. PLANTS WIKI ═══════════════ */}
       <section className="bg-rm-cream border-t border-dashed border-rm-rule">
-        <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-16 md:py-24">
-          <Reveal className="text-center mb-12 md:mb-14 max-w-2xl mx-auto">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 md:px-10 py-12 sm:py-16 md:py-24">
+          <Reveal className="text-center mb-10 sm:mb-12 md:mb-14 max-w-2xl mx-auto">
             <div className="flex items-center justify-center gap-2.5 mb-4">
               <span className="block w-7 h-px bg-rm-burgundy" />
-              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+              <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
                 Planches d&apos;herbier
               </span>
               <span className="block w-7 h-px bg-rm-burgundy" />
             </div>
-            <h2 className="font-display text-[34px] md:text-[44px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
+            <h2 className="font-display text-[28px] sm:text-[34px] md:text-[44px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
               Les <em className="italic text-rm-burgundy">plantes</em> à découvrir
             </h2>
-            <p className="font-serif italic text-[16px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-4">
+            <p className="font-serif italic text-[15px] sm:text-[16px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-4">
               {dict.home.wiki.subtitle}
             </p>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 md:gap-8">
             {(wikiEntries || mockPlants).map((plant: any, idx: number) => {
               const imgSrc =
                 plant.image ||
@@ -594,7 +594,7 @@ export default async function HomePage({ params }: Props) {
             })}
           </div>
 
-          <Reveal className="text-center mt-12 md:mt-14" delay={150}>
+          <Reveal className="text-center mt-10 sm:mt-12 md:mt-14" delay={150}>
             <Link
               href={`/${locale}/plantes`}
               className="inline-flex items-center gap-2 font-sans text-sm font-semibold bg-rm-burgundy text-white px-6 py-3.5 hover:bg-rm-burgundy/90 transition-colors"
@@ -608,19 +608,19 @@ export default async function HomePage({ params }: Props) {
 
       {/* ═══════════════ 4. LE CORPS & LA PLANTE ═══════════════ */}
       <section className="bg-rm-paper border-t border-dashed border-rm-rule">
-        <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-16 md:py-24">
-          <Reveal className="text-center mb-12 md:mb-14 max-w-2xl mx-auto">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 md:px-10 py-12 sm:py-16 md:py-24">
+          <Reveal className="text-center mb-10 sm:mb-12 md:mb-14 max-w-2xl mx-auto">
             <div className="flex items-center justify-center gap-2.5 mb-4">
               <span className="block w-7 h-px bg-rm-burgundy" />
-              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+              <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
                 Chapitre II · Le corps &amp; la plante
               </span>
               <span className="block w-7 h-px bg-rm-burgundy" />
             </div>
-            <h2 className="font-display text-[34px] md:text-[44px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
+            <h2 className="font-display text-[28px] sm:text-[34px] md:text-[44px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
               Où <em className="italic text-rm-burgundy">avez-vous</em> besoin d&apos;aide&nbsp;?
             </h2>
-            <p className="font-serif italic text-[16px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-4">
+            <p className="font-serif italic text-[15px] sm:text-[16px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-4">
               Touchez une région pour découvrir les plantes qui la soulagent traditionnellement.
             </p>
           </Reveal>
@@ -633,24 +633,24 @@ export default async function HomePage({ params }: Props) {
 
       {/* ═══════════════ 5. BLOG ═══════════════ */}
       <section className="bg-rm-cream border-t border-dashed border-rm-rule">
-        <div className="mx-auto max-w-[1280px] px-6 md:px-10 py-16 md:py-24">
-          <Reveal className="text-center mb-12 md:mb-14 max-w-2xl mx-auto">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 md:px-10 py-12 sm:py-16 md:py-24">
+          <Reveal className="text-center mb-10 sm:mb-12 md:mb-14 max-w-2xl mx-auto">
             <div className="flex items-center justify-center gap-2.5 mb-4">
               <span className="block w-7 h-px bg-rm-burgundy" />
-              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+              <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
                 Journal
               </span>
               <span className="block w-7 h-px bg-rm-burgundy" />
             </div>
-            <h2 className="font-display text-[34px] md:text-[44px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
+            <h2 className="font-display text-[28px] sm:text-[34px] md:text-[44px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
               Le <em className="italic text-rm-burgundy">journal</em> des plantes
             </h2>
-            <p className="font-serif italic text-[16px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-4">
+            <p className="font-serif italic text-[15px] sm:text-[16px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-4">
               {dict.home.blog.subtitle}
             </p>
           </Reveal>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 md:gap-8">
             {(() => {
               const posts = blogPosts || mockBlogPosts
               const featured = posts[0] as any
@@ -689,8 +689,8 @@ export default async function HomePage({ params }: Props) {
                         </span>
                       )}
                     </div>
-                    <div className="p-6 md:p-8">
-                      <div className="font-mono text-[11px] tracking-wide text-rm-inkSoft/80 uppercase mb-3 flex items-center gap-2">
+                    <div className="p-5 sm:p-6 md:p-8">
+                      <div className="font-mono text-[11px] tracking-wide text-rm-inkSoft/80 uppercase mb-3 flex flex-wrap items-center gap-2">
                         <span>{getDate(featured)}</span>
                         {featured.readingTime && (
                           <>
@@ -701,11 +701,11 @@ export default async function HomePage({ params }: Props) {
                           </>
                         )}
                       </div>
-                      <h3 className="font-display text-[26px] md:text-[30px] leading-[1.12] text-rm-teal tracking-[-0.01em] group-hover:text-rm-burgundy transition-colors">
+                      <h3 className="font-display text-[22px] sm:text-[26px] md:text-[30px] leading-[1.12] text-rm-teal tracking-[-0.01em] group-hover:text-rm-burgundy transition-colors">
                         {featured.title}
                       </h3>
                       {featured.excerpt && (
-                        <p className="font-serif italic text-[16px] leading-[1.55] text-rm-inkSoft mt-3 line-clamp-3">
+                        <p className="font-serif italic text-[15px] sm:text-[16px] leading-[1.55] text-rm-inkSoft mt-3 line-clamp-3">
                           {featured.excerpt}
                         </p>
                       )}
@@ -714,7 +714,7 @@ export default async function HomePage({ params }: Props) {
                   </Reveal>
 
                   {/* Side (1/3) */}
-                  <div className="flex flex-col gap-6 md:gap-8">
+                  <div className="flex flex-col gap-5 sm:gap-6 md:gap-8">
                     {side.map((post: any, sIdx: number) => (
                       <Reveal key={post.slug} delay={120 + sIdx * 110} className="flex-1">
                       <Link
@@ -760,7 +760,7 @@ export default async function HomePage({ params }: Props) {
             })()}
           </div>
 
-          <Reveal className="text-center mt-12 md:mt-14" delay={150}>
+          <Reveal className="text-center mt-10 sm:mt-12 md:mt-14" delay={150}>
             <Link
               href={`/${locale}/blog`}
               className="inline-flex items-center gap-2 font-sans text-sm font-semibold bg-rm-burgundy text-white px-6 py-3.5 hover:bg-rm-burgundy/90 transition-colors"
@@ -774,18 +774,18 @@ export default async function HomePage({ params }: Props) {
 
       {/* ═══════════════ 6. NEWSLETTER ═══════════════ */}
       <section className="bg-rm-paper border-t border-dashed border-rm-rule">
-        <Reveal className="mx-auto max-w-2xl px-6 md:px-10 py-16 md:py-24 text-center">
+        <Reveal className="mx-auto max-w-2xl px-4 sm:px-6 md:px-10 py-12 sm:py-16 md:py-24 text-center">
           <div className="flex items-center justify-center gap-2.5 mb-4">
             <span className="block w-7 h-px bg-rm-burgundy" />
-            <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+            <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
               Courrier saisonnier
             </span>
             <span className="block w-7 h-px bg-rm-burgundy" />
           </div>
-          <h2 className="font-display text-[32px] md:text-[42px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
+          <h2 className="font-display text-[26px] sm:text-[32px] md:text-[42px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
             <em className="italic text-rm-burgundy">Recevez</em> notre newsletter
           </h2>
-          <p className="font-serif italic text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-4">
+          <p className="font-serif italic text-[15px] sm:text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-4">
             {dict.home.newsletter.subtitle}
           </p>
 
@@ -810,16 +810,16 @@ export default async function HomePage({ params }: Props) {
 
       {/* ═══════════════ 7. FAQ PREVIEW ═══════════════ */}
       <section className="bg-rm-cream border-t border-dashed border-rm-rule">
-        <div className="mx-auto max-w-3xl px-6 md:px-10 py-16 md:py-24">
-          <Reveal className="text-center mb-12 md:mb-14">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 md:px-10 py-12 sm:py-16 md:py-24">
+          <Reveal className="text-center mb-10 sm:mb-12 md:mb-14">
             <div className="flex items-center justify-center gap-2.5 mb-4">
               <span className="block w-7 h-px bg-rm-burgundy" />
-              <span className="font-sans text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+              <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
                 En marge
               </span>
               <span className="block w-7 h-px bg-rm-burgundy" />
             </div>
-            <h2 className="font-display text-[32px] md:text-[42px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
+            <h2 className="font-display text-[26px] sm:text-[32px] md:text-[42px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
               Questions <em className="italic text-rm-burgundy">fréquentes</em>
             </h2>
           </Reveal>
@@ -827,12 +827,12 @@ export default async function HomePage({ params }: Props) {
           <Reveal className="divide-y divide-dashed divide-rm-rule border-t border-b border-dashed border-rm-rule" delay={80}>
             {mockFaqItems.map((faq, i) => (
               <details key={i} className="group">
-                <summary className="flex w-full items-center justify-between gap-4 py-5 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                  <span className="flex items-baseline gap-4 flex-1 min-w-0">
-                    <span className="font-mono text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/60 shrink-0">
+                <summary className="flex w-full items-center justify-between gap-3 sm:gap-4 py-4 sm:py-5 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                  <span className="flex items-baseline gap-2.5 sm:gap-4 flex-1 min-w-0">
+                    <span className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/60 shrink-0">
                       N° {String(i + 1).padStart(2, '0')}
                     </span>
-                    <span className="font-display text-[18px] md:text-[20px] leading-[1.25] text-rm-teal text-left">
+                    <span className="font-display text-[16px] sm:text-[18px] md:text-[20px] leading-[1.25] text-rm-teal text-left">
                       {faq.question}
                     </span>
                   </span>
@@ -851,7 +851,7 @@ export default async function HomePage({ params }: Props) {
                     <polyline points="6 9 12 15 18 9" />
                   </svg>
                 </summary>
-                <div className="pb-5 pl-[72px] pr-8 font-serif italic text-[15px] leading-[1.6] text-rm-inkSoft">
+                <div className="pb-5 pl-0 sm:pl-[72px] pr-2 sm:pr-8 font-serif italic text-[14px] sm:text-[15px] leading-[1.6] text-rm-inkSoft">
                   {faq.answer}
                 </div>
               </details>
