@@ -74,6 +74,7 @@ type SectionImage = {
   alt?: string
   width?: number
   height?: number
+  caption?: string
 }
 
 type ExtractedSection = {
@@ -319,6 +320,28 @@ export default async function BlogDetailPage({ params }: Props) {
         images: [],
       },
     ]
+  }
+
+  // Injecte les images de `galleryUrls` (URLs externes saisies en admin) dans
+  // les sections. `sectionIndex` est 1-based (1 = première section). Plusieurs
+  // images peuvent cibler la même section. Les entrées sans index ou hors
+  // bornes sont collectées dans `trailingImages` et rendues en fin d'article.
+  const trailingImages: SectionImage[] = []
+  if (Array.isArray((p as any).galleryUrls)) {
+    for (const entry of (p as any).galleryUrls as any[]) {
+      const url = typeof entry?.url === 'string' ? entry.url.trim() : ''
+      if (!url) continue
+      const img: SectionImage = {
+        url,
+        caption: typeof entry?.caption === 'string' ? entry.caption : undefined,
+      }
+      const idx = typeof entry?.sectionIndex === 'number' ? entry.sectionIndex - 1 : -1
+      if (idx >= 0 && idx < sections.length) {
+        sections[idx] = { ...sections[idx], images: [...sections[idx].images, img] }
+      } else {
+        trailingImages.push(img)
+      }
+    }
   }
 
   // Featured image
@@ -731,12 +754,17 @@ export default async function BlogDetailPage({ params }: Props) {
                         >
                           <Image
                             src={img.url}
-                            alt={img.alt || section.title}
+                            alt={img.alt || img.caption || section.title}
                             width={img.width || 1200}
                             height={img.height || 800}
                             className="w-full h-auto object-cover"
                             sizes="(max-width: 768px) 100vw, 720px"
                           />
+                          {img.caption && (
+                            <figcaption className="mt-2 px-1 font-serif italic text-[13px] text-rm-inkSoft">
+                              {img.caption}
+                            </figcaption>
+                          )}
                         </figure>
                       ))}
                     </div>
@@ -774,6 +802,32 @@ export default async function BlogDetailPage({ params }: Props) {
                 </EditorialSection>
               )
             })}
+
+            {/* Galerie en fin d'article (URLs sans sectionIndex ou hors bornes) */}
+            {trailingImages.length > 0 && (
+              <div className="not-prose mt-12 space-y-6">
+                {trailingImages.map((img, iIdx) => (
+                  <figure
+                    key={`trailing-img-${iIdx}`}
+                    className="relative w-full overflow-hidden rounded-[8px] border border-rm-rule"
+                  >
+                    <Image
+                      src={img.url}
+                      alt={img.alt || img.caption || articleTitle}
+                      width={img.width || 1200}
+                      height={img.height || 800}
+                      className="w-full h-auto object-cover"
+                      sizes="(max-width: 768px) 100vw, 720px"
+                    />
+                    {img.caption && (
+                      <figcaption className="mt-2 px-1 font-serif italic text-[13px] text-rm-inkSoft">
+                        {img.caption}
+                      </figcaption>
+                    )}
+                  </figure>
+                ))}
+              </div>
+            )}
 
             {/* Author box */}
             {authorName && (
@@ -933,17 +987,26 @@ export default async function BlogDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* ═══════════════ "ON EN PARLE" STRIP ═══════════════ */}
-      {allProducts.length > 0 && (
+      {/* ═══════════════ "À LIRE AUSSI" STRIP ═══════════════
+        On affichait avant 5 produits (`allProducts`) sous l'intitulé
+        "On en parle". Sur une page article, l'utilisateur attend plutôt
+        d'autres articles à lire — on bascule donc sur les derniers articles
+        publiés, en excluant l'article courant. */}
+      {(() => {
+        const otherArticles = (allPosts as any[])
+          .filter((a) => a?.slug && a.slug !== slug)
+          .slice(0, 5)
+        if (otherArticles.length === 0) return null
+        return (
         <Reveal>
           <section className="mt-14 sm:mt-20 bg-rm-creamSoft border-t border-rm-rule py-10 sm:py-14 md:py-20">
             <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8">
               <div className="flex items-baseline justify-between mb-8 sm:mb-10 gap-4">
                 <h2 className="font-display italic text-rm-teal text-[26px] sm:text-[32px] md:text-[44px] tracking-[-0.01em]">
-                  On en parle
+                  À lire aussi
                 </h2>
                 <Link
-                  href={`/${locale}/produits`}
+                  href={`/${locale}/blog`}
                   className="font-sans text-[12px] tracking-[0.15em] uppercase text-rm-burgundy hover:text-rm-teal transition-colors"
                 >
                   Voir tout →
@@ -951,22 +1014,21 @@ export default async function BlogDetailPage({ params }: Props) {
               </div>
 
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
-                {allProducts.slice(0, 5).map((product: any, idx: number) => {
+                {otherArticles.map((article: any, idx: number) => {
                   const img =
-                    resolveMediaUrl(product.images?.[0]?.image, 'card') ??
-                    product.externalImageUrl
+                    resolveMediaUrl(article.featuredImage, 'card') ?? null
                   const num = `N°${String(idx + 1).padStart(2, '0')}`
                   return (
                     <Link
-                      key={product.id || product.slug}
-                      href={`/${locale}/produits/${product.slug || ''}`}
+                      key={article.id || article.slug}
+                      href={`/${locale}/blog/${article.slug || ''}`}
                       className="group block bg-rm-cream border border-rm-rule rounded-[10px] overflow-hidden hover:border-rm-burgundy transition-colors"
                     >
                       <div className="relative aspect-square bg-rm-paper overflow-hidden flex items-center justify-center">
                         {img ? (
                           <Image
                             src={img}
-                            alt={product.name || ''}
+                            alt={article.title || ''}
                             fill
                             sizes="(max-width: 768px) 50vw, 220px"
                             className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -997,11 +1059,11 @@ export default async function BlogDetailPage({ params }: Props) {
                           </span>
                         </div>
                         <p className="font-display text-[15px] text-rm-teal leading-tight line-clamp-2 min-h-[36px] group-hover:text-rm-burgundy transition-colors">
-                          {product.name}
+                          {article.title}
                         </p>
-                        {typeof product.price === 'number' && (
-                          <p className="mt-2 font-sans text-[13px] font-semibold text-rm-burgundy">
-                            {formatPrice(product.price)}
+                        {typeof article.readingTime === 'number' && article.readingTime > 0 && (
+                          <p className="mt-2 font-sans text-[12px] text-rm-inkSoft">
+                            {article.readingTime} {dict.blog.readingTime}
                           </p>
                         )}
                       </div>
@@ -1012,7 +1074,8 @@ export default async function BlogDetailPage({ params }: Props) {
             </div>
           </section>
         </Reveal>
-      )}
+        )
+      })()}
 
       {/* Back to journal */}
       <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-8 py-12 text-center">

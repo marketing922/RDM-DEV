@@ -10,6 +10,9 @@ export async function GET(request: Request) {
     const headers = await getHeaders()
     const { user } = await payload.auth({ headers })
     if (!user) return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+    if ((user as any).role !== 'admin') {
+      return NextResponse.json({ error: 'forbidden' }, { status: 403 })
+    }
 
     const url = new URL(request.url)
     const q = (url.searchParams.get('q') || 'camomille').trim()

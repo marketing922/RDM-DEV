@@ -5,7 +5,7 @@ import { backupAfterChange } from '@/hooks/backupAfterChange'
 import { coerceUploadIds } from '@/hooks/coerceUploadIds'
 import { makeEmbedHook } from '@/hooks/embedAfterChange'
 import { productsExtractor } from '@/hooks/embedExtractors'
-import { makeModerateContentHook } from '@/hooks/moderateContentHook'
+import { makeModerateContentAfterChangeHook } from '@/hooks/moderateContentHook'
 import { suggestedRelationsField } from '@/components/admin/fields/suggestedRelationsField'
 import { complianceCheckField } from '@/components/admin/fields/complianceCheckField'
 import { seoGenerateField } from '@/components/admin/fields/seoGenerateField'
@@ -42,11 +42,13 @@ export const Products: CollectionConfig = {
   },
   hooks: {
     beforeValidate: [coerceUploadIds, scanForbiddenClaims],
-    beforeChange: [
-      gatePublishCompliance,
-      makeModerateContentHook({ collection: 'products', fields: ['shortDescription', 'ingredients'] }),
+    beforeChange: [gatePublishCompliance],
+    afterChange: [
+      makeModerateContentAfterChangeHook({ collection: 'products', fields: ['shortDescription', 'ingredients'] }),
+      createAuditLog,
+      backupAfterChange,
+      makeEmbedHook('products', productsExtractor),
     ],
-    afterChange: [createAuditLog, backupAfterChange, makeEmbedHook('products', productsExtractor)],
   },
   fields: [
     {
@@ -285,6 +287,17 @@ export const Products: CollectionConfig = {
                 description: 'Les bienfaits sant\u00e9 li\u00e9s \u00e0 ce produit',
               },
             },
+            {
+              name: 'relatedPlants',
+              type: 'relationship',
+              relationTo: 'wikiEntries',
+              hasMany: true,
+              label: 'Plantes li\u00e9es',
+              admin: {
+                description:
+                  'Plantes wiki composant ce produit. Maintenu en miroir de wikiEntries.relatedProducts.',
+              },
+            },
           ],
         },
         {
@@ -376,8 +389,8 @@ export const Products: CollectionConfig = {
                 { name: 'confidence', type: 'number', min: 0, max: 1 },
                 {
                   name: 'matchedClaims',
-                  type: 'array',
-                  fields: [{ name: 'claim', type: 'text' }],
+                  type: 'json',
+                  admin: { description: 'Allégations détectées par le LLM (tableau JSON, audit trail IA).' },
                 },
                 { name: 'reason', type: 'textarea' },
                 { name: 'at', type: 'date' },

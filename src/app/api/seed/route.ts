@@ -1,6 +1,7 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { NextRequest, NextResponse } from 'next/server'
+import { authenticateSeedRoute } from '@/lib/seed-auth'
 
 export const maxDuration = 60
 
@@ -21,6 +22,8 @@ export async function GET(req: NextRequest) {
   if (process.env.NODE_ENV === 'production') {
     return NextResponse.json({ error: 'Disabled in production.' }, { status: 403 })
   }
+  const auth = await authenticateSeedRoute(req)
+  if (!auth.ok) return NextResponse.json({ error: auth.reason }, { status: auth.status })
   if (req.nextUrl.searchParams.get('confirm') !== 'yes') {
     return NextResponse.json({ message: 'Add ?confirm=yes to run seed.' })
   }

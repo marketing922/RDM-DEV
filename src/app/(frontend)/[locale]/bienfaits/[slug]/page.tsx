@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Heart } from 'lucide-react'
+import BenefitIcon from '@/components/bienfaits/BenefitIcon'
 import { getDictionary } from '@/i18n/server'
 import type { Locale } from '@/i18n/config'
 import { richTextToPlain } from '@/lib/utils'
@@ -22,11 +22,11 @@ import {
 } from '@/lib/queries'
 import { resolveMediaUrl } from '@/lib/mediaUrl'
 import { siteMetadataBase } from '@/lib/metadata'
+import { DEFAULT_PLANT_IMAGE } from '@/lib/brand-assets'
 
 export const revalidate = 3600
 
-const DEFAULT_PRODUCT_IMAGE =
-  'https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1761295312/Chat_GPT_Image_Oct_24_2025_10_38_36_AM_1_a78649daf4.png'
+const DEFAULT_PRODUCT_IMAGE = DEFAULT_PLANT_IMAGE
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>
@@ -76,16 +76,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-/* ─── Helpers ──────────────────────────────────────────────────────── */
-
-function formatBenefitNumber(id: unknown, fallback: string): string {
-  const str = String(id ?? fallback)
-  // Keep last 3 alphanumeric chars, uppercase
-  const cleaned = str.replace(/[^a-zA-Z0-9]/g, '').toUpperCase()
-  const suffix = cleaned.slice(-3).padStart(3, '0')
-  return `B-${suffix}`
-}
-
 /* ─── Page ─────────────────────────────────────────────────────────── */
 
 export default async function BienfaitDetailPage({ params }: Props) {
@@ -102,7 +92,8 @@ export default async function BienfaitDetailPage({ params }: Props) {
   const benefitName =
     b.name ||
     slug.replace(/-/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase())
-  const benefitNumber = formatBenefitNumber(b.id, slug)
+  const benefitNumber: string = b.referenceNumber || ''
+  const tDetail = (dict.benefits as any).detail ?? {}
 
   // Related plants (from benefit.relatedPlants relationship, depth:2)
   const relatedPlants: Array<{
@@ -148,23 +139,31 @@ export default async function BienfaitDetailPage({ params }: Props) {
   }
   relatedProducts = relatedProducts.slice(0, 4)
 
-  // Related articles — blog posts tagged with this benefit slug (best-effort).
-  let relatedArticles: any[] = []
-  try {
-    const { docs: allPosts } = await getBlogPosts({ limit: 12, locale })
-    relatedArticles = (allPosts as any[])
-      .filter((post) => {
-        const tags = Array.isArray(post.tags) ? post.tags : []
-        return tags.some((t: any) => {
-          const tSlug = typeof t === 'object' ? t?.slug : null
-          const tName = typeof t === 'object' ? t?.name : null
-          return tSlug === slug || tName?.toLowerCase() === benefitName.toLowerCase()
+  // Related articles — explicit relation on the benefit (preferred), with a
+  // best-effort tag-matching fallback when the editor hasn't linked any.
+  let relatedArticles: any[] = Array.isArray(b.relatedArticles)
+    ? b.relatedArticles
+        .filter((p: any) => p && typeof p === 'object' && p.slug && p.title)
+    : []
+
+  if (relatedArticles.length === 0) {
+    try {
+      const { docs: allPosts } = await getBlogPosts({ limit: 12, locale })
+      relatedArticles = (allPosts as any[])
+        .filter((post) => {
+          const tags = Array.isArray(post.tags) ? post.tags : []
+          return tags.some((t: any) => {
+            const tSlug = typeof t === 'object' ? t?.slug : null
+            const tName = typeof t === 'object' ? t?.name : null
+            return tSlug === slug || tName?.toLowerCase() === benefitName.toLowerCase()
+          })
         })
-      })
-      .slice(0, 3)
-  } catch {
-    relatedArticles = []
+        .slice(0, 3)
+    } catch {
+      relatedArticles = []
+    }
   }
+  relatedArticles = relatedArticles.slice(0, 3)
 
   // Long description text (Lexical richText → plain, preserving paragraphs)
   const descriptionText = b.description ? richTextToPlain(b.description) : ''
@@ -173,12 +172,16 @@ export default async function BienfaitDetailPage({ params }: Props) {
     .map((p) => p.trim())
     .filter(Boolean)
 
-  // Optional "À savoir" note — Benefits.ts has no precautions field today,
-  // but we render it if an editor adds one via GEO/other hook.
-  const precautionsText =
-    (b.precautionsText as string | undefined) ||
-    (b.precautions ? richTextToPlain(b.precautions) : '') ||
-    ''
+  const precautionsParagraphs = b.precautions
+    ? richTextToPlain(b.precautions).split(/\n{2,}/).map((p) => p.trim()).filter(Boolean)
+    : []
+
+  const redFlagItems: string[] = (typeof b.redFlags === 'string' ? b.redFlags : '')
+    .split(/\n+/)
+    .map((s: string) => s.trim())
+    .filter(Boolean)
+
+  const regulatoryClaim: string = b.regulatoryClaim || ''
 
   return (
     <main className="min-h-screen bg-rm-cream">
@@ -222,8 +225,12 @@ export default async function BienfaitDetailPage({ params }: Props) {
       {/* ═══════════════ HEADER ÉDITORIAL ═══════════════ */}
       <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-8 sm:pb-10">
         <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
-          <span className="font-mono">{benefitNumber}</span>
-          <span className="mx-2 text-rm-ruleStrong">·</span>
+          {benefitNumber && (
+            <>
+              <span className="font-mono">{benefitNumber}</span>
+              <span className="mx-2 text-rm-ruleStrong">·</span>
+            </>
+          )}
           <span>{dict.benefits.title}</span>
         </p>
 
@@ -232,7 +239,7 @@ export default async function BienfaitDetailPage({ params }: Props) {
             aria-hidden
             className="inline-flex h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0 items-center justify-center rounded-full bg-rm-creamSoft border border-rm-stone text-rm-ochre"
           >
-            <Heart className="h-5 w-5 sm:h-7 sm:w-7" strokeWidth={1.5} />
+            <BenefitIcon name={b.icon} className="h-5 w-5 sm:h-7 sm:w-7" strokeWidth={1.5} />
           </span>
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-rm-teal">
             {benefitName}
@@ -293,10 +300,10 @@ export default async function BienfaitDetailPage({ params }: Props) {
         {descriptionParagraphs.length > 0 && (
           <article className="mt-8">
             <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
-              Lecture
+              {tDetail.lecture}
             </p>
             <h2 className="mt-2 font-display text-xl sm:text-2xl md:text-3xl text-rm-teal border-l-4 border-rm-ochre pl-3 sm:pl-4">
-              Traditionnellement utilisé pour {benefitName.toLowerCase()}
+              {tDetail.traditionalUse} {benefitName.toLowerCase()}
             </h2>
             <div className="mt-5 sm:mt-6 space-y-4 sm:space-y-5 font-serif text-[16px] sm:text-[18px] leading-[1.7] sm:leading-[1.75] text-rm-inkSoft">
               {descriptionParagraphs.map((paragraph, i) => (
@@ -315,129 +322,159 @@ export default async function BienfaitDetailPage({ params }: Props) {
           </article>
         )}
 
-        {precautionsText && (
+        {precautionsParagraphs.length > 0 && (
           <aside className="mt-10 rounded-r-xl border-l-4 border-rm-burgundy bg-rm-creamSoft px-5 py-4">
             <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
-              À savoir
+              {tDetail.precautions}
             </p>
-            <p className="mt-2 font-serif text-[15px] leading-relaxed text-rm-ink">
-              {precautionsText}
+            <div className="mt-2 space-y-2 font-serif text-[15px] leading-relaxed text-rm-ink">
+              {precautionsParagraphs.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </div>
+          </aside>
+        )}
+
+        {redFlagItems.length > 0 && (
+          <aside className="mt-6 border border-rm-burgundy/40 bg-rm-burgundy/5 px-5 py-4">
+            <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
+              {tDetail.redFlags}
             </p>
+            <ul className="mt-2 list-disc list-inside font-serif text-[15px] leading-relaxed text-rm-ink space-y-1">
+              {redFlagItems.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
           </aside>
         )}
 
         <KeyTakeawaysBox items={b.keyTakeaways} />
       </section>
 
-      {/* ═══════════════ PLANTES ASSOCIÉES ═══════════════ */}
-      {relatedPlants.length > 0 && (
+      {/* ═══════════════ PLANTES + PRODUITS (côte à côte) ═══════════════ */}
+      {(relatedPlants.length > 0 || relatedProducts.length > 0) && (
         <section className="border-t border-rm-rule bg-rm-paper/40">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-            <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
-              Plantes traditionnellement utilisées
-            </p>
-            <h2 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl text-rm-teal">
-              Les plantes de l’almanach
-            </h2>
-            <div
-              aria-hidden
-              className="mt-4 h-px w-full border-t border-dotted border-rm-ruleStrong"
-            />
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
 
-            <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {relatedPlants.map((plant) => (
-                <li key={plant.slug ?? plant.name}>
-                  <Link
-                    href={`/${locale}/plantes/${plant.slug}`}
-                    className="group block h-full rounded-xl bg-rm-cream border border-rm-stone p-5 transition-all hover:-translate-y-0.5 hover:border-rm-burgundy hover:shadow-[0_10px_24px_rgba(5,74,87,0.08)]"
-                  >
-                    <h3 className="font-display text-xl text-rm-teal group-hover:text-rm-burgundy transition-colors">
-                      {plant.name}
-                    </h3>
-                    {plant.latinName && (
-                      <p className="mt-1 font-serif italic text-sm text-rm-burgundy">
-                        {plant.latinName}
-                      </p>
-                    )}
-                    {plant.shortDescription && (
-                      <p className="mt-3 font-serif text-[15px] leading-snug text-rm-inkSoft line-clamp-2">
-                        {plant.shortDescription}
-                      </p>
-                    )}
-                    <span className="mt-4 inline-flex items-center gap-1 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-rm-burgundy">
-                      Découvrir la fiche
-                      <span aria-hidden>→</span>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
+              {/* ── Plantes (colonne gauche) ── */}
+              {relatedPlants.length > 0 && (
+                <div className={relatedProducts.length > 0 ? 'lg:col-span-5' : 'lg:col-span-12'}>
+                  <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
+                    Plantes traditionnellement utilisées
+                  </p>
+                  <h2 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl text-rm-teal">
+                    Les plantes de l’almanach
+                  </h2>
+                  <div
+                    aria-hidden
+                    className="mt-4 h-px w-full border-t border-dotted border-rm-ruleStrong"
+                  />
 
-      {/* ═══════════════ PRODUITS RECOMMANDÉS ═══════════════ */}
-      {relatedProducts.length > 0 && (
-        <section className="border-t border-rm-rule">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-            <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
-              Dans notre boutique
-            </p>
-            <h2 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl text-rm-teal">
-              Produits recommandés
-            </h2>
-            <div
-              aria-hidden
-              className="mt-4 h-px w-full border-t border-dotted border-rm-ruleStrong"
-            />
-
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {relatedProducts.map((product: any) => {
-                const img =
-                  resolveMediaUrl(
-                    (product.images?.[0] as any)?.image,
-                    'card',
-                  ) ??
-                  (product.externalImageUrl as string | undefined) ??
-                  DEFAULT_PRODUCT_IMAGE
-                return (
-                  <Link
-                    key={product.slug}
-                    href={`/${locale}/produits/${product.slug}`}
-                    className="group flex flex-col overflow-hidden rounded-xl border border-rm-stone bg-rm-cream transition-all hover:-translate-y-0.5 hover:border-rm-burgundy hover:shadow-[0_10px_24px_rgba(5,74,87,0.08)]"
-                  >
-                    <div className="relative aspect-[4/3] overflow-hidden bg-rm-creamSoft">
-                      <Image
-                        src={img}
-                        alt={product.name}
-                        fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-                    <div className="flex flex-1 flex-col p-4">
-                      <h3 className="font-display text-lg text-rm-teal group-hover:text-rm-burgundy transition-colors">
-                        {product.name}
-                      </h3>
-                      {product.shortDescription && (
-                        <p className="mt-1 font-serif text-sm text-rm-inkSoft line-clamp-2">
-                          {product.shortDescription}
-                        </p>
-                      )}
-                      <div className="mt-auto pt-3 flex items-baseline justify-between">
-                        {typeof product.price === 'number' && (
-                          <span className="font-mono text-base font-semibold text-rm-teal">
-                            {product.price.toFixed(2).replace('.', ',')} €
+                  <ul className={`mt-8 grid gap-4 sm:gap-5 ${
+                    relatedProducts.length > 0
+                      ? 'grid-cols-1 sm:grid-cols-2'
+                      : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+                  }`}>
+                    {relatedPlants.map((plant) => (
+                      <li key={plant.slug ?? plant.name}>
+                        <Link
+                          href={`/${locale}/plantes/${plant.slug}`}
+                          className="group block h-full rounded-xl bg-rm-cream border border-rm-stone p-5 transition-all hover:-translate-y-0.5 hover:border-rm-burgundy hover:shadow-[0_10px_24px_rgba(5,74,87,0.08)]"
+                        >
+                          <h3 className="font-display text-xl text-rm-teal group-hover:text-rm-burgundy transition-colors">
+                            {plant.name}
+                          </h3>
+                          {plant.latinName && (
+                            <p className="mt-1 font-serif italic text-sm text-rm-burgundy">
+                              {plant.latinName}
+                            </p>
+                          )}
+                          {plant.shortDescription && (
+                            <p className="mt-3 font-serif text-[15px] leading-snug text-rm-inkSoft line-clamp-2">
+                              {plant.shortDescription}
+                            </p>
+                          )}
+                          <span className="mt-4 inline-flex items-center gap-1 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-rm-burgundy">
+                            Découvrir la fiche
+                            <span aria-hidden>→</span>
                           </span>
-                        )}
-                        <span className="font-sans text-xs font-semibold uppercase tracking-[0.12em] text-rm-burgundy">
-                          Voir
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                )
-              })}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* ── Produits (colonne droite) ── */}
+              {relatedProducts.length > 0 && (
+                <div className={relatedPlants.length > 0 ? 'lg:col-span-7' : 'lg:col-span-12'}>
+                  <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
+                    Dans notre boutique
+                  </p>
+                  <h2 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl text-rm-teal">
+                    Produits recommandés
+                  </h2>
+                  <div
+                    aria-hidden
+                    className="mt-4 h-px w-full border-t border-dotted border-rm-ruleStrong"
+                  />
+
+                  <div className={`mt-8 grid gap-4 sm:gap-5 ${
+                    relatedPlants.length > 0
+                      ? 'grid-cols-1 sm:grid-cols-2'
+                      : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+                  }`}>
+                    {relatedProducts.map((product: any) => {
+                      const img =
+                        resolveMediaUrl(
+                          (product.images?.[0] as any)?.image,
+                          'card',
+                        ) ??
+                        (product.externalImageUrl as string | undefined) ??
+                        DEFAULT_PRODUCT_IMAGE
+                      return (
+                        <Link
+                          key={product.slug}
+                          href={`/${locale}/produits/${product.slug}`}
+                          className="group flex flex-col overflow-hidden rounded-xl border border-rm-stone bg-rm-cream transition-all hover:-translate-y-0.5 hover:border-rm-burgundy hover:shadow-[0_10px_24px_rgba(5,74,87,0.08)]"
+                        >
+                          <div className="relative aspect-[4/3] overflow-hidden bg-rm-creamSoft">
+                            <Image
+                              src={img}
+                              alt={product.name}
+                              fill
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          </div>
+                          <div className="flex flex-1 flex-col p-4">
+                            <h3 className="font-display text-lg text-rm-teal group-hover:text-rm-burgundy transition-colors">
+                              {product.name}
+                            </h3>
+                            {product.shortDescription && (
+                              <p className="mt-1 font-serif text-sm text-rm-inkSoft line-clamp-2">
+                                {product.shortDescription}
+                              </p>
+                            )}
+                            <div className="mt-auto pt-3 flex items-baseline justify-between">
+                              {typeof product.price === 'number' && (
+                                <span className="font-mono text-base font-semibold text-rm-teal">
+                                  {product.price.toFixed(2).replace('.', ',')} €
+                                </span>
+                              )}
+                              <span className="font-sans text-xs font-semibold uppercase tracking-[0.12em] text-rm-burgundy">
+                                Voir
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
             </div>
           </div>
         </section>
@@ -445,8 +482,8 @@ export default async function BienfaitDetailPage({ params }: Props) {
 
       {/* ═══════════════ ARTICLES LIÉS ═══════════════ */}
       {relatedArticles.length > 0 && (
-        <section className="border-t border-rm-rule bg-rm-paper/40">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+        <section className="border-t border-rm-rule">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
             <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
               En savoir plus
             </p>
@@ -458,7 +495,7 @@ export default async function BienfaitDetailPage({ params }: Props) {
               className="mt-4 h-px w-full border-t border-dotted border-rm-ruleStrong"
             />
 
-            <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {relatedArticles.map((post: any) => (
                 <li key={post.slug}>
                   <Link
@@ -516,7 +553,7 @@ export default async function BienfaitDetailPage({ params }: Props) {
             className="inline-flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.14em] text-rm-teal hover:text-rm-burgundy transition-colors"
           >
             <span aria-hidden>←</span>
-            Tous les bienfaits
+            {tDetail.backToList}
           </Link>
         </div>
       </section>

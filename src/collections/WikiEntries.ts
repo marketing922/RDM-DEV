@@ -1,11 +1,11 @@
 import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
-import { scanForbiddenClaims, gatePublishCompliance, createAuditLog, autoSlug } from '@/hooks'
+import { scanForbiddenClaims, gatePublishCompliance, createAuditLog, autoSlug, assignPlantNumber } from '@/hooks'
 import { backupAfterChange } from '@/hooks/backupAfterChange'
 import { coerceUploadIds } from '@/hooks/coerceUploadIds'
 import { makeEmbedHook } from '@/hooks/embedAfterChange'
 import { wikiEntriesExtractor } from '@/hooks/embedExtractors'
-import { makeModerateContentHook } from '@/hooks/moderateContentHook'
+import { makeModerateContentAfterChangeHook } from '@/hooks/moderateContentHook'
 import { suggestedRelationsField } from '@/components/admin/fields/suggestedRelationsField'
 import { complianceCheckField } from '@/components/admin/fields/complianceCheckField'
 import { seoGenerateField } from '@/components/admin/fields/seoGenerateField'
@@ -21,7 +21,7 @@ export const WikiEntries: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'latinName', '_status', 'complianceStatus', 'updatedAt'],
+    defaultColumns: ['referenceNumber', 'name', 'latinName', 'category', '_status', 'complianceStatus', 'updatedAt'],
     group: 'Contenu',
     description: 'G\u00e9rer les fiches plantes de l\u2019encyclop\u00e9die des rem\u00e8des naturels',
     components: {
@@ -50,11 +50,13 @@ export const WikiEntries: CollectionConfig = {
   },
   hooks: {
     beforeValidate: [coerceUploadIds, scanForbiddenClaims],
-    beforeChange: [
-      gatePublishCompliance,
-      makeModerateContentHook({ collection: 'wikiEntries', fields: ['shortDescription', 'longDescription', 'precautionsText'] }),
+    beforeChange: [assignPlantNumber, gatePublishCompliance],
+    afterChange: [
+      makeModerateContentAfterChangeHook({ collection: 'wikiEntries', fields: ['shortDescription', 'longDescription', 'precautionsText'] }),
+      createAuditLog,
+      backupAfterChange,
+      makeEmbedHook('wikiEntries', wikiEntriesExtractor),
     ],
-    afterChange: [createAuditLog, backupAfterChange, makeEmbedHook('wikiEntries', wikiEntriesExtractor)],
   },
   fields: [
     {
@@ -63,6 +65,16 @@ export const WikiEntries: CollectionConfig = {
         {
           label: 'Informations g\u00e9n\u00e9rales',
           fields: [
+            {
+              name: 'referenceNumber',
+              type: 'text',
+              label: 'N\u00b0 de r\u00e9f\u00e9rence',
+              admin: {
+                readOnly: true,
+                description: 'Num\u00e9ro stable assign\u00e9 automatiquement \u00e0 la cr\u00e9ation (P-001, P-002\u2026). Ne pas modifier.',
+                position: 'sidebar',
+              },
+            },
             {
               name: 'name',
               type: 'text',
@@ -76,6 +88,28 @@ export const WikiEntries: CollectionConfig = {
                   Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
                 },
               },
+            },
+            {
+              name: 'category',
+              type: 'select',
+              required: true,
+              label: 'Cat\u00e9gorie th\u00e9rapeutique',
+              admin: {
+                description: 'Famille s\u00e9mantique de la plante. D\u00e9termine le regroupement sur la page liste.',
+              },
+              options: [
+                { label: 'Syst\u00e8me nerveux & mental', value: 'nervous' },
+                { label: 'Digestion', value: 'digestive' },
+                { label: 'Voies respiratoires', value: 'respiratory' },
+                { label: 'Sph\u00e8re f\u00e9minine', value: 'female' },
+                { label: 'Sph\u00e8re masculine', value: 'male' },
+                { label: 'Circulation', value: 'circulatory' },
+                { label: 'Articulations & muscles', value: 'joints' },
+                { label: 'Immunit\u00e9 & vitalit\u00e9', value: 'immunity' },
+                { label: 'Peau & phan\u00e8res', value: 'skin' },
+                { label: 'M\u00e9tabolisme & \u00e9quilibre', value: 'metabolism' },
+                { label: 'Plante polyvalente', value: 'multi' },
+              ],
             },
             {
               name: 'latinName',
@@ -127,15 +161,52 @@ export const WikiEntries: CollectionConfig = {
           fields: [
             {
               name: 'family',
-              type: 'text',
+              type: 'select',
               label: 'Famille botanique',
               admin: {
-                placeholder: 'Ex : Ast\u00e9rac\u00e9es',
-                description: 'La famille botanique \u00e0 laquelle appartient la plante',
-                components: {
-                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
-                },
+                description: 'Famille botanique normalis\u00e9e (whitelist).',
               },
+              options: [
+                { label: 'Ast\u00e9rac\u00e9es (Asteraceae)', value: 'asteraceae' },
+                { label: 'Lamiac\u00e9es (Lamiaceae)', value: 'lamiaceae' },
+                { label: 'Apiac\u00e9es (Apiaceae)', value: 'apiaceae' },
+                { label: 'Rosac\u00e9es (Rosaceae)', value: 'rosaceae' },
+                { label: 'Fabac\u00e9es (Fabaceae)', value: 'fabaceae' },
+                { label: 'Verb\u00e9nac\u00e9es (Verbenaceae)', value: 'verbenaceae' },
+                { label: 'Plantaginac\u00e9es (Plantaginaceae)', value: 'plantaginaceae' },
+                { label: 'Hyp\u00e9ricac\u00e9es (Hypericaceae)', value: 'hypericaceae' },
+                { label: 'Sapindac\u00e9es (Sapindaceae)', value: 'sapindaceae' },
+                { label: 'Adoxac\u00e9es (Adoxaceae)', value: 'adoxaceae' },
+                { label: 'Caprifoliac\u00e9es (Caprifoliaceae)', value: 'caprifoliaceae' },
+                { label: 'Malvac\u00e9es (Malvaceae)', value: 'malvaceae' },
+                { label: 'Boraginac\u00e9es (Boraginaceae)', value: 'boraginaceae' },
+                { label: 'Renonculac\u00e9es (Ranunculaceae)', value: 'ranunculaceae' },
+                { label: 'Papav\u00e9rac\u00e9es (Papaveraceae)', value: 'papaveraceae' },
+                { label: 'Brassicac\u00e9es (Brassicaceae)', value: 'brassicaceae' },
+                { label: 'Liliac\u00e9es (Liliaceae)', value: 'liliaceae' },
+                { label: 'Pinac\u00e9es (Pinaceae)', value: 'pinaceae' },
+                { label: 'Ginkgoac\u00e9es (Ginkgoaceae)', value: 'ginkgoaceae' },
+                { label: 'Zingib\u00e9rac\u00e9es (Zingiberaceae)', value: 'zingiberaceae' },
+                { label: 'Araliac\u00e9es (Araliaceae)', value: 'araliaceae' },
+                { label: 'Crassulac\u00e9es (Crassulaceae)', value: 'crassulaceae' },
+                { label: 'Salicac\u00e9es (Salicaceae)', value: 'salicaceae' },
+                { label: '\u00c9quis\u00e9tac\u00e9es (Equisetaceae)', value: 'equisetaceae' },
+                { label: 'Laurac\u00e9es (Lauraceae)', value: 'lauraceae' },
+                { label: 'Linac\u00e9es (Linaceae)', value: 'linaceae' },
+                { label: 'Onagrac\u00e9es (Onagraceae)', value: 'onagraceae' },
+                { label: '\u00c9ricac\u00e9es (Ericaceae)', value: 'ericaceae' },
+                { label: 'Solanac\u00e9es (Solanaceae)', value: 'solanaceae' },
+                { label: 'Schisandrac\u00e9es (Schisandraceae)', value: 'schisandraceae' },
+                { label: 'Polygonac\u00e9es (Polygonaceae)', value: 'polygonaceae' },
+                { label: 'Caryophyllac\u00e9es (Caryophyllaceae)', value: 'caryophyllaceae' },
+                { label: 'Gentianac\u00e9es (Gentianaceae)', value: 'gentianaceae' },
+                { label: 'Th\u00e9ac\u00e9es (Theaceae)', value: 'theaceae' },
+                { label: 'Iridac\u00e9es (Iridaceae)', value: 'iridaceae' },
+                { label: 'Hamam\u00e9lidac\u00e9es (Hamamelidaceae)', value: 'hamamelidaceae' },
+                { label: 'Vitac\u00e9es (Vitaceae)', value: 'vitaceae' },
+                { label: 'Champignons m\u00e9dicinaux', value: 'fungi' },
+                { label: 'Autre', value: 'other' },
+              ],
             },
             {
               name: 'origin',
@@ -152,16 +223,47 @@ export const WikiEntries: CollectionConfig = {
             },
             {
               name: 'partsUsed',
-              type: 'text',
-              localized: true,
+              type: 'select',
+              hasMany: true,
               label: 'Parties utilis\u00e9es',
               admin: {
-                placeholder: 'Ex : Fleurs, feuilles',
-                description: 'Les parties de la plante employ\u00e9es en phytoth\u00e9rapie',
-                components: {
-                  Field: '@/components/admin/fields/AIGenerateTextField.tsx#default',
-                },
+                description: 'Parties de la plante employ\u00e9es en phytoth\u00e9rapie (whitelist).',
               },
+              options: [
+                { label: 'Fleurs', value: 'flower' },
+                { label: 'Feuilles', value: 'leaf' },
+                { label: 'Sommit\u00e9s fleuries', value: 'flowering-tops' },
+                { label: 'Racine', value: 'root' },
+                { label: 'Rhizome', value: 'rhizome' },
+                { label: '\u00c9corce', value: 'bark' },
+                { label: 'Fruit', value: 'fruit' },
+                { label: 'Graine', value: 'seed' },
+                { label: 'Baie', value: 'berry' },
+                { label: 'Bourgeon', value: 'bud' },
+                { label: 'Tige', value: 'stem' },
+                { label: 'Bulbe', value: 'bulb' },
+                { label: 'Plante enti\u00e8re', value: 'whole-plant' },
+                { label: 'Huile essentielle', value: 'essential-oil' },
+                { label: 'R\u00e9sine / Gomme', value: 'resin' },
+                { label: 'Champignon entier', value: 'mushroom' },
+              ],
+            },
+            {
+              name: 'imageType',
+              type: 'select',
+              label: 'Type visuel (g\u00e9n\u00e9rateur)',
+              admin: {
+                description: 'Cat\u00e9gorie de la mati\u00e8re \u00e0 repr\u00e9senter dans le bol (cf. workflow Nano Banana RDM).',
+              },
+              options: [
+                { label: 'Fleurs / p\u00e9tales s\u00e9ch\u00e9s', value: 'flowers-dried' },
+                { label: 'Feuilles s\u00e9ch\u00e9es', value: 'leaves-dried' },
+                { label: 'Racines / \u00e9corces / morceaux ligneux', value: 'roots-bark' },
+                { label: 'Baies / graines / fruits secs', value: 'berries-seeds' },
+                { label: 'Champignons s\u00e9ch\u00e9s', value: 'mushrooms' },
+                { label: 'Tisane fumante', value: 'tisane' },
+                { label: '\u00c9pices', value: 'spices' },
+              ],
             },
             {
               name: 'activeCompounds',
@@ -306,15 +408,45 @@ export const WikiEntries: CollectionConfig = {
               },
             },
             {
+              name: 'externalImageUrl',
+              type: 'text',
+              label: 'Image principale (URL Cloudinary)',
+              admin: {
+                placeholder: 'https://res.cloudinary.com/laboratoire-calebasse/image/upload/rdm/plants/<slug>.png',
+                description: 'URL Cloudinary de l\u2019image principale de la plante. Auto-construite par le seed \u00e0 partir du slug.',
+              },
+            },
+            {
+              name: 'galleryUrls',
+              type: 'array',
+              label: 'Galerie (URLs Cloudinary)',
+              labels: { singular: 'URL', plural: 'URLs' },
+              admin: {
+                description: 'URLs Cloudinary additionnelles (variantes : tisane, frais, poudre, etc.)',
+              },
+              fields: [
+                {
+                  name: 'url',
+                  type: 'text',
+                  required: true,
+                  label: 'URL',
+                  admin: { placeholder: 'https://res.cloudinary.com/...' },
+                },
+                {
+                  name: 'caption',
+                  type: 'text',
+                  label: 'L\u00e9gende',
+                  admin: { placeholder: 'Ex : Camomille en infusion' },
+                },
+              ],
+            },
+            {
               name: 'images',
               type: 'array',
-              label: 'Galerie d\u2019images',
-              labels: {
-                singular: 'Image',
-                plural: 'Images',
-              },
+              label: 'Galerie (uploads manuels)',
+              labels: { singular: 'Image', plural: 'Images' },
               admin: {
-                description: 'Photos et illustrations de la plante',
+                description: 'Uploads Payload manuels (alternative \u00e0 Cloudinary). Utilisez de pr\u00e9f\u00e9rence externalImageUrl + galleryUrls.',
               },
               fields: [
                 {
@@ -358,6 +490,7 @@ export const WikiEntries: CollectionConfig = {
               name: 'complianceStatus',
               type: 'select',
               defaultValue: 'pending',
+              index: true,
               label: 'Statut de conformit\u00e9',
               admin: {
                 description: '\u00c9tat de la v\u00e9rification r\u00e9glementaire du contenu',
@@ -401,8 +534,8 @@ export const WikiEntries: CollectionConfig = {
                 { name: 'confidence', type: 'number', min: 0, max: 1 },
                 {
                   name: 'matchedClaims',
-                  type: 'array',
-                  fields: [{ name: 'claim', type: 'text' }],
+                  type: 'json',
+                  admin: { description: 'Allégations détectées par le LLM (tableau JSON, audit trail IA).' },
                 },
                 { name: 'reason', type: 'textarea' },
                 { name: 'at', type: 'date' },
@@ -417,5 +550,9 @@ export const WikiEntries: CollectionConfig = {
     complianceCheckField({ collection: 'wikiEntries', fields: ['shortDescription', 'longDescription', 'precautionsText'] }),
     seoGenerateField({ collection: 'wikiEntries' }),
     aiHistoryField(),
+  ],
+  indexes: [
+    { fields: ['complianceStatus'] },
+    { fields: ['category'] },
   ],
 }

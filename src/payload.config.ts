@@ -17,6 +17,7 @@ import {
   WikiEntries,
   BlogPosts,
   Pages,
+  FaqItems,
   SitePages,
   Users,
   AuditLog,
@@ -39,6 +40,11 @@ import {
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+if (process.env.NODE_ENV === 'production' && process.env.PAYLOAD_PUSH !== 'false') {
+  // eslint-disable-next-line no-console
+  console.warn('[payload] PAYLOAD_PUSH is enabled in production — Drizzle DDL will mutate the schema on boot. Set PAYLOAD_PUSH=false on Vercel and run `npm run migrate` instead.')
+}
+
 export default buildConfig({
   sharp,
   admin: {
@@ -57,6 +63,7 @@ export default buildConfig({
     },
     avatar: 'default',
     components: {
+      beforeLogin: ['@/components/admin/BeforeLogin.tsx#default'],
       graphics: {
         Logo: '@/components/admin/Logo.tsx#default',
         Icon: '@/components/admin/Icon.tsx#default',
@@ -115,6 +122,7 @@ export default buildConfig({
     WikiEntries,
     BlogPosts,
     Pages,
+    FaqItems,
     SitePages,
     Users,
     AuditLog,

@@ -4,6 +4,8 @@ import type { Locale } from '@/i18n/config'
 import FAQTemplate from '@/components/institutional/FAQTemplate'
 import { FAQJsonLd } from '@/components/seo'
 import { siteMetadataBase } from '@/lib/metadata'
+import { getFaqItems } from '@/lib/queries/faqItems'
+import { richTextToPlain } from '@/lib/utils'
 
 export const revalidate = 3600
 
@@ -16,11 +18,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: 'Questions fréquentes — Les Remèdes de Mamie',
     description:
       'Toutes les réponses aux questions fréquentes : plantes, boutique, livraison, newsletter.',
-    alternates: { canonical: `/${locale}/faq` },
+    alternates: {
+      canonical: `/${locale}/faq`,
+      languages: {
+        fr: `/fr/faq`,
+        en: `/en/faq`,
+      },
+    },
   }
 }
 
 // Plain-text Q/A pairs mirroring the rich JSX in FAQTemplate (used for JSON-LD).
+// Fallback en dur conservé pendant la transition vers la collection `faqItems`.
 const FAQ_ITEMS: Array<{ question: string; answer: string }> = [
   // La maison & l'équipe
   {
@@ -86,9 +95,19 @@ const FAQ_ITEMS: Array<{ question: string; answer: string }> = [
 export default async function FAQPage({ params }: Props) {
   const { locale } = await params
   const dict = await getDictionary(locale as Locale)
+
+  const dbItems = await getFaqItems({ locale })
+  const items =
+    dbItems.length > 0
+      ? dbItems.map((item) => ({
+          question: item.question,
+          answer: richTextToPlain(item.answer),
+        }))
+      : FAQ_ITEMS
+
   return (
     <>
-      <FAQJsonLd items={FAQ_ITEMS} />
+      <FAQJsonLd items={items} />
       <FAQTemplate locale={locale} homeLabel={dict.nav.home} />
     </>
   )

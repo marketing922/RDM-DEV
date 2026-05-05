@@ -27,6 +27,9 @@ export async function GET() {
     if (!user) {
       return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
     }
+    if ((user as any).role !== 'admin') {
+      return NextResponse.json({ error: 'forbidden' }, { status: 403 })
+    }
     const doc = await payload.findGlobal({
       slug: 'siteSettings',
       depth: 0,
@@ -54,9 +57,9 @@ export async function POST(req: Request) {
     if (!user) {
       return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
     }
-    // Only admins/editors can write. Viewers are blocked.
+    // Admin-only: editor / publisher / compliance_reviewer / viewer all blocked.
     const role = (user as any).role
-    if (role === 'viewer') {
+    if (role !== 'admin') {
       return NextResponse.json({ error: 'forbidden' }, { status: 403 })
     }
 

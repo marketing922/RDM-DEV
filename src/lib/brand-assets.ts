@@ -22,3 +22,15 @@ export const BRAND = {
     sansMetauxLourds: `${CLOUDINARY}/v1759917732/metaux_lourds_1_Photoroom_6dd6ec51b6.png`,
   },
 } as const
+
+/**
+ * Single source of truth for the default plant placeholder image.
+ * Imported across product / wiki / benefit detail pages and the home page.
+ */
+export const DEFAULT_PLANT_IMAGE = BRAND.defaultPlant
+
+/**
+ * Default cover image used for blog articles when no featured image is set.
+ * Reuses the plant placeholder rather than introducing an external Unsplash URL.
+ */
+export const DEFAULT_BLOG_IMAGE = BRAND.defaultPlant

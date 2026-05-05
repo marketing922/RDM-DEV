@@ -14,7 +14,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: 'CGV — Les Remèdes de Mamie',
     description:
       'Conditions générales de vente. En vigueur depuis le 1er mai 2026.',
-    alternates: { canonical: `/${locale}/cgv` },
+    alternates: {
+      canonical: `/${locale}/cgv`,
+      languages: {
+        fr: `/fr/cgv`,
+        en: `/en/cgv`,
+      },
+    },
   }
 }
 

@@ -12,6 +12,7 @@ import ProductGallery from '@/components/produits/ProductGallery'
 import Reveal from '@/components/ui/Reveal'
 import { BreadcrumbJsonLd, ProductJsonLd } from '@/components/seo'
 import { siteMetadataBase } from '@/lib/metadata'
+import { DEFAULT_PLANT_IMAGE } from '@/lib/brand-assets'
 
 export const revalidate = 3600
 
@@ -67,9 +68,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://remedes-mamie.com'
   const imgs = productImages(p)
-  const image =
-    imgs[0] ||
-    'https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1761295312/Chat_GPT_Image_Oct_24_2025_10_38_36_AM_1_a78649daf4.png'
+  const image = imgs[0] || DEFAULT_PLANT_IMAGE
   const description =
     p.shortDescription ||
     (p.description ? richTextToPlain(p.description).slice(0, 160) : `${p.name}`)
@@ -83,6 +82,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     alternates: {
       canonical: `${siteUrl}/${locale}/produits/${slug}`,
+      languages: {
+        fr: `${siteUrl}/fr/produits/${slug}`,
+        en: `${siteUrl}/en/produits/${slug}`,
+      },
     },
   }
 }
@@ -100,9 +103,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
   const images = productImages(p)
   if (images.length === 0) {
-    images.push(
-      'https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1761295312/Chat_GPT_Image_Oct_24_2025_10_38_36_AM_1_a78649daf4.png',
-    )
+    images.push(DEFAULT_PLANT_IMAGE)
   }
 
   const price = formatPrice(p.price)
@@ -442,9 +443,7 @@ export default async function ProductDetailPage({ params }: Props) {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6">
               {relatedProducts.map((rp: any, rIdx: number) => {
                 const rpImgs = productImages(rp)
-                const rpImg =
-                  rpImgs[0] ||
-                  'https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1761295312/Chat_GPT_Image_Oct_24_2025_10_38_36_AM_1_a78649daf4.png'
+                const rpImg = rpImgs[0] || DEFAULT_PLANT_IMAGE
                 const rpPrice = formatPrice(rp.price)
                 return (
                   <Reveal key={rp.id || rp.slug} delay={(rIdx % 4) * 80}>

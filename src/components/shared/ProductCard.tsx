@@ -70,8 +70,11 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const hasPromo = !!compareAtPrice && compareAtPrice > price
 
-  const benefitChips = extractChips(benefits).slice(0, 3)
-  const tagChips = extractChips(tags).slice(0, 3)
+  // Cap total chips to keep cards uniform; benefits get priority.
+  const allBenefits = extractChips(benefits)
+  const allTags = extractChips(tags)
+  const benefitChips = allBenefits.slice(0, 3)
+  const tagChips = allTags.slice(0, Math.max(0, 3 - benefitChips.length))
 
   return (
     <>
@@ -101,35 +104,30 @@ export function ProductCard({ product }: ProductCardProps) {
             {name}
           </h3>
 
-          {shortDescription && (
-            <p className="text-xs text-[#712E2F]/70 line-clamp-2 min-h-[32px]">
-              {shortDescription}
-            </p>
-          )}
+          <p className="text-xs text-[#712E2F]/70 line-clamp-2 min-h-[32px]">
+            {shortDescription || ''}
+          </p>
 
-          {(benefitChips.length > 0 || tagChips.length > 0) && (
-            <div className="flex flex-wrap gap-1.5">
-              {benefitChips.map((b) => (
-                <span
-                  key={`b-${b.id}`}
-                  className="inline-flex items-center gap-1 rounded-full bg-[#D0802C]/10 px-2 py-0.5 text-[11px] font-medium text-[#D0802C]"
-                >
-                  {b.icon && <span aria-hidden="true">{b.icon}</span>}
-                  {b.name}
-                </span>
-              ))}
-              {tagChips.map((t) => (
-                <span
-                  key={`t-${t.id}`}
-                  className="inline-flex items-center rounded-full bg-[#DCD8C7]/50 px-2 py-0.5 text-[11px] font-medium text-[#712E2F]/80"
-                >
-                  #{t.name}
-                </span>
-              ))}
-            </div>
-          )}
+          <div className="flex flex-nowrap gap-1.5 h-6 overflow-hidden">
+            {benefitChips.map((b) => (
+              <span
+                key={`b-${b.id}`}
+                className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-[#D0802C]/10 px-2 py-0.5 text-[11px] font-medium text-[#D0802C]"
+              >
+                {b.name}
+              </span>
+            ))}
+            {tagChips.map((t) => (
+              <span
+                key={`t-${t.id}`}
+                className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full bg-[#DCD8C7]/50 px-2 py-0.5 text-[11px] font-medium text-[#712E2F]/80"
+              >
+                #{t.name}
+              </span>
+            ))}
+          </div>
 
-          <div className="mt-1 flex items-baseline gap-2">
+          <div className="mt-auto flex items-baseline gap-2 pt-1">
             <span className="text-lg font-bold text-[#A2211E]">{formatPrice(price)}</span>
             {hasPromo && (
               <span className="text-sm text-[#712E2F]/50 line-through">
@@ -138,7 +136,7 @@ export function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
 
-          {weight && <p className="text-xs text-[#712E2F]/70">{weight}</p>}
+          <p className="text-xs text-[#712E2F]/70 min-h-[16px]">{weight || ''}</p>
 
           <button
             type="button"

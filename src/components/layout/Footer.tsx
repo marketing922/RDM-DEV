@@ -80,14 +80,14 @@ export function Footer({ dict, locale, footer }: FooterProps) {
     <footer className="bg-[#1F2937] text-white">
       {/* Main grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="py-12 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
 
-          {/* Brand */}
-          <div className="lg:col-span-1">
+          {/* Brand — wide left column */}
+          <div className="lg:col-span-5">
             <h3 className="text-base font-bold text-[#FEF9E9] mb-4">
               {dict.meta.siteName}
             </h3>
-            <p className="text-sm text-gray-300 leading-relaxed mb-6">
+            <p className="text-sm text-gray-300 leading-relaxed mb-6 whitespace-pre-line max-w-md">
               {dict.footer.description}
             </p>
             {data.socialLinks.length > 0 && (
@@ -130,6 +130,9 @@ export function Footer({ dict, locale, footer }: FooterProps) {
             )}
           </div>
 
+          {/* Right side — link columns + contact */}
+          <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-4 gap-8">
+
           {/* Dynamic columns from footer global */}
           {data.columns.map((col) => (
             <div key={col.title}>
@@ -157,7 +160,7 @@ export function Footer({ dict, locale, footer }: FooterProps) {
             <ul className="space-y-3 text-sm text-gray-300">
               <li className="flex items-start gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 flex-shrink-0 text-gray-400"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-                <span>15 rue de la Vistule<br />75013 Paris, France</span>
+                <span>58 rue Étienne Dolet<br />92240 Malakoff, France</span>
               </li>
               <li className="flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="flex-shrink-0 text-gray-400"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
@@ -168,6 +171,7 @@ export function Footer({ dict, locale, footer }: FooterProps) {
                 <span>contact@remedes-mamie.com</span>
               </li>
             </ul>
+          </div>
           </div>
         </div>
 

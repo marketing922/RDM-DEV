@@ -47,6 +47,7 @@ import { default as default_5579abbe6cbfdc12b001b41ef9479426 } from '@/component
 import { default as default_4e1e699efd22461324c9d216a74648ef } from '@/components/admin/Nav.tsx'
 import { default as default_f9bbae075ff7661688b05c4ed7480007 } from '@/components/admin/Icon.tsx'
 import { default as default_29cf8bd0dcc024aa26cbdb3a51d5d381 } from '@/components/admin/Logo.tsx'
+import { default as default_e736e0cf166dc4df2c39aa5544a2a5a3 } from '@/components/admin/BeforeLogin.tsx'
 import { default as default_8f28fbabed88008478002706780c491f } from '@/components/admin/Dashboard.tsx'
 import { default as default_06234670eecad279a4302dc99d1fe38f } from '@/components/admin/Account.tsx'
 import { default as default_d9481a17fa8953c89ee98e11f3423c3b } from '@/components/admin/views/Login.tsx'
@@ -108,6 +109,7 @@ export const importMap = {
   "@/components/admin/Nav.tsx#default": default_4e1e699efd22461324c9d216a74648ef,
   "@/components/admin/Icon.tsx#default": default_f9bbae075ff7661688b05c4ed7480007,
   "@/components/admin/Logo.tsx#default": default_29cf8bd0dcc024aa26cbdb3a51d5d381,
+  "@/components/admin/BeforeLogin.tsx#default": default_e736e0cf166dc4df2c39aa5544a2a5a3,
   "@/components/admin/Dashboard.tsx#default": default_8f28fbabed88008478002706780c491f,
   "@/components/admin/Account.tsx#default": default_06234670eecad279a4302dc99d1fe38f,
   "@/components/admin/views/Login.tsx#default": default_d9481a17fa8953c89ee98e11f3423c3b,

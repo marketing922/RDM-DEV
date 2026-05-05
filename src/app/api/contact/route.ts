@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 /**
  * POST /api/contact
@@ -28,6 +29,16 @@ function escapeHtml(s: string): string {
 }
 
 export async function POST(req: Request) {
+  const ip =
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+  const rl = await checkRateLimit(`contact:${ip}`, { limit: 5 })
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: 'Trop de requêtes' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfterSec) } },
+    )
+  }
+
   let body: any
   try {
     body = await req.json()

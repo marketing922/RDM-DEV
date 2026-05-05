@@ -5,7 +5,7 @@ import { backupAfterChange } from '@/hooks/backupAfterChange'
 import { coerceUploadIds } from '@/hooks/coerceUploadIds'
 import { makeEmbedHook } from '@/hooks/embedAfterChange'
 import { blogPostsExtractor } from '@/hooks/embedExtractors'
-import { makeModerateContentHook } from '@/hooks/moderateContentHook'
+import { makeModerateContentAfterChangeHook } from '@/hooks/moderateContentHook'
 import { suggestedRelationsField } from '@/components/admin/fields/suggestedRelationsField'
 import { complianceCheckField } from '@/components/admin/fields/complianceCheckField'
 import { seoGenerateField } from '@/components/admin/fields/seoGenerateField'
@@ -48,11 +48,13 @@ export const BlogPosts: CollectionConfig = {
   },
   hooks: {
     beforeValidate: [coerceUploadIds, scanForbiddenClaims],
-    beforeChange: [
-      gatePublishCompliance,
-      makeModerateContentHook({ collection: 'blogPosts', fields: ['excerpt'] }),
+    beforeChange: [gatePublishCompliance],
+    afterChange: [
+      makeModerateContentAfterChangeHook({ collection: 'blogPosts', fields: ['excerpt'] }),
+      createAuditLog,
+      backupAfterChange,
+      makeEmbedHook('blogPosts', blogPostsExtractor),
     ],
-    afterChange: [createAuditLog, backupAfterChange, makeEmbedHook('blogPosts', blogPostsExtractor)],
   },
   fields: [
     {
@@ -126,6 +128,44 @@ export const BlogPosts: CollectionConfig = {
               admin: {
                 description: 'Image principale affich\u00e9e en en-t\u00eate de l\u2019article',
               },
+            },
+            {
+              name: 'galleryUrls',
+              type: 'array',
+              label: 'Galerie additionnelle (URLs)',
+              labels: { singular: 'Image', plural: 'Images' },
+              admin: {
+                description:
+                  "URLs externes (Cloudinary, etc.) inject\u00e9es dans le corps de l'article. " +
+                  'Plusieurs images peuvent cibler la m\u00eame section. Laisser ' +
+                  '\u00ab Section n\u00b0 \u00bb vide pour les afficher en fin d\u2019article.',
+              },
+              fields: [
+                {
+                  name: 'url',
+                  type: 'text',
+                  required: true,
+                  label: 'URL',
+                  admin: { placeholder: 'https://res.cloudinary.com/...' },
+                },
+                {
+                  name: 'caption',
+                  type: 'text',
+                  label: 'L\u00e9gende',
+                  admin: { placeholder: 'Ex : Lavande en pleine floraison' },
+                },
+                {
+                  name: 'sectionIndex',
+                  type: 'number',
+                  min: 1,
+                  label: 'Section n\u00b0',
+                  admin: {
+                    description:
+                      'Num\u00e9ro de la section (1, 2, 3\u2026) apr\u00e8s laquelle ins\u00e9rer l\u2019image. ' +
+                      'Vide = en fin d\u2019article.',
+                  },
+                },
+              ],
             },
           ],
         },
@@ -231,6 +271,7 @@ export const BlogPosts: CollectionConfig = {
               name: 'complianceStatus',
               type: 'select',
               defaultValue: 'pending',
+              index: true,
               label: 'Statut de conformit\u00e9',
               admin: {
                 description: '\u00c9tat de la v\u00e9rification r\u00e9glementaire du contenu',
@@ -274,8 +315,8 @@ export const BlogPosts: CollectionConfig = {
                 { name: 'confidence', type: 'number', min: 0, max: 1 },
                 {
                   name: 'matchedClaims',
-                  type: 'array',
-                  fields: [{ name: 'claim', type: 'text' }],
+                  type: 'json',
+                  admin: { description: 'Allégations détectées par le LLM (tableau JSON, audit trail IA).' },
                 },
                 { name: 'reason', type: 'textarea' },
                 { name: 'at', type: 'date' },
@@ -290,5 +331,9 @@ export const BlogPosts: CollectionConfig = {
     complianceCheckField({ collection: 'blogPosts', fields: ['excerpt'] }),
     seoGenerateField({ collection: 'blogPosts' }),
     aiHistoryField(),
+  ],
+  indexes: [
+    { fields: ['complianceStatus'] },
+    { fields: ['publishedAt'] },
   ],
 }

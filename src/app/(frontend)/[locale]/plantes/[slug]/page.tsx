@@ -10,6 +10,7 @@ import { BreadcrumbJsonLd, GeoStructuredData } from '@/components/seo'
 import { getWikiEntryBySlug, getWikiEntries, getBlogPosts, getProducts } from '@/lib/queries'
 import { siteMetadataBase } from '@/lib/metadata'
 import { resolveMediaUrl } from '@/lib/mediaUrl'
+import { getPlantVariants } from '@/lib/cloudinaryVariants'
 import {
   EditorialSection,
   EditorialFigure,
@@ -21,11 +22,10 @@ import {
 } from '@/components/editorial/primitives'
 import Reveal from '@/components/ui/Reveal'
 import PlantActions from '@/components/plantes/PlantActions'
+import PlantImage from '@/components/plantes/PlantImage'
+import { DEFAULT_PLANT_IMAGE } from '@/lib/brand-assets'
 
 export const revalidate = 3600
-
-const DEFAULT_PLANT_IMAGE =
-  'https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1761295312/Chat_GPT_Image_Oct_24_2025_10_38_36_AM_1_a78649daf4.png'
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>
@@ -61,6 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://remedes-mamie.com'
   const e = entry as any
   const imageUrl =
+    (e.externalImageUrl as string | undefined) ??
     resolveMediaUrl(e.heroImage, 'card') ??
     resolveMediaUrl((e.images?.[0] as any)?.image, 'card') ??
     DEFAULT_PLANT_IMAGE
@@ -160,11 +161,41 @@ export default async function PlantDetailPage({ params }: Props) {
   const { lead: titleLead, tail: titleTail } = splitTitle(plantName)
 
   // ── Media --------------------------------------------------
-  const heroSrc =
-    resolveMediaUrl(e.heroImage, 'original') ??
-    resolveMediaUrl((e.images?.[0] as any)?.image, 'original') ??
+  // Priorité : externalImageUrl (Cloudinary) → heroImage (upload Payload)
+  // → images[0] (galerie upload) → fallback générique.
+  const heroSrc: string | null =
+    (e.externalImageUrl as string | undefined) ||
+    resolveMediaUrl(e.heroImage, 'original') ||
+    resolveMediaUrl((e.images?.[0] as any)?.image, 'original') ||
     null
   const heroFallback = DEFAULT_PLANT_IMAGE
+
+  // Galerie : URLs Cloudinary additionnelles (galleryUrls) + uploads Payload (images[1+])
+  // + auto-détection live des variants Cloudinary (slug-2, slug-tisane, ...).
+  const galleryItems: Array<{ src: string; alt?: string; caption?: string }> = []
+  const seen = new Set<string>()
+  const pushGallery = (src: string, extra?: { alt?: string; caption?: string }) => {
+    if (!src || seen.has(src) || src === heroSrc) return
+    seen.add(src)
+    galleryItems.push({ src, ...extra })
+  }
+  if (Array.isArray(e.galleryUrls)) {
+    for (const g of e.galleryUrls) {
+      const url = (g as any)?.url
+      if (typeof url === 'string' && url.trim()) {
+        pushGallery(url, { caption: (g as any)?.caption })
+      }
+    }
+  }
+  const detectedVariants = await getPlantVariants(slug).catch(() => [] as string[])
+  for (const url of detectedVariants) pushGallery(url)
+  if (Array.isArray(e.images)) {
+    for (let i = 0; i < e.images.length; i++) {
+      const img = (e.images[i] as any)?.image
+      const url = resolveMediaUrl(img, 'original')
+      if (url) pushGallery(url, { alt: img?.alt })
+    }
+  }
 
   // ── Textual content ---------------------------------------
   const longText: string =
@@ -425,20 +456,12 @@ export default async function PlantDetailPage({ params }: Props) {
 
             {/* Right — square image */}
             <div className="relative aspect-square w-full max-w-[280px] sm:max-w-[360px] justify-self-start lg:justify-self-end overflow-hidden rounded-[4px] border border-rm-rule bg-rm-creamSoft">
-              {heroSrc ? (
-                <Image
-                  src={heroSrc}
-                  alt={plantName}
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 360px"
-                  className="object-cover"
-                  priority
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Sprig className="h-32 w-32 text-rm-teal opacity-30" />
-                </div>
-              )}
+              <PlantImage
+                src={heroSrc}
+                alt={plantName}
+                sizes="(max-width: 1024px) 100vw, 360px"
+                className="object-cover"
+              />
             </div>
           </div>
         </Reveal>
@@ -626,19 +649,59 @@ export default async function PlantDetailPage({ params }: Props) {
                   {directAnswer && <p>{directAnswer}</p>}
                 </div>
 
-                <EditorialFigure
-                  caption={`${plantName}${e.latinName ? ` — ${e.latinName}` : ''}. Planche botanique.`}
-                >
-                  {heroSrc ? (
-                    <Image
-                      src={heroSrc}
-                      alt={plantName}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 640px"
-                      className="object-cover"
-                    />
-                  ) : null}
-                </EditorialFigure>
+                {/* Planche botanique : prioritise la 1re variante de galerie
+                    (différente de l'image principale du header), sinon
+                    fallback sur le hero pour ne jamais laisser un cadre vide. */}
+                {(() => {
+                  const figureSrc = galleryItems[0]?.src || heroSrc
+                  const figureCaption =
+                    galleryItems[0]?.caption ||
+                    `${plantName}${e.latinName ? ` — ${e.latinName}` : ''}. Planche botanique.`
+                  if (!figureSrc) return null
+                  return (
+                    <EditorialFigure caption={figureCaption}>
+                      <PlantImage
+                        src={figureSrc}
+                        alt={galleryItems[0]?.alt || plantName}
+                        sizes="(max-width: 1024px) 100vw, 640px"
+                        className="object-cover"
+                      />
+                    </EditorialFigure>
+                  )
+                })()}
+
+                {/* Galerie : variantes additionnelles (à partir de la 2e),
+                    seulement si on en a au moins 2. */}
+                {galleryItems.length > 1 && (
+                  <div className="mt-8">
+                    <p className="font-sans text-[10px] uppercase tracking-[0.18em] text-rm-burgundy mb-3">
+                      Autres planches
+                    </p>
+                    <div className={`grid gap-3 ${
+                      galleryItems.length === 2 ? 'grid-cols-1 max-w-md' :
+                      galleryItems.length === 3 ? 'grid-cols-2' :
+                      'grid-cols-2 sm:grid-cols-3'
+                    }`}>
+                      {galleryItems.slice(1).map((item, i) => (
+                        <figure key={i} className="space-y-2">
+                          <div className="relative aspect-square overflow-hidden rounded-[4px] border border-rm-rule bg-rm-creamSoft">
+                            <PlantImage
+                              src={item.src}
+                              alt={item.alt || `${plantName} — variante ${i + 2}`}
+                              sizes="(max-width: 640px) 50vw, 33vw"
+                              className="object-cover"
+                            />
+                          </div>
+                          {item.caption && (
+                            <figcaption className="font-serif italic text-[12px] leading-snug text-rm-inkSoft text-center">
+                              {item.caption}
+                            </figcaption>
+                          )}
+                        </figure>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <EditorialAside kind="À ne pas confondre">
                   Attention aux espèces voisines qui peuvent présenter un
@@ -963,6 +1026,7 @@ export default async function PlantDetailPage({ params }: Props) {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 lg:gap-6">
                 {neighbourPlants.map((p: any, i: number) => {
                   const imgSrc =
+                    (p.externalImageUrl as string | undefined) ??
                     resolveMediaUrl(p.heroImage, 'card') ??
                     resolveMediaUrl((p.images?.[0] as any)?.image, 'card') ??
                     null
@@ -979,14 +1043,14 @@ export default async function PlantDetailPage({ params }: Props) {
                       href={`/${locale}/plantes/${p.slug}`}
                       className="group block"
                     >
-                      <div className="relative aspect-[4/5] overflow-hidden rounded-[4px] border border-rm-cream/20 bg-rm-cream/5">
+                      <div className="relative aspect-square overflow-hidden rounded-[4px] border border-rm-cream/20 bg-rm-cream/5">
                         {imgSrc ? (
                           <Image
                             src={imgSrc}
                             alt={p.name}
                             fill
                             sizes="(max-width: 768px) 50vw, 20vw"
-                            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                            className="object-contain transition-transform duration-500 group-hover:scale-[1.03]"
                           />
                         ) : (
                           <div className="absolute inset-0 flex items-center justify-center">

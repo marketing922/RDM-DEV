@@ -119,6 +119,8 @@ type Props = {
   limit: number
   publishedCount: number
   outOfStockCount: number
+  avgPriceLabel: string
+  merchantLinksCount: number
   initialSearch: string
   initialStatus: ProductStatusKey
 }
@@ -140,6 +142,8 @@ const ProductsListClient: React.FC<Props> = ({
   limit,
   publishedCount,
   outOfStockCount,
+  avgPriceLabel,
+  merchantLinksCount,
   initialSearch,
   initialStatus,
 }) => {
@@ -258,11 +262,10 @@ const ProductsListClient: React.FC<Props> = ({
           dotColor={RM.teal}
           href="/admin/collections/products?status=published"
         />
-        {/* TODO: wire boutique analytics */}
         <StatCard
-          label="Chiffre d'affaires · 30j"
-          value="—"
-          delta="Boutique non connectée"
+          label="Prix moyen"
+          value={avgPriceLabel}
+          delta={avgPriceLabel === '—' ? 'aucun prix' : 'catalogue'}
           deltaColor={RM.inkSoft}
           dotColor={RM.ochre}
         />
@@ -274,11 +277,10 @@ const ProductsListClient: React.FC<Props> = ({
           dotColor={RM.burgundy}
           href="/admin/collections/products?stock=out"
         />
-        {/* TODO: wire orders */}
         <StatCard
-          label="Commandes en attente"
-          value="—"
-          delta="Boutique non connectée"
+          label="Liens marchands"
+          value={merchantLinksCount}
+          delta={merchantLinksCount > 0 ? 'Amazon / Temu' : 'aucun lien'}
           deltaColor={RM.inkSoft}
           dotColor={RM.stone}
         />

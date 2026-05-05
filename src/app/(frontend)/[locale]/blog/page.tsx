@@ -25,6 +25,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     metadataBase: siteMetadataBase(),
     title: `${dict.blog.title} | ${dict.meta.siteName}`,
     description: dict.blog.subtitle,
+    alternates: {
+      canonical: `/${locale}/blog`,
+      languages: {
+        fr: `/fr/blog`,
+        en: `/en/blog`,
+      },
+    },
   }
 }
 

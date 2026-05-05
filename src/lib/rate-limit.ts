@@ -1,91 +1,20 @@
-import { Ratelimit } from '@upstash/ratelimit'
-import { redis, hasUpstashEnv } from './redis-client'
+import 'server-only'
+import type { Pool } from 'pg'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
 
-type LimiterLike = {
-  limit: (identifier: string) => Promise<{
-    success: boolean
-    limit: number
-    remaining: number
-    reset: number
-  }>
-}
+/**
+ * Rate-limit fixed-window minute-based, atomic via UPSERT Postgres.
+ *
+ * Table : `rdm_ai.rate_limit_buckets` (voir migration
+ * `20260504_120000_rate_limit_buckets.ts`).
+ *
+ * Politique en cas d'erreur DB : **fail open** — on laisse passer la
+ * requête et on log via `payload.logger`. Mieux vaut un faux négatif
+ * qu'un site cassé.
+ */
 
 type Scope = 'user-hour' | 'user-day' | 'global-day'
-
-// WHY: Vercel serverless is stateless across invocations — in-memory fallback is dev-only, never prod.
-function createInMemoryLimiter(
-  max: number,
-  windowMs: number,
-  kind: 'sliding' | 'fixed',
-  prefix: string,
-): LimiterLike {
-  const buckets = new Map<string, number[]>()
-  return {
-    async limit(identifier: string) {
-      const key = `${prefix}:${identifier}`
-      const now = Date.now()
-      const windowStart =
-        kind === 'fixed' ? Math.floor(now / windowMs) * windowMs : now - windowMs
-      const reset =
-        kind === 'fixed' ? windowStart + windowMs : now + windowMs
-      const entries = (buckets.get(key) ?? []).filter((ts) =>
-        kind === 'fixed' ? ts >= windowStart : ts > windowStart,
-      )
-      if (entries.length >= max) {
-        buckets.set(key, entries)
-        const earliest = entries[0] ?? now
-        const resetAt = kind === 'fixed' ? reset : earliest + windowMs
-        return { success: false, limit: max, remaining: 0, reset: resetAt }
-      }
-      entries.push(now)
-      buckets.set(key, entries)
-      return {
-        success: true,
-        limit: max,
-        remaining: max - entries.length,
-        reset,
-      }
-    },
-  }
-}
-
-if (!hasUpstashEnv) {
-  console.warn(
-    '[rate-limit] Rate-limit en mode in-memory — ne tient pas en production Vercel (stateless). Configure UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN.',
-  )
-}
-
-export const aiUserHour: LimiterLike = redis
-  ? new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(30, '1 h'),
-      prefix: 'rdm:ai:user:1h',
-      analytics: false,
-    })
-  : createInMemoryLimiter(30, 60 * 60 * 1000, 'sliding', 'rdm:ai:user:1h')
-
-export const aiUserDay: LimiterLike = redis
-  ? new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(200, '24 h'),
-      prefix: 'rdm:ai:user:1d',
-      analytics: false,
-    })
-  : createInMemoryLimiter(200, 24 * 60 * 60 * 1000, 'sliding', 'rdm:ai:user:1d')
-
-export const aiGlobalDay: LimiterLike = redis
-  ? new Ratelimit({
-      redis,
-      limiter: Ratelimit.fixedWindow(1000, '1 d'),
-      prefix: 'rdm:ai:global:1d',
-      analytics: false,
-    })
-  : createInMemoryLimiter(
-      1000,
-      24 * 60 * 60 * 1000,
-      'fixed',
-      'rdm:ai:global:1d',
-    )
 
 export type AiRateLimitResult =
   | {
@@ -99,6 +28,81 @@ export type AiRateLimitResult =
       retryAfterSec: number
     }
 
+export type RateLimitResult =
+  | { ok: true; remaining: number }
+  | { ok: false; retryAfterSec: number }
+
+async function getPool(): Promise<{ pool: Pool; logger?: { error: (...a: unknown[]) => void; warn: (...a: unknown[]) => void } } | null> {
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const pool = (payload.db as unknown as { pool?: Pool }).pool
+    if (!pool) return null
+    return { pool, logger: payload.logger as any }
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Bump le compteur du bucket `key` pour la fenêtre courante (minute en cours
+ * par défaut, ou tronquée à `windowSec` si fourni).
+ *
+ * NOTE: `windowSec` ≠ 60 reste fixed-window mais aligné sur des bornes
+ * `to_timestamp(floor(extract(epoch from now()) / windowSec) * windowSec)`.
+ */
+export async function checkRateLimit(
+  key: string,
+  opts: { limit: number; windowSec?: number },
+): Promise<RateLimitResult> {
+  const { limit } = opts
+  const windowSec = opts.windowSec ?? 60
+
+  const ctx = await getPool()
+  if (!ctx) {
+    // Fail open — pas de pool dispo, on laisse passer.
+    return { ok: true, remaining: limit - 1 }
+  }
+  const { pool, logger } = ctx
+
+  try {
+    const result = await pool.query<{ count: number; window_start: string }>(
+      `INSERT INTO rdm_ai.rate_limit_buckets (key, window_start, count)
+       VALUES (
+         $1,
+         to_timestamp(floor(extract(epoch from now()) / $2) * $2),
+         1
+       )
+       ON CONFLICT (key) DO UPDATE SET
+         count = CASE
+           WHEN rdm_ai.rate_limit_buckets.window_start = to_timestamp(floor(extract(epoch from now()) / $2) * $2)
+           THEN rdm_ai.rate_limit_buckets.count + 1
+           ELSE 1
+         END,
+         window_start = to_timestamp(floor(extract(epoch from now()) / $2) * $2)
+       RETURNING count, window_start;`,
+      [key, windowSec],
+    )
+    const row = result.rows[0]
+    if (!row) return { ok: true, remaining: limit - 1 }
+
+    const count = Number(row.count)
+    if (count > limit) {
+      const windowStartMs = new Date(row.window_start).getTime()
+      const resetMs = windowStartMs + windowSec * 1000
+      const retryAfterSec = Math.max(1, Math.ceil((resetMs - Date.now()) / 1000))
+      return { ok: false, retryAfterSec }
+    }
+    return { ok: true, remaining: Math.max(0, limit - count) }
+  } catch (err) {
+    logger?.error?.({ err, key }, '[rate-limit] DB error — fail open')
+    return { ok: true, remaining: limit - 1 }
+  }
+}
+
+/**
+ * Conserve l'API existante. Trois fenêtres : user/hour, user/day, global/day.
+ * Implémentées comme trois compteurs `checkRateLimit` distincts.
+ */
 export async function checkAiRateLimit(opts: {
   userId: string
   endpoint: string
@@ -106,30 +110,31 @@ export async function checkAiRateLimit(opts: {
   const userKey = `${opts.userId}:${opts.endpoint}`
   const globalKey = `global:${opts.endpoint}`
 
-  const hour = await aiUserHour.limit(userKey)
-  if (!hour.success) {
-    const retryAfterSec = Math.max(1, Math.ceil((hour.reset - Date.now()) / 1000))
-    return { ok: false, scope: 'user-hour', reset: hour.reset, retryAfterSec }
+  const hour = await checkRateLimit(`rdm:ai:user:1h:${userKey}`, {
+    limit: 30,
+    windowSec: 60 * 60,
+  })
+  if (!hour.ok) {
+    const reset = Date.now() + hour.retryAfterSec * 1000
+    return { ok: false, scope: 'user-hour', reset, retryAfterSec: hour.retryAfterSec }
   }
 
-  const day = await aiUserDay.limit(userKey)
-  if (!day.success) {
-    const retryAfterSec = Math.max(1, Math.ceil((day.reset - Date.now()) / 1000))
-    return { ok: false, scope: 'user-day', reset: day.reset, retryAfterSec }
+  const day = await checkRateLimit(`rdm:ai:user:1d:${userKey}`, {
+    limit: 200,
+    windowSec: 24 * 60 * 60,
+  })
+  if (!day.ok) {
+    const reset = Date.now() + day.retryAfterSec * 1000
+    return { ok: false, scope: 'user-day', reset, retryAfterSec: day.retryAfterSec }
   }
 
-  const globalDay = await aiGlobalDay.limit(globalKey)
-  if (!globalDay.success) {
-    const retryAfterSec = Math.max(
-      1,
-      Math.ceil((globalDay.reset - Date.now()) / 1000),
-    )
-    return {
-      ok: false,
-      scope: 'global-day',
-      reset: globalDay.reset,
-      retryAfterSec,
-    }
+  const globalDay = await checkRateLimit(`rdm:ai:global:1d:${globalKey}`, {
+    limit: 1000,
+    windowSec: 24 * 60 * 60,
+  })
+  if (!globalDay.ok) {
+    const reset = Date.now() + globalDay.retryAfterSec * 1000
+    return { ok: false, scope: 'global-day', reset, retryAfterSec: globalDay.retryAfterSec }
   }
 
   return {

@@ -120,6 +120,8 @@ type Props = {
   limit: number
   draftsCount: number
   publishedCount: number
+  updated30dCount: number
+  contributorsCount: number
   initialSearch: string
   initialStatus: StatusKey
 }
@@ -141,6 +143,8 @@ const PlantsListClient: React.FC<Props> = ({
   limit,
   draftsCount,
   publishedCount,
+  updated30dCount,
+  contributorsCount,
   initialSearch,
   initialStatus,
 }) => {
@@ -363,12 +367,11 @@ const PlantsListClient: React.FC<Props> = ({
           dotColor={RM.teal}
           href="/admin/collections/wikiEntries?status=published"
         />
-        {/* TODO: wire real analytics */}
         <StatCard
-          label="Vues ce mois"
-          value="—"
-          delta="à venir"
-          deltaColor={RM.inkSoft}
+          label="Mis à jour · 30j"
+          value={updated30dCount}
+          delta={updated30dCount > 0 ? 'fiches actives' : 'aucune récente'}
+          deltaColor={updated30dCount > 0 ? RM.teal : RM.inkSoft}
           dotColor={RM.ochre}
         />
         <StatCard
@@ -379,11 +382,10 @@ const PlantsListClient: React.FC<Props> = ({
           dotColor={RM.burgundy}
           href="/admin/collections/wikiEntries?status=draft"
         />
-        {/* TODO: count distinct contributors */}
         <StatCard
           label="Contributions"
-          value={totalDocs}
-          delta="total"
+          value={contributorsCount || totalDocs}
+          delta={contributorsCount ? 'auteurs' : 'total'}
           deltaColor={RM.inkSoft}
           dotColor={RM.stone}
         />

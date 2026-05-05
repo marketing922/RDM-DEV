@@ -23,6 +23,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `Nos Produits | ${dict.meta.siteName}`,
     description:
       'D\u00e9couvrez notre gamme de tisanes, poudres et g\u00e9lules naturelles fabriqu\u00e9es en France.',
+    alternates: {
+      canonical: `/${locale}/produits`,
+      languages: {
+        fr: `/fr/produits`,
+        en: `/en/produits`,
+      },
+    },
   }
 }
 

@@ -9,6 +9,7 @@ type Props = {
   initialFilter: string
   filters: Filter[]
   searchPlaceholder: string
+  paramName?: string
 }
 
 export default function PlantesToolbar({
@@ -16,6 +17,7 @@ export default function PlantesToolbar({
   initialFilter,
   filters,
   searchPlaceholder,
+  paramName = 'filter',
 }: Props) {
   const router = useRouter()
   const pathname = usePathname()
@@ -72,7 +74,7 @@ export default function PlantesToolbar({
   }
 
   const setFilter = (key: string) => {
-    router.replace(buildUrl({ filter: key === 'all' ? null : key }))
+    router.replace(buildUrl({ [paramName]: key === 'all' ? null : key }))
   }
 
   return (

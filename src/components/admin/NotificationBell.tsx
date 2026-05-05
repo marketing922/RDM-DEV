@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { useAuth } from '@payloadcms/ui'
 import { Bell, X } from 'lucide-react'
@@ -89,7 +90,15 @@ const NotificationBell: React.FC = () => {
   const [docs, setDocs] = useState<NotifDoc[]>([])
   const [loading, setLoading] = useState(false)
   const [hoverBell, setHoverBell] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null)
   const wrapperRef = useRef<HTMLDivElement | null>(null)
+  const buttonRef = useRef<HTMLButtonElement | null>(null)
+  const panelRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const fetchDocs = useCallback(async () => {
     if (!userId) return
@@ -121,18 +130,45 @@ const NotificationBell: React.FC = () => {
     return () => clearInterval(t)
   }, [userId, fetchDocs])
 
-  // Close popover on outside click.
+  // Close popover on outside click (button + panel both excluded since panel is portaled).
   useEffect(() => {
     if (!open) return
     const onDocClick = (e: MouseEvent) => {
       const target = e.target as Node | null
-      if (wrapperRef.current && target && !wrapperRef.current.contains(target)) {
-        setOpen(false)
-      }
+      if (!target) return
+      if (wrapperRef.current?.contains(target)) return
+      if (panelRef.current?.contains(target)) return
+      setOpen(false)
     }
     document.addEventListener('mousedown', onDocClick)
     return () => document.removeEventListener('mousedown', onDocClick)
   }, [open])
+
+  // Compute fixed position from the bell button (panel is portaled to body
+  // so it escapes the sidebar's overflow:auto and stacking context).
+  const PANEL_WIDTH = 360
+  const recompute = useCallback(() => {
+    const btn = buttonRef.current
+    if (!btn) return
+    const r = btn.getBoundingClientRect()
+    const margin = 8
+    let left = r.right - PANEL_WIDTH
+    if (left < margin) left = margin
+    const maxLeft = window.innerWidth - PANEL_WIDTH - margin
+    if (left > maxLeft) left = maxLeft
+    setPos({ top: r.bottom + 6, left })
+  }, [])
+
+  useLayoutEffect(() => {
+    if (!open) return
+    recompute()
+    window.addEventListener('resize', recompute)
+    window.addEventListener('scroll', recompute, true)
+    return () => {
+      window.removeEventListener('resize', recompute)
+      window.removeEventListener('scroll', recompute, true)
+    }
+  }, [open, recompute])
 
   const visible = useMemo(
     () => docs.filter((d) => isVisibleForUser(d, userId, role)),
@@ -165,6 +201,7 @@ const NotificationBell: React.FC = () => {
       style={{ position: 'relative', display: 'inline-block' }}
     >
       <button
+        ref={buttonRef}
         type="button"
         aria-label="Notifications"
         onClick={() => setOpen((v) => !v)}
@@ -215,21 +252,23 @@ const NotificationBell: React.FC = () => {
         )}
       </button>
 
-      {open && (
+      {open && mounted && pos && createPortal(
         <div
+          ref={panelRef}
           role="dialog"
           aria-label="Panneau notifications"
+          className="rm-notif-panel"
           style={{
-            position: 'absolute',
-            top: 'calc(100% + 6px)',
-            right: 0,
-            width: 360,
+            position: 'fixed',
+            top: pos.top,
+            left: pos.left,
+            width: PANEL_WIDTH,
             maxHeight: 500,
             background: RM.paper,
             border: `1px solid ${RM.ruleStrong}`,
             borderRadius: 8,
             boxShadow: '0 10px 28px rgba(0,0,0,0.18)',
-            zIndex: 60,
+            zIndex: 9999,
             display: 'flex',
             flexDirection: 'column',
             fontFamily: RM.fSans,
@@ -450,8 +489,13 @@ const NotificationBell: React.FC = () => {
               Voir tout
             </Link>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
+      <style>{`
+        .rm-notif-panel ::-webkit-scrollbar { width: 0; height: 0; }
+        .rm-notif-panel * { scrollbar-width: none; }
+      `}</style>
     </div>
   )
 }

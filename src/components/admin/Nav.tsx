@@ -277,7 +277,7 @@ const Nav: React.FC = () => {
         </div>
 
         {/* Groups */}
-        <nav style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
+        <nav className="rm-admin-nav" style={{ flex: 1, overflowY: 'auto', overflowX: 'hidden' }}>
           {navigationGroups.map((group, gIdx) => (
             <div key={group.id}>
               <div
@@ -354,6 +354,10 @@ const Nav: React.FC = () => {
         )}
       </div>
       </aside>
+      <style>{`
+        .rm-admin-nav { scrollbar-width: none; }
+        .rm-admin-nav::-webkit-scrollbar { width: 0; height: 0; }
+      `}</style>
     </>
   )
 }

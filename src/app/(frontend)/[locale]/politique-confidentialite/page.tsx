@@ -14,7 +14,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: 'Politique de confidentialité — Les Remèdes de Mamie',
     description:
       'Politique de confidentialité et traitement des données personnelles conformément au RGPD.',
-    alternates: { canonical: `/${locale}/politique-confidentialite` },
+    alternates: {
+      canonical: `/${locale}/politique-confidentialite`,
+      languages: {
+        fr: `/fr/politique-confidentialite`,
+        en: `/en/politique-confidentialite`,
+      },
+    },
   }
 }
 

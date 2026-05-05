@@ -112,6 +112,21 @@ type RunCtx = {
 
 const LOCK_TTL_SEC = 600
 
+// ─── Editorial guardrails (claim-avoidance) ─────────────────────────────
+//
+// Hardened anti-claim rules injected in every long-form blog/wiki prompt.
+// EU Reg 1924/2006 forbids non-authorised health claims on plants ; the
+// LLM keeps gravitating toward "soulager / apaiser / agir sur" which the
+// moderator then blocks. These rules push the model toward cultural and
+// traditional framing instead, which is regulatorily safer.
+const EDITORIAL_GUARDRAILS = `RÈGLES DE CONFORMITÉ (impératives, EU Reg 1924/2006) :
+- INTERDIT : guérir, soigner, traiter, prévenir, soulager, apaiser, calmer, réduire, lutter contre, agir sur, combattre, éliminer, supprimer, atténuer, neutraliser, efficace contre, remède contre, soulagement, apaisement, action thérapeutique.
+- INTERDIT de relier une plante à un symptôme, une douleur, une maladie, une fonction physiologique précise (ex : "X aide la digestion", "Y soulage les yeux", "Z réduit la fatigue") — même reformulé doucement.
+- INTERDIT toute promesse, garantie, comparaison à un médicament, mention d'efficacité.
+- AUTORISÉ : usages culturels, traditions, mythes, savoir transmis, contexte historique, description botanique, sensorielle ("au parfum", "à la couleur"), conseils pratiques d'usage culinaire ou domestique.
+- TOURNURES SÛRES : "utilisée traditionnellement dans la médecine de Mamie", "on lui prêtait dans la tradition X", "selon le savoir transmis", "associée dans la culture Y à", "appréciée pour son parfum / sa douceur", "compagnon de la cuisine d'autrefois".
+- Si tu hésites, parle de la PLANTE (son histoire, son terroir, son aspect, ses usages culinaires) plutôt que du LECTEUR ou de son corps.`
+
 // ─── Main entrypoint ────────────────────────────────────────────────────
 
 export async function produceContent(opts: ProduceOptions): Promise<ProduceResult> {
@@ -378,9 +393,9 @@ async function runWikiPipeline(
       conservation:
         "Précise les conditions de conservation en 1 phrase (ex. \"Conserver les fleurs séchées en bocal hermétique, à l'abri de la lumière et de l'humidité, pendant 12 mois maximum.\"). Pas de guillemets.",
       precautionsText:
-        "Décris les précautions d'emploi et contre-indications connues de la plante en 2-3 phrases factuelles. Mentionne explicitement la grossesse, l'allaitement et les enfants si pertinent. Aucune allégation de guérison.",
+        `${EDITORIAL_GUARDRAILS}\n\nDécris les précautions d'emploi et contre-indications connues de la plante en 2-3 phrases factuelles. Mentionne explicitement la grossesse, l'allaitement et les enfants si pertinent. Aucune allégation de guérison ; reste dans le registre informationnel ("déconseillée pendant…", "à éviter en cas de…").`,
       longDescription:
-        'Rédige 3-5 paragraphes (séparés par une ligne vide) qui présentent la plante : histoire / origine, propriétés botaniques, usages traditionnels documentés, particularités. Ton encyclopédique, factuel, neutre. Pas de markdown.',
+        `${EDITORIAL_GUARDRAILS}\n\nRédige 3-5 paragraphes (séparés par une ligne vide) qui présentent la plante : histoire / origine, propriétés botaniques, usages traditionnels documentés, particularités. Ton encyclopédique, factuel, neutre. Pas de markdown.`,
     }
 
     const filledData = { ...base }
@@ -571,28 +586,65 @@ async function runWikiPipeline(
     }
   })
 
-  // 7. Moderating
+  // 7. Moderating — with one-shot compliance rewrite recovery on risk/block.
   const moderation = await runStep(ctx, 'moderating', async () => {
     const base = filled.value.result
-    const text = [base.shortDescription, base.longDescription].filter(Boolean).join('\n\n')
-    const verdict = await moderateClaims({
-      text,
+    const buildText = () => [base.shortDescription, base.longDescription].filter(Boolean).join('\n\n')
+    let verdict = await moderateClaims({
+      text: buildText(),
       locale: ctx.locale,
       context: { collection: 'wikiEntries' },
     })
-    const cost = calcCostEur({
-      model: 'gemini-2.5-flash-lite',
-      promptTokens: verdict.promptTokens,
-      completionTokens: verdict.completionTokens,
-    })
-    ctx.costEur += cost
+    {
+      const cost = calcCostEur({
+        model: 'gemini-2.5-flash-lite',
+        promptTokens: verdict.promptTokens,
+        completionTokens: verdict.completionTokens,
+      })
+      ctx.costEur += cost
+    }
+
+    const needsRewrite =
+      verdict.verdict === 'block' ||
+      (verdict.verdict === 'risk' && (verdict.confidence ?? 0) >= 0.5)
+    if (needsRewrite) {
+      const rewritten = await rewriteWikiForCompliance(
+        ctx,
+        {
+          name: base.name || ctx.seed,
+          shortDescription: base.shortDescription || '',
+          longDescription: base.longDescription || '',
+          precautionsText: base.precautionsText,
+        },
+        { reason: verdict.reason, suggestion: verdict.suggestion, matchedClaims: verdict.matchedClaims },
+      )
+      if (rewritten) {
+        ;(base as { shortDescription?: string }).shortDescription = rewritten.shortDescription
+        ;(base as { longDescription?: string }).longDescription = rewritten.longDescription
+        if (rewritten.precautionsText !== undefined) {
+          ;(base as { precautionsText?: string }).precautionsText = rewritten.precautionsText
+        }
+        ctx.warnings.push(`Rewrite conformité wiki appliqué (1ère modération : ${verdict.verdict}, ${verdict.reason})`)
+        verdict = await moderateClaims({
+          text: buildText(),
+          locale: ctx.locale,
+          context: { collection: 'wikiEntries' },
+        })
+        const cost2 = calcCostEur({
+          model: 'gemini-2.5-flash-lite',
+          promptTokens: verdict.promptTokens,
+          completionTokens: verdict.completionTokens,
+        })
+        ctx.costEur += cost2
+      } else {
+        ctx.warnings.push('Rewrite conformité wiki indisponible — modération initiale conservée')
+      }
+    }
+
     if (verdict.verdict === 'block') {
       throw new Error(`MODERATION_BLOCK:${verdict.reason}`)
     }
     if (verdict.verdict === 'risk') {
-      // High-confidence "risk" verdict is treated as a block — it usually
-      // means the LLM detected a borderline EFSA claim. Below 0.7 confidence
-      // we let it through with a warning (still requires regex compliance).
       if ((verdict.confidence ?? 0) >= 0.7) {
         throw new Error(`MODERATION_BLOCK:risk-high-confidence:${verdict.reason}`)
       }
@@ -891,14 +943,14 @@ async function runBlogPipeline(
       ctx,
       'title',
       { topic: ctx.seed },
-      `${BLOG_TONE}\n\n${subjectBlock}\n\nGénère un titre éditorial chaleureux et engageant (50-65 caractères, sans guillemets) qui mentionne EXPLICITEMENT le sujet "${ctx.seed}" et reflète l'angle. Le titre doit donner envie d'apprendre, pas vendre.`,
+      `${BLOG_TONE}\n\n${EDITORIAL_GUARDRAILS}\n\n${subjectBlock}\n\nGénère un titre éditorial chaleureux et engageant (50-65 caractères, sans guillemets) qui mentionne EXPLICITEMENT le sujet "${ctx.seed}" et reflète l'angle. Le titre doit donner envie d'apprendre, pas vendre. Évite tout verbe d'action thérapeutique (soulager, apaiser, traiter…).`,
     )
     // Excerpt
     const excerpt = await callAIForField(
       ctx,
       'excerpt',
       { topic: ctx.seed, title },
-      `${BLOG_TONE}\n\n${subjectBlock}\n\nTitre choisi : "${title}".\n\nRédige un extrait (1 paragraphe, 140-200 caractères) qui accueille le lecteur avec bienveillance et lui donne envie de poursuivre. L'extrait doit parler EXPLICITEMENT du sujet "${ctx.seed}".`,
+      `${BLOG_TONE}\n\n${EDITORIAL_GUARDRAILS}\n\n${subjectBlock}\n\nTitre choisi : "${title}".\n\nRédige un extrait (1 paragraphe, 140-200 caractères) qui accueille le lecteur avec bienveillance et lui donne envie de poursuivre. L'extrait doit parler EXPLICITEMENT du sujet "${ctx.seed}", en restant dans le registre culturel/traditionnel/sensoriel.`,
     )
 
     // Content sections (3 sections)
@@ -907,7 +959,7 @@ async function runBlogPipeline(
       ctx,
       'sections-outline',
       { topic: ctx.seed, title },
-      `${BLOG_TONE}\n\n${subjectBlock}\n\nTitre : "${title}"\n\nPropose 3 titres de sections h2 pour structurer un article sur "${ctx.seed}" comme un récit progressif (origine/contexte, usages traditionnels, conseils pratiques modernes par exemple). UN titre par ligne, sans numérotation, sans guillemets. Préfère des titres en phrase complète plutôt que des mots-clés secs. Chaque titre doit ancrer le lecteur dans le sujet "${ctx.seed}".`,
+      `${BLOG_TONE}\n\n${EDITORIAL_GUARDRAILS}\n\n${subjectBlock}\n\nTitre : "${title}"\n\nPropose 3 titres de sections h2 pour structurer un article sur "${ctx.seed}" comme un récit progressif (origine/contexte, usages traditionnels, conseils pratiques modernes par exemple). UN titre par ligne, sans numérotation, sans guillemets. Préfère des titres en phrase complète plutôt que des mots-clés secs. Chaque titre doit ancrer le lecteur dans le sujet "${ctx.seed}", sans verbe d'action thérapeutique.`,
     )
     const headings = (headingsRaw || '')
       .split('\n')
@@ -922,7 +974,7 @@ async function runBlogPipeline(
           ctx,
           'section-content',
           { topic: ctx.seed, heading },
-          `${BLOG_TONE}\n\n${subjectBlock}\n\nTitre de l'article : "${title}"\nSection en cours : "${heading}"\n\nRédige 2-3 paragraphes (séparés par une ligne vide) qui développent la section "${heading}" en restant TOUJOURS centré sur le sujet "${ctx.seed}". Reste factuel mais incarne le ton chaleureux : phrases qui invitent ("Vous découvrirez…", "Imaginez…", "On l'utilisait autrefois…"), images sensorielles quand pertinent (parfum, couleur, saison). Pas de liste, pas de markdown, français naturel et fluide. Appuie-toi sur les FAITS COLLECTÉS plus haut quand c'est pertinent.`,
+          `${BLOG_TONE}\n\n${EDITORIAL_GUARDRAILS}\n\n${subjectBlock}\n\nTitre de l'article : "${title}"\nSection en cours : "${heading}"\n\nRédige 2-3 paragraphes (séparés par une ligne vide) qui développent la section "${heading}" en restant TOUJOURS centré sur le sujet "${ctx.seed}". Reste factuel mais incarne le ton chaleureux : phrases qui invitent ("Vous découvrirez…", "Imaginez…", "On l'utilisait autrefois…"), images sensorielles quand pertinent (parfum, couleur, saison). Pas de liste, pas de markdown, français naturel et fluide. Appuie-toi sur les FAITS COLLECTÉS plus haut quand c'est pertinent. RAPPEL CONFORMITÉ : reste dans le registre culturel/traditionnel ; ne jamais relier la plante à un symptôme ou une fonction physiologique.`,
         )
         const paragraphs = (para || '')
           .split(/\n\s*\n/)
@@ -944,7 +996,8 @@ async function runBlogPipeline(
   if (!fields.ok) return await abort(ctx, lockKey, 'fields_failed', fields.error)
 
   // 3b. Build a working plain-text representation for SEO/moderation/GEO.
-  const sectionsPlain = fields.value.result.sections
+  // `let` because the moderation step may rewrite the body for compliance.
+  let sectionsPlain = fields.value.result.sections
     .map((s) => `${s.heading ? `## ${s.heading}\n` : ''}${s.paragraphs.join('\n\n')}`)
     .join('\n\n')
 
@@ -1044,28 +1097,61 @@ async function runBlogPipeline(
     ).catch(() => undefined)
   }
 
-  // 5. Moderating
+  // 5. Moderating — with one-shot compliance rewrite recovery on risk/block.
   const moderation = await runStep(ctx, 'moderating', async () => {
     const f = fields.value.result
-    const text = [f.excerpt, sectionsPlain].filter(Boolean).join('\n\n')
-    const verdict = await moderateClaims({
-      text,
+    const buildText = () => [f.excerpt, sectionsPlain].filter(Boolean).join('\n\n')
+    let verdict = await moderateClaims({
+      text: buildText(),
       locale: ctx.locale,
       context: { collection: 'blogPosts' },
     })
-    const cost = calcCostEur({
-      model: 'gemini-2.5-flash-lite',
-      promptTokens: verdict.promptTokens,
-      completionTokens: verdict.completionTokens,
-    })
-    ctx.costEur += cost
+    {
+      const cost = calcCostEur({
+        model: 'gemini-2.5-flash-lite',
+        promptTokens: verdict.promptTokens,
+        completionTokens: verdict.completionTokens,
+      })
+      ctx.costEur += cost
+    }
+
+    // If flagged, attempt a single neutralization rewrite, then re-moderate.
+    const needsRewrite =
+      verdict.verdict === 'block' ||
+      (verdict.verdict === 'risk' && (verdict.confidence ?? 0) >= 0.5)
+    if (needsRewrite) {
+      const rewritten = await rewriteForCompliance(
+        ctx,
+        { title: f.title, excerpt: f.excerpt, sections: f.sections },
+        { reason: verdict.reason, suggestion: verdict.suggestion, matchedClaims: verdict.matchedClaims },
+      )
+      if (rewritten) {
+        f.excerpt = rewritten.excerpt
+        f.sections = rewritten.sections
+        sectionsPlain = f.sections
+          .map((s) => `${s.heading ? `## ${s.heading}\n` : ''}${s.paragraphs.join('\n\n')}`)
+          .join('\n\n')
+        ctx.warnings.push(`Rewrite conformité appliqué (1ère modération : ${verdict.verdict}, ${verdict.reason})`)
+        verdict = await moderateClaims({
+          text: buildText(),
+          locale: ctx.locale,
+          context: { collection: 'blogPosts' },
+        })
+        const cost2 = calcCostEur({
+          model: 'gemini-2.5-flash-lite',
+          promptTokens: verdict.promptTokens,
+          completionTokens: verdict.completionTokens,
+        })
+        ctx.costEur += cost2
+      } else {
+        ctx.warnings.push('Rewrite conformité indisponible — modération initiale conservée')
+      }
+    }
+
     if (verdict.verdict === 'block') {
       throw new Error(`MODERATION_BLOCK:${verdict.reason}`)
     }
     if (verdict.verdict === 'risk') {
-      // High-confidence "risk" verdict is treated as a block — it usually
-      // means the LLM detected a borderline EFSA claim. Below 0.7 confidence
-      // we let it through with a warning (still requires regex compliance).
       if ((verdict.confidence ?? 0) >= 0.7) {
         throw new Error(`MODERATION_BLOCK:risk-high-confidence:${verdict.reason}`)
       }
@@ -1791,6 +1877,254 @@ async function callAIForField(
       { code: 'callAI_failed', message: err instanceof Error ? err.message : String(err) },
     ).catch(() => undefined)
     throw err
+  }
+}
+
+// ─── Compliance rewrite helper ──────────────────────────────────────────
+//
+// One-shot neutralization pass : when moderation flags risk/block, we ask
+// Gemini to rewrite the existing copy by stripping any health-claim
+// phrasing (per EDITORIAL_GUARDRAILS) while keeping the cultural narrative.
+// Returns the rewritten {excerpt, sections} or null if anything fails.
+
+type RewriteShape = {
+  excerpt: string
+  sections: Array<{ heading?: string; paragraphs: string[] }>
+}
+
+async function rewriteForCompliance(
+  ctx: RunCtx,
+  current: {
+    title: string
+    excerpt: string
+    sections: Array<{ heading?: string; paragraphs: string[] }>
+  },
+  moderation: { reason?: string; suggestion?: string; matchedClaims?: string[] },
+): Promise<RewriteShape | null> {
+  const apiKey = process.env.GEMINI_API_KEY
+  if (!apiKey) return null
+  const t0 = Date.now()
+  try {
+    const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = await import(
+      '@google/generative-ai'
+    )
+    const client = new GoogleGenerativeAI(apiKey)
+    const model = client.getGenerativeModel({
+      model: 'gemini-2.5-flash-lite',
+      systemInstruction:
+        "Tu es éditeur conformité phytothérapie pour Les Remèdes de Mamie. Tu reçois un article qui a été flaggé par la modération pour allégations de santé non autorisées. Tu dois RÉÉCRIRE le texte en supprimant toute formulation problématique (verbes thérapeutiques, lien plante↔symptôme/fonction physiologique, promesses) tout en gardant le récit, la chaleur, et la longueur. Tu réponds UNIQUEMENT en JSON.",
+      safetySettings: [
+        { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+        { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+        { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+        { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+      ],
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 2400,
+        responseMimeType: 'application/json',
+      },
+    })
+
+    const claimsBlock = (moderation.matchedClaims || []).slice(0, 8).map((c) => `- ${c}`).join('\n') || '(aucune phrase précise fournie)'
+    const userPrompt = [
+      EDITORIAL_GUARDRAILS,
+      '',
+      `MOTIF DE BLOCAGE : ${moderation.reason || 'allégation de santé non autorisée'}`,
+      moderation.suggestion ? `SUGGESTION DU MODÉRATEUR : ${moderation.suggestion}` : '',
+      'PHRASES PROBLÉMATIQUES IDENTIFIÉES :',
+      claimsBlock,
+      '',
+      `TITRE DE L'ARTICLE : ${current.title}`,
+      '',
+      `EXTRAIT ACTUEL : ${current.excerpt}`,
+      '',
+      'SECTIONS ACTUELLES (JSON) :',
+      JSON.stringify(current.sections),
+      '',
+      'TÂCHE : réécris l\'extrait et chaque section en neutralisant TOUTE allégation. Conserve la même structure (mêmes headings, même nombre de paragraphes). Bascule en registre culturel/traditionnel/sensoriel. Réponds STRICTEMENT par un JSON :',
+      '{ "excerpt": "<extrait neutralisé>", "sections": [ { "heading": "<inchangé>", "paragraphs": ["<para 1>", "<para 2>", ...] }, ... ] }',
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    const result = await model.generateContent(userPrompt)
+    const raw = result.response.text().trim()
+    const usage = result.response.usageMetadata
+    const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim()
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(cleaned)
+    } catch {
+      const m = cleaned.match(/\{[\s\S]*\}/)
+      if (!m) return null
+      try { parsed = JSON.parse(m[0]) } catch { return null }
+    }
+
+    const cost = calcCostEur({
+      model: 'gemini-2.5-flash-lite',
+      promptTokens: usage?.promptTokenCount,
+      completionTokens: usage?.candidatesTokenCount,
+    })
+    ctx.costEur += cost
+    await logAiCall(
+      ctx.payload,
+      {
+        subsystem: 'ai-pipeline',
+        model: 'gemini-2.5-flash-lite',
+        collectionTarget: ctx.kind === 'wiki' ? 'wikiEntries' : 'blogPosts',
+        fieldTarget: 'rewrite-for-compliance',
+      },
+      t0,
+      { promptTokens: usage?.promptTokenCount, completionTokens: usage?.candidatesTokenCount },
+      null,
+    ).catch(() => undefined)
+
+    const obj = parsed as { excerpt?: unknown; sections?: unknown }
+    if (typeof obj.excerpt !== 'string' || !Array.isArray(obj.sections)) return null
+    const sections: Array<{ heading?: string; paragraphs: string[] }> = []
+    for (const s of obj.sections) {
+      if (!s || typeof s !== 'object') continue
+      const sObj = s as { heading?: unknown; paragraphs?: unknown }
+      const heading = typeof sObj.heading === 'string' && sObj.heading.trim() ? sObj.heading : undefined
+      const paragraphs = Array.isArray(sObj.paragraphs)
+        ? sObj.paragraphs.filter((p): p is string => typeof p === 'string').map((p) => p.trim()).filter((p) => p.length > 0)
+        : []
+      if (paragraphs.length) sections.push({ heading, paragraphs })
+    }
+    if (sections.length === 0) return null
+    return { excerpt: obj.excerpt.trim(), sections }
+  } catch (err) {
+    await logAiCall(
+      ctx.payload,
+      {
+        subsystem: 'ai-pipeline',
+        model: 'gemini-2.5-flash-lite',
+        collectionTarget: ctx.kind === 'wiki' ? 'wikiEntries' : 'blogPosts',
+        fieldTarget: 'rewrite-for-compliance',
+      },
+      t0,
+      null,
+      { code: 'rewrite_failed', message: err instanceof Error ? err.message : String(err) },
+    ).catch(() => undefined)
+    return null
+  }
+}
+
+// One-shot rewrite for the wiki long-form fields (shortDescription +
+// longDescription + precautionsText) using the same neutralization recipe.
+async function rewriteWikiForCompliance(
+  ctx: RunCtx,
+  current: {
+    name: string
+    shortDescription: string
+    longDescription: string
+    precautionsText?: string
+  },
+  moderation: { reason?: string; suggestion?: string; matchedClaims?: string[] },
+): Promise<{ shortDescription: string; longDescription: string; precautionsText?: string } | null> {
+  const apiKey = process.env.GEMINI_API_KEY
+  if (!apiKey) return null
+  const t0 = Date.now()
+  try {
+    const { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } = await import(
+      '@google/generative-ai'
+    )
+    const client = new GoogleGenerativeAI(apiKey)
+    const model = client.getGenerativeModel({
+      model: 'gemini-2.5-flash-lite',
+      systemInstruction:
+        "Tu es éditeur conformité phytothérapie. Tu réécris une fiche plante flaggée par la modération pour allégations non autorisées. Tu gardes le ton encyclopédique, factuel, neutre. Tu réponds UNIQUEMENT en JSON.",
+      safetySettings: [
+        { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+        { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+        { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+        { category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT, threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE },
+      ],
+      generationConfig: {
+        temperature: 0.3,
+        maxOutputTokens: 2000,
+        responseMimeType: 'application/json',
+      },
+    })
+
+    const claimsBlock = (moderation.matchedClaims || []).slice(0, 8).map((c) => `- ${c}`).join('\n') || '(aucune phrase précise fournie)'
+    const userPrompt = [
+      EDITORIAL_GUARDRAILS,
+      '',
+      `MOTIF : ${moderation.reason || 'allégation non autorisée'}`,
+      moderation.suggestion ? `SUGGESTION : ${moderation.suggestion}` : '',
+      'PHRASES PROBLÉMATIQUES :',
+      claimsBlock,
+      '',
+      `PLANTE : ${current.name}`,
+      '',
+      `SHORT DESCRIPTION ACTUELLE : ${current.shortDescription}`,
+      '',
+      `LONG DESCRIPTION ACTUELLE : ${current.longDescription}`,
+      '',
+      current.precautionsText ? `PRÉCAUTIONS ACTUELLES : ${current.precautionsText}` : '',
+      '',
+      'TÂCHE : réécris ces champs en neutralisant toute allégation. Conserve la même longueur. Réponds STRICTEMENT en JSON :',
+      '{ "shortDescription": "...", "longDescription": "...", "precautionsText": "..." }',
+    ]
+      .filter(Boolean)
+      .join('\n')
+
+    const result = await model.generateContent(userPrompt)
+    const raw = result.response.text().trim()
+    const usage = result.response.usageMetadata
+    const cleaned = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim()
+    let parsed: unknown
+    try {
+      parsed = JSON.parse(cleaned)
+    } catch {
+      const m = cleaned.match(/\{[\s\S]*\}/)
+      if (!m) return null
+      try { parsed = JSON.parse(m[0]) } catch { return null }
+    }
+
+    const cost = calcCostEur({
+      model: 'gemini-2.5-flash-lite',
+      promptTokens: usage?.promptTokenCount,
+      completionTokens: usage?.candidatesTokenCount,
+    })
+    ctx.costEur += cost
+    await logAiCall(
+      ctx.payload,
+      {
+        subsystem: 'ai-pipeline',
+        model: 'gemini-2.5-flash-lite',
+        collectionTarget: 'wikiEntries',
+        fieldTarget: 'rewrite-for-compliance',
+      },
+      t0,
+      { promptTokens: usage?.promptTokenCount, completionTokens: usage?.candidatesTokenCount },
+      null,
+    ).catch(() => undefined)
+
+    const obj = parsed as { shortDescription?: unknown; longDescription?: unknown; precautionsText?: unknown }
+    if (typeof obj.shortDescription !== 'string' || typeof obj.longDescription !== 'string') return null
+    if (!obj.shortDescription.trim() || !obj.longDescription.trim()) return null
+    return {
+      shortDescription: obj.shortDescription.trim(),
+      longDescription: obj.longDescription.trim(),
+      precautionsText: typeof obj.precautionsText === 'string' && obj.precautionsText.trim() ? obj.precautionsText.trim() : undefined,
+    }
+  } catch (err) {
+    await logAiCall(
+      ctx.payload,
+      {
+        subsystem: 'ai-pipeline',
+        model: 'gemini-2.5-flash-lite',
+        collectionTarget: 'wikiEntries',
+        fieldTarget: 'rewrite-for-compliance',
+      },
+      t0,
+      null,
+      { code: 'rewrite_failed', message: err instanceof Error ? err.message : String(err) },
+    ).catch(() => undefined)
+    return null
   }
 }
 

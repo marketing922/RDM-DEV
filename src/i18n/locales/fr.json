@@ -26,10 +26,10 @@
   },
   "home": {
     "hero": {
-      "title": "Le savoir ancestral des plantes médicinales",
-      "subtitle": "Explorez notre encyclopédie des plantes et leurs bienfaits. Des fiches détaillées, des conseils d'utilisation et des informations vérifiées pour prendre soin de vous naturellement.",
-      "cta": "Explorer les plantes",
-      "ctaSecondary": "En savoir plus"
+      "title": "L'almanach des plantes qui soignent depuis toujours",
+      "subtitle": "Chez Mamie, rien n'est laissé au hasard : une encyclopédie botanique qui réunit les savoirs de la pharmacopée française et des médecines traditionnelles du monde, rigoureusement sourcée et lisible par tous.",
+      "cta": "Parcourir l'encyclopédie",
+      "ctaSecondary": "Notre démarche"
     },
     "bestsellers": {
       "title": "Nos best-sellers",
@@ -38,12 +38,12 @@
     },
     "wiki": {
       "title": "Encyclopédie des plantes",
-      "subtitle": "Découvrez les bienfaits des plantes médicinales",
+      "subtitle": "Des plantes d'exception, présentées avec rigueur — leurs usages traditionnels, leurs propriétés et leurs précautions, du champ à votre tasse.",
       "viewAll": "Explorer l'encyclopédie"
     },
     "blog": {
-      "title": "Notre blog",
-      "subtitle": "Conseils et actualités sur les remèdes naturels",
+      "title": "Le journal des plantes",
+      "subtitle": "Conseils, recettes et savoir-faire ancestral, inspirés par les médecines traditionnelles du monde.",
       "viewAll": "Tous les articles"
     },
     "testimonials": {
@@ -51,8 +51,8 @@
       "subtitle": "Des témoignages authentiques"
     },
     "newsletter": {
-      "title": "Restez informé",
-      "subtitle": "Recevez nos conseils santé et nos offres exclusives",
+      "title": "Le courrier saisonnier de Mamie",
+      "subtitle": "Une lettre par saison : nouvelles plantes, recettes traditionnelles et conseils d'usage — directement dans votre boîte.",
       "placeholder": "Votre adresse email",
       "cta": "S'inscrire",
       "privacy": "En vous inscrivant, vous acceptez notre politique de confidentialité."
@@ -111,8 +111,52 @@
   },
   "wiki": {
     "title": "Encyclopédie des plantes",
-    "subtitle": "Tout savoir sur les plantes médicinales et leurs bienfaits",
-    "searchPlaceholder": "Rechercher une plante...",
+    "subtitle": "Traditions d'usage par plante médicinale",
+    "searchPlaceholder": "Rechercher une plante…",
+    "noResults": "Aucun résultat pour ces critères",
+    "noResultsHint": "Essayez d'autres mots-clés ou une autre famille.",
+    "empty": "Aucune plante encore répertoriée",
+    "emptyHint": "L'almanach des plantes s'enrichira prochainement.",
+    "clearFilters": "Effacer les filtres",
+    "entries": "fiches répertoriées",
+    "entry": "fiche répertoriée",
+    "results": "résultats",
+    "result": "résultat",
+    "discover": "À découvrir",
+    "viewAllInCategory": "Voir toutes les plantes",
+    "viewMore": "Voir plus",
+    "categories": {
+      "all": "Toutes les catégories",
+      "nervous": "Système nerveux & mental",
+      "digestive": "Digestion",
+      "respiratory": "Voies respiratoires",
+      "female": "Sphère féminine",
+      "male": "Sphère masculine",
+      "circulatory": "Circulation",
+      "joints": "Articulations & muscles",
+      "immunity": "Immunité & vitalité",
+      "skin": "Peau & phanères",
+      "metabolism": "Métabolisme & équilibre",
+      "multi": "Plantes polyvalentes"
+    },
+    "partsUsed": {
+      "flower": "Fleurs",
+      "leaf": "Feuilles",
+      "flowering-tops": "Sommités fleuries",
+      "root": "Racine",
+      "rhizome": "Rhizome",
+      "bark": "Écorce",
+      "fruit": "Fruit",
+      "seed": "Graine",
+      "berry": "Baie",
+      "bud": "Bourgeon",
+      "stem": "Tige",
+      "bulb": "Bulbe",
+      "whole-plant": "Plante entière",
+      "essential-oil": "Huile essentielle",
+      "resin": "Résine / Gomme",
+      "mushroom": "Champignon entier"
+    },
     "filters": {
       "all": "Toutes",
       "digestive": "Digestive",
@@ -130,7 +174,11 @@
       "precautions": "Précautions d'emploi",
       "contraindications": "Contre-indications",
       "relatedProducts": "Produits associés",
-      "relatedPlants": "Plantes associées"
+      "relatedPlants": "Plantes associées",
+      "relatedArticles": "Articles liés",
+      "lecture": "Lecture",
+      "traditionalUse": "Traditionnellement utilisée pour",
+      "backToList": "Toutes les plantes"
     }
   },
   "blog": {
@@ -156,16 +204,57 @@
   },
   "benefits": {
     "title": "Les bienfaits",
-    "subtitle": "Découvrez comment les plantes peuvent vous aider au quotidien",
+    "subtitle": "Traditions d'usage par affection",
+    "searchPlaceholder": "Rechercher un bienfait…",
+    "noResults": "Aucun résultat pour ces critères",
+    "noResultsHint": "Essayez d'autres mots-clés ou une autre région.",
+    "empty": "Aucun bienfait encore répertorié",
+    "emptyHint": "La table des bienfaits s'enrichira prochainement.",
+    "clearFilters": "Effacer les filtres",
+    "entries": "entrées répertoriées",
+    "entry": "entrée répertoriée",
+    "results": "résultats",
+    "result": "résultat",
+    "relatedPlantsCount": "plantes associées",
+    "relatedPlantCount": "plante associée",
+    "discover": "À découvrir",
+    "regions": {
+      "all": "Toutes les régions",
+      "tete": "Tête",
+      "gorge": "Gorge",
+      "respiration": "Respiration",
+      "digestion": "Digestion",
+      "feminin": "Féminin",
+      "circulation": "Circulation"
+    },
+    "categories": {
+      "nervous": "Système nerveux & mental",
+      "digestive": "Digestion",
+      "respiratory": "Voies respiratoires",
+      "female": "Sphère féminine",
+      "male": "Sphère masculine",
+      "circulatory": "Circulation",
+      "joints": "Articulations & muscles",
+      "immunity": "Immunité & vitalité",
+      "skin": "Peau & phanères",
+      "metabolism": "Métabolisme & équilibre"
+    },
     "detail": {
       "quickAnswer": "En bref",
       "recommendedProducts": "Produits recommandés",
-      "relatedPlants": "Plantes associées"
+      "relatedPlants": "Plantes associées",
+      "relatedArticles": "Articles liés",
+      "regulatoryClaim": "Allégation autorisée",
+      "precautions": "Précautions d'usage",
+      "redFlags": "Quand consulter un médecin",
+      "lecture": "Lecture",
+      "traditionalUse": "Traditionnellement utilisé pour",
+      "backToList": "Tous les bienfaits"
     }
   },
   "about": {
     "title": "À propos",
-    "subtitle": "Notre histoire, nos valeurs, notre engagement",
+    "subtitle": "Chez Mamie, rien n'est laissé au hasard : des plantes d'exception, testées et transformées en France, pour votre vitalité au naturel.",
     "values": {
       "title": "Nos valeurs",
       "natural": { "title": "100% Naturel", "description": "Des ingrédients sélectionnés avec soin, sans additifs chimiques." },
@@ -256,7 +345,7 @@
     }
   },
   "footer": {
-    "description": "Votre encyclopédie des plantes médicinales et remèdes naturels. Des fiches détaillées, des conseils d'utilisation et des informations vérifiées.",
+    "description": "La vocation des Remèdes de Mamie est de faire redécouvrir les bienfaits des traditions naturelles à travers des recettes simples, sincères et efficaces.\n\nNous puisons dans l'héritage des médecines ancestrales, éclairées par la science moderne, pour offrir à chacun des formules éprouvées par le temps. Notre exigence : des ingrédients issus de leurs terroirs d'origine, travaillés en France, dans une démarche alliant qualité, authenticité et sécurité.\n\nParce que prendre soin de soi, c'est aussi retrouver le lien avec la nature — avec amour, patience et bienveillance.",
     "shop": {
       "title": "Boutique",
       "tisanes": "Tisanes",

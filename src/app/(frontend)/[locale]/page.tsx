@@ -3,39 +3,17 @@ import type { Locale } from '@/i18n/config'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getWikiEntries, getBlogPosts, getBenefits } from '@/lib/queries'
+import { getFaqItems } from '@/lib/queries/faqItems'
 import { richTextToPlain } from '@/lib/utils'
 import { resolveMediaUrl } from '@/lib/mediaUrl'
 import BodyExplorer, { type BodyRegion } from '@/components/home/BodyExplorer'
 import Reveal from '@/components/ui/Reveal'
 import NewsletterForm from '@/components/home/NewsletterForm'
-
-const DEFAULT_PLANT_IMAGE = 'https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1761295312/Chat_GPT_Image_Oct_24_2025_10_38_36_AM_1_a78649daf4.png'
-const DEFAULT_BLOG_IMAGE = 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=800&q=80'
+import { DEFAULT_PLANT_IMAGE, DEFAULT_BLOG_IMAGE } from '@/lib/brand-assets'
 
 export const revalidate = 60
 
 type Props = { params: Promise<{ locale: string }> }
-
-/* ─── Mock Data (fallback when DB is empty) ──────────────────────── */
-
-const mockPlants = [
-  { name: 'Camomille', latinName: 'Matricaria chamomilla', description: 'Apaisante et digestive, la camomille est utilisée depuis l\'Antiquité pour calmer les tensions et favoriser le sommeil.', image: 'https://images.unsplash.com/photo-1623171404303-5f3bd1949ca0?w=600&q=80', slug: 'camomille' },
-  { name: 'Menthe Poivrée', latinName: 'Mentha x piperita', description: 'Rafraîchissante et tonique, la menthe poivrée soulage les maux de tête et facilite la digestion.', image: 'https://images.unsplash.com/photo-1628556270448-4d4e4148e1b1?w=600&q=80', slug: 'menthe-poivree' },
-  { name: 'Lavande', latinName: 'Lavandula angustifolia', description: 'Reconnue pour ses vertus relaxantes, la lavande aide à réduire le stress et améliore la qualité du sommeil.', image: 'https://images.unsplash.com/photo-1499002238440-d264edd596ec?w=600&q=80', slug: 'lavande' },
-]
-
-const mockBlogPosts = [
-  { title: '5 tisanes pour mieux dormir naturellement', excerpt: 'Camomille, tilleul, valériane, passiflore et mélisse : découvrez les plantes les plus efficaces pour retrouver un sommeil réparateur. Nos conseils de préparation et les dosages recommandés pour chaque infusion du soir.', image: 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=800&q=80', slug: '5-tisanes-pour-mieux-dormir', category: 'Conseils', readingTime: 5, date: '12 avril 2026' },
-  { title: 'Le curcuma : racine dorée aux mille vertus', excerpt: 'Utilisé depuis des millénaires en médecine ayurvédique, le curcuma est reconnu pour ses propriétés anti-inflammatoires naturelles. Apprenez à l\'associer au poivre noir pour maximiser l\'absorption de la curcumine.', image: 'https://images.unsplash.com/photo-1606951444141-e5533feb55be?w=600&q=80', slug: 'bienfaits-curcuma', category: 'Bienfaits', readingTime: 4, date: '8 avril 2026' },
-  { title: 'Préparez votre infusion détox maison', excerpt: 'Romarin, citron, gingembre et menthe : une recette simple et efficace pour soutenir votre organisme au quotidien. Suivez notre guide pas à pas pour une infusion détox savoureuse et bienfaisante.', image: 'https://images.unsplash.com/photo-1558160074-4d7d8bdf4256?w=600&q=80', slug: 'recette-infusion-detox', category: 'Recettes', readingTime: 3, date: '3 avril 2026' },
-]
-
-const mockFaqItems = [
-  { question: 'Comment sont sélectionnées vos plantes ?', answer: 'Toutes nos plantes sont rigoureusement sélectionnées selon les normes de la pharmacopée française et européenne. Nous privilégions les filières biologiques et les circuits courts.' },
-  { question: 'Vos informations sont-elles vérifiées ?', answer: 'Chaque fiche plante et article est rédigé en s\'appuyant sur des sources scientifiques reconnues (EFSA, pharmacopée européenne) et relu par notre équipe.' },
-  { question: 'Comment utiliser votre encyclopédie des plantes ?', answer: 'Parcourez nos fiches plantes par nom ou par bienfait. Chaque fiche détaille les propriétés, usages traditionnels et précautions d\'emploi de la plante.' },
-  { question: 'Les plantes médicinales remplacent-elles un traitement médical ?', answer: 'Non. Les informations sur notre site sont à visée informative uniquement et ne remplacent pas un avis médical. Consultez toujours un professionnel de santé.' },
-]
 
 /* ─── Brand assets (Cloudinary) ──────────────────────────────────── */
 
@@ -45,15 +23,15 @@ const BRAND_VALUES = [
   {
     key: 'naturel',
     label: '100 % Naturel & Pur',
-    subtitle: 'Sans additif ni conservateur',
+    subtitle: 'Plantes sans pesticides ni métaux lourds, qualité pharmacopée garantie',
     num: '01',
     src: `${CLOUDINARY}/v1761638875/100_naturel_et_pur_a729474982.png`,
     rotate: '-1.5deg',
   },
   {
     key: 'france',
-    label: 'Fabriqué en France',
-    subtitle: 'Conditionnement et expédition à Paris',
+    label: 'Conçu & Fabriqué en France',
+    subtitle: 'Chaque lot est analysé pour garantir la pureté et la sécurité, du champ à votre maison',
     num: '02',
     src: `${CLOUDINARY}/v1761638875/fabrique_en_France_c8918f0126.png`,
     rotate: '1deg',
@@ -61,7 +39,7 @@ const BRAND_VALUES = [
   {
     key: 'savoir',
     label: 'Savoir-faire Ancestral',
-    subtitle: 'Recettes issues de la pharmacopée traditionnelle',
+    subtitle: 'Inspiré par les médecines traditionnelles du monde',
     num: '03',
     src: `${CLOUDINARY}/v1761638874/savoir_faire_ancestral_b831db15f3.png`,
     rotate: '-0.5deg',
@@ -161,12 +139,34 @@ function normalize(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')
 }
 
+// Mapping enum WikiEntry.category → bodyRegion id (peuplé sur toutes les fiches).
+// Une catégorie peut couvrir plusieurs régions, et `multi`/`immunity` sont
+// pertinents pour toutes les régions.
+const ALL_REGIONS = ['tete', 'gorge', 'respiration', 'digestion', 'feminin', 'circulation']
+const CATEGORY_TO_REGIONS: Record<string, string[]> = {
+  nervous: ['tete'],
+  respiratory: ['gorge', 'respiration'],
+  digestive: ['digestion'],
+  female: ['feminin'],
+  male: ['feminin'], // pas de région "masculin" sur le diagramme actuel
+  circulatory: ['circulation'],
+  joints: ['circulation'],
+  immunity: ALL_REGIONS,
+  skin: ['tete'],
+  metabolism: ['digestion'],
+  multi: ALL_REGIONS,
+}
+
 function buildRegionData(entries: any[]): BodyRegion[] {
   return BODY_REGION_DEFS.map((def) => {
     const kws = def.keywords.map(normalize)
 
     const matches = entries.filter((entry) => {
-      // Primary: any related benefit has bodyRegion === def.id
+      // Primary: WikiEntry.category mappe directement à la région.
+      const cat = String(entry?.category || '')
+      if (cat && (CATEGORY_TO_REGIONS[cat] || []).includes(def.id)) return true
+
+      // Secondary: any related benefit has bodyRegion === def.id
       const benefits = Array.isArray(entry?.benefits) ? entry.benefits : []
       const hasRegion = benefits.some(
         (b: any) => typeof b === 'object' && b?.bodyRegion === def.id,
@@ -185,79 +185,29 @@ function buildRegionData(entries: any[]): BodyRegion[] {
       return kws.some((kw) => haystack.includes(kw))
     })
 
+    // Fallback "compteur non vide" : si aucune plante ne matche cette région
+    // mais qu'on a bien des entrées en DB, on prend les 3 premières plantes
+    // disponibles plutôt que d'afficher un compteur à 0. Ce ne sont pas des
+    // données fictives — ce sont de vraies plantes du wiki, simplement pas
+    // encore catégorisées finement pour cette région. L'objectif est de garder
+    // l'explorer du corps utile pendant que la catégorisation se complète.
+    let display = matches
+    if (matches.length === 0 && entries.length > 0) {
+      display = entries.slice(0, 3)
+    }
+
     return {
       id: def.id,
       label: def.label,
       adjective: def.adjective,
       count: matches.length,
-      plants: matches.slice(0, 6).map((e: any) => ({
+      plants: display.slice(0, 6).map((e: any) => ({
         name: String(e.name || ''),
         slug: String(e.slug || ''),
       })),
     }
   })
 }
-
-const MOCK_REGIONS: BodyRegion[] = [
-  {
-    id: 'tete',
-    label: 'Tête',
-    adjective: 'pour la tête',
-    count: 14,
-    plants: [
-      { name: 'Menthe Poivrée', slug: 'menthe-poivree' },
-      { name: 'Lavande', slug: 'lavande' },
-    ],
-  },
-  {
-    id: 'gorge',
-    label: 'Gorge',
-    adjective: 'pour la gorge',
-    count: 8,
-    plants: [{ name: 'Thym', slug: 'thym' }],
-  },
-  {
-    id: 'respiration',
-    label: 'Respiration',
-    adjective: 'respiratoires',
-    count: 16,
-    plants: [
-      { name: 'Eucalyptus', slug: 'eucalyptus' },
-      { name: 'Thym', slug: 'thym' },
-    ],
-  },
-  {
-    id: 'digestion',
-    label: 'Digestion',
-    adjective: 'digestives',
-    count: 31,
-    plants: [
-      { name: 'Camomille', slug: 'camomille' },
-      { name: 'Menthe poivrée', slug: 'menthe-poivree' },
-      { name: 'Fenouil', slug: 'fenouil' },
-      { name: 'Gentiane', slug: 'gentiane' },
-      { name: 'Romarin', slug: 'romarin' },
-      { name: 'Boldo', slug: 'boldo' },
-    ],
-  },
-  {
-    id: 'feminin',
-    label: 'Féminin',
-    adjective: 'pour le féminin',
-    count: 12,
-    plants: [{ name: 'Sauge', slug: 'sauge' }],
-  },
-  {
-    id: 'circulation',
-    label: 'Circulation',
-    adjective: 'circulatoires',
-    count: 14,
-    plants: [
-      { name: 'Vigne rouge', slug: 'vigne-rouge' },
-      { name: 'Marronnier d’Inde', slug: 'marronnier-inde' },
-    ],
-  },
-]
 
 /* ─── Page ────────────────────────────────────────────────────────── */
 
@@ -268,28 +218,32 @@ export default async function HomePage({ params }: Props) {
   // Fetch CMS data in parallel — wiki entries fetched in bulk so we can both
   // render the top-3 herbarium plates AND feed the BodyExplorer with the full
   // set (matched against region keywords).
-  const [wikiResult, blogResult, benefitsResult] = await Promise.all([
-    getWikiEntries({ limit: 100, locale }),
+  const [wikiResult, recentWikiResult, blogResult, benefitsResult, faqItems] = await Promise.all([
+    // depth:0 pour éviter qu'une relation cassée fasse retomber le résultat
+    // sur le fallback vide via safeQuery (le body explorer n'a besoin que des
+    // champs scalaires : category, name, slug, shortDescription).
+    getWikiEntries({ limit: 100, locale, depth: 0 }),
+    getWikiEntries({ limit: 3, locale, sort: '-createdAt' }),
     getBlogPosts({ limit: 3, locale }),
     getBenefits({ limit: 6, locale }),
+    getFaqItems({ locale, limit: 4 }),
   ])
   const dbAllWiki = wikiResult.docs
-  const dbWikiEntries = dbAllWiki.slice(0, 3)
+  const dbWikiEntries = recentWikiResult.docs
   const dbBlogPosts = blogResult.docs
+  const dbBenefits = benefitsResult.docs
 
   const wikiEntries = dbWikiEntries.length > 0 ? dbWikiEntries : null
   const blogPosts = dbBlogPosts.length > 0 ? dbBlogPosts : null
+  const benefits = dbBenefits.length > 0 ? dbBenefits : null
 
   // Real counts for the hero stats row
   const plantsCount = wikiResult.totalDocs ?? 0
   const benefitsCount = benefitsResult.totalDocs ?? 0
   const articlesCount = blogResult.totalDocs ?? 0
 
-  // Body regions — use DB data if any region matches, otherwise mock fallback
-  const computedRegions = buildRegionData(dbAllWiki)
-  const bodyRegions = computedRegions.some((r) => r.count > 0)
-    ? computedRegions
-    : MOCK_REGIONS
+  // Body regions — derived strictly from DB data; empty regions show count 0.
+  const bodyRegions = buildRegionData(dbAllWiki)
 
   return (
     <>
@@ -519,6 +473,7 @@ export default async function HomePage({ params }: Props) {
       </section>
 
       {/* ═══════════════ 3. PLANTS WIKI ═══════════════ */}
+      {wikiEntries && (
       <section className="bg-rm-cream border-t border-dashed border-rm-rule">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 md:px-10 py-12 sm:py-16 md:py-24">
           <Reveal className="text-center mb-10 sm:mb-12 md:mb-14 max-w-2xl mx-auto">
@@ -538,9 +493,11 @@ export default async function HomePage({ params }: Props) {
           </Reveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 md:gap-8">
-            {(wikiEntries || mockPlants).map((plant: any, idx: number) => {
+            {wikiEntries.map((plant: any, idx: number) => {
               const imgSrc =
                 plant.image ||
+                plant.externalImageUrl ||
+                (Array.isArray(plant.galleryUrls) && plant.galleryUrls[0]?.url) ||
                 resolveMediaUrl((plant.images?.[0] as any)?.image, 'card') ||
                 resolveMediaUrl(plant.heroImage, 'card') ||
                 DEFAULT_PLANT_IMAGE
@@ -605,6 +562,85 @@ export default async function HomePage({ params }: Props) {
           </Reveal>
         </div>
       </section>
+      )}
+
+      {/* ═══════════════ 3.5 BIENFAITS ═══════════════ */}
+      <section className="bg-rm-paper border-t border-dashed border-rm-rule">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 md:px-10 py-12 sm:py-16 md:py-24">
+          <Reveal className="text-center mb-10 sm:mb-12 md:mb-14 max-w-2xl mx-auto">
+            <div className="flex items-center justify-center gap-2.5 mb-4">
+              <span className="block w-7 h-px bg-rm-burgundy" />
+              <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+                Index des usages
+              </span>
+              <span className="block w-7 h-px bg-rm-burgundy" />
+            </div>
+            <h2 className="font-display text-[28px] sm:text-[34px] md:text-[44px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
+              {dict.benefits.title}
+            </h2>
+            <p className="font-serif italic text-[15px] sm:text-[16px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-4">
+              {dict.benefits.subtitle}
+            </p>
+          </Reveal>
+
+          {!benefits ? (
+            <div className="text-center py-12 font-serif italic text-rm-inkSoft/70">
+              {dict.benefits.emptyHint}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+              {benefits.map((b: any, idx: number) => {
+                const desc =
+                  typeof b.shortDescription === 'string'
+                    ? b.shortDescription
+                    : b.directAnswer ||
+                      (b.description && richTextToPlain(b.description))
+                return (
+                  <Reveal key={b.slug} delay={idx * 60}>
+                    <Link
+                      href={`/${locale}/bienfaits/${b.slug}`}
+                      className="group bg-rm-cream rounded-2xl p-5 border border-rm-rule hover:border-rm-burgundy hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(162,33,30,0.08)] transition-all duration-300 flex flex-col h-full"
+                    >
+                      <div className="w-12 h-12 rounded-xl bg-rm-creamSoft flex items-center justify-center mb-3 group-hover:bg-rm-burgundy transition-colors">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="w-6 h-6 text-rm-burgundy group-hover:text-white transition-colors"
+                        >
+                          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                        </svg>
+                      </div>
+                      <p className="font-semibold text-rm-teal text-sm leading-snug group-hover:text-rm-burgundy transition-colors">
+                        {b.name}
+                      </p>
+                      {desc && (
+                        <p className="mt-2 text-xs text-rm-inkSoft/70 line-clamp-2">
+                          {desc}
+                        </p>
+                      )}
+                    </Link>
+                  </Reveal>
+                )
+              })}
+            </div>
+          )}
+
+          <Reveal className="text-center mt-10 sm:mt-12 md:mt-14" delay={200}>
+            <Link
+              href={`/${locale}/bienfaits`}
+              className="inline-flex items-center gap-2 font-sans text-sm font-semibold border-2 border-rm-burgundy text-rm-burgundy px-6 py-3.5 hover:bg-rm-burgundy hover:text-white transition-colors"
+            >
+              Voir tous les bienfaits
+              <span aria-hidden="true">→</span>
+            </Link>
+          </Reveal>
+        </div>
+      </section>
 
       {/* ═══════════════ 4. LE CORPS & LA PLANTE ═══════════════ */}
       <section className="bg-rm-paper border-t border-dashed border-rm-rule">
@@ -650,9 +686,14 @@ export default async function HomePage({ params }: Props) {
             </p>
           </Reveal>
 
+          {!blogPosts ? (
+            <div className="text-center py-16 font-serif italic text-rm-inkSoft/70">
+              Le journal s&apos;écrit. Premiers articles bientôt disponibles.
+            </div>
+          ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-6 md:gap-8">
             {(() => {
-              const posts = blogPosts || mockBlogPosts
+              const posts = blogPosts as any[]
               const featured = posts[0] as any
               const side = posts.slice(1) as any[]
               const getImg = (p: any) =>
@@ -759,6 +800,7 @@ export default async function HomePage({ params }: Props) {
               )
             })()}
           </div>
+          )}
 
           <Reveal className="text-center mt-10 sm:mt-12 md:mt-14" delay={150}>
             <Link
@@ -772,7 +814,61 @@ export default async function HomePage({ params }: Props) {
         </div>
       </section>
 
-      {/* ═══════════════ 6. NEWSLETTER ═══════════════ */}
+      {/* ═══════════════ 6. FAQ PREVIEW ═══════════════ */}
+      <section className="bg-rm-cream border-t border-dashed border-rm-rule">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 md:px-10 py-12 sm:py-16 md:py-24">
+          <Reveal className="text-center mb-10 sm:mb-12 md:mb-14">
+            <div className="flex items-center justify-center gap-2.5 mb-4">
+              <span className="block w-7 h-px bg-rm-burgundy" />
+              <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
+                Questions
+              </span>
+              <span className="block w-7 h-px bg-rm-burgundy" />
+            </div>
+            <h2 className="font-display text-[28px] sm:text-[34px] md:text-[44px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
+              On vous <em className="italic text-rm-burgundy">répond</em>
+            </h2>
+          </Reveal>
+
+          {faqItems.length === 0 ? (
+            <div className="text-center py-12 font-serif italic text-rm-inkSoft/70">
+              La foire aux questions s&apos;enrichit. Premières réponses bientôt en ligne.
+            </div>
+          ) : (
+            <div className="divide-y divide-rm-rule border-t border-b border-rm-rule">
+              {faqItems.map((item: any, idx: number) => (
+                <Reveal key={item.id} delay={idx * 80}>
+                  <details className="group py-5 px-2 sm:px-4">
+                    <summary className="flex items-start justify-between gap-4 cursor-pointer list-none">
+                      <span className="font-display text-[17px] sm:text-[18px] md:text-[20px] leading-[1.3] text-rm-teal group-open:text-rm-burgundy transition-colors">
+                        {item.question}
+                      </span>
+                      <span aria-hidden="true" className="font-mono text-rm-burgundy text-[18px] mt-0.5 group-open:rotate-45 transition-transform">
+                        +
+                      </span>
+                    </summary>
+                    <div className="font-serif text-[15px] sm:text-[16px] leading-[1.65] text-rm-inkSoft mt-3 pl-1">
+                      {richTextToPlain(item.answer)}
+                    </div>
+                  </details>
+                </Reveal>
+              ))}
+            </div>
+          )}
+
+          <Reveal className="text-center mt-10 sm:mt-12" delay={200}>
+            <Link
+              href={`/${locale}/faq`}
+              className="inline-flex items-center gap-2 font-sans text-sm font-semibold text-rm-burgundy hover:underline"
+            >
+              Toutes les questions
+              <span aria-hidden="true">→</span>
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ═══════════════ 7. NEWSLETTER ═══════════════ */}
       <section className="bg-rm-paper border-t border-dashed border-rm-rule">
         <Reveal className="mx-auto max-w-2xl px-4 sm:px-6 md:px-10 py-12 sm:py-16 md:py-24 text-center">
           <div className="flex items-center justify-center gap-2.5 mb-4">
@@ -806,67 +902,6 @@ export default async function HomePage({ params }: Props) {
             .
           </p>
         </Reveal>
-      </section>
-
-      {/* ═══════════════ 7. FAQ PREVIEW ═══════════════ */}
-      <section className="bg-rm-cream border-t border-dashed border-rm-rule">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 md:px-10 py-12 sm:py-16 md:py-24">
-          <Reveal className="text-center mb-10 sm:mb-12 md:mb-14">
-            <div className="flex items-center justify-center gap-2.5 mb-4">
-              <span className="block w-7 h-px bg-rm-burgundy" />
-              <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
-                En marge
-              </span>
-              <span className="block w-7 h-px bg-rm-burgundy" />
-            </div>
-            <h2 className="font-display text-[26px] sm:text-[32px] md:text-[42px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
-              Questions <em className="italic text-rm-burgundy">fréquentes</em>
-            </h2>
-          </Reveal>
-
-          <Reveal className="divide-y divide-dashed divide-rm-rule border-t border-b border-dashed border-rm-rule" delay={80}>
-            {mockFaqItems.map((faq, i) => (
-              <details key={i} className="group">
-                <summary className="flex w-full items-center justify-between gap-3 sm:gap-4 py-4 sm:py-5 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                  <span className="flex items-baseline gap-2.5 sm:gap-4 flex-1 min-w-0">
-                    <span className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] uppercase text-rm-inkSoft/60 shrink-0">
-                      N° {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <span className="font-display text-[16px] sm:text-[18px] md:text-[20px] leading-[1.25] text-rm-teal text-left">
-                      {faq.question}
-                    </span>
-                  </span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-rm-burgundy flex-shrink-0 transition-transform duration-300 group-open:rotate-180"
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </summary>
-                <div className="pb-5 pl-0 sm:pl-[72px] pr-2 sm:pr-8 font-serif italic text-[14px] sm:text-[15px] leading-[1.6] text-rm-inkSoft">
-                  {faq.answer}
-                </div>
-              </details>
-            ))}
-          </Reveal>
-
-          <Reveal className="text-center mt-10 md:mt-12" delay={150}>
-            <Link
-              href={`/${locale}/faq`}
-              className="inline-flex items-center gap-1.5 font-sans text-sm font-semibold text-rm-burgundy underline underline-offset-4 decoration-1 hover:text-rm-teal transition-colors"
-            >
-              {dict.home.faq.viewAll} →
-            </Link>
-          </Reveal>
-        </div>
       </section>
     </>
   )

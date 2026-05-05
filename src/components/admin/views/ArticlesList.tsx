@@ -144,6 +144,29 @@ const ArticlesList: React.FC<ListViewServerProps> = async (props) => {
     publishedCount = 0
   }
 
+  // Publiés sur 30 jours glissants — signal éditorial dérivé du champ
+  // publishedAt. Remplace l'ancienne tuile "Lectures · 30j" qui dépendait
+  // d'analytics externes non câblés.
+  let published30dCount = 0
+  try {
+    if (payload) {
+      const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+      const res = await payload.count({
+        collection: 'blogPosts',
+        where: {
+          and: [
+            { _status: { equals: 'published' } },
+            { publishedAt: { greater_than: since } },
+          ],
+        },
+        overrideAccess: true,
+      })
+      published30dCount = res?.totalDocs ?? 0
+    }
+  } catch {
+    published30dCount = 0
+  }
+
   // Contributors — count distinct authors across all blogPosts.
   // Fallback: grand total if the query fails or yields nothing useful.
   let contributorsCount = 0
@@ -214,6 +237,7 @@ const ArticlesList: React.FC<ListViewServerProps> = async (props) => {
       limit={limit}
       draftCount={draftCount}
       publishedCount={publishedCount}
+      published30dCount={published30dCount}
       contributorsCount={contributorsCount}
       initialSearch={search}
       initialStatus={status}

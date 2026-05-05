@@ -26,10 +26,10 @@
   },
   "home": {
     "hero": {
-      "title": "The ancestral wisdom of medicinal plants",
-      "subtitle": "Explore our plant encyclopedia and their benefits. Detailed guides, usage tips and verified information to help you care for yourself naturally.",
-      "cta": "Explore plants",
-      "ctaSecondary": "Learn more"
+      "title": "The almanac of plants that have healed for centuries",
+      "subtitle": "At Grandma's, nothing is left to chance: a botanical encyclopedia gathering the knowledge of the French pharmacopoeia and the world's traditional medicines — rigorously sourced, accessible to all.",
+      "cta": "Browse the encyclopedia",
+      "ctaSecondary": "Our approach"
     },
     "bestsellers": {
       "title": "Our bestsellers",
@@ -38,12 +38,12 @@
     },
     "wiki": {
       "title": "Plant Encyclopedia",
-      "subtitle": "Discover the benefits of medicinal plants",
+      "subtitle": "Exceptional plants, presented with rigour — their traditional uses, their properties and their precautions, from field to cup.",
       "viewAll": "Explore the encyclopedia"
     },
     "blog": {
-      "title": "Our blog",
-      "subtitle": "Tips and news about natural remedies",
+      "title": "The plant journal",
+      "subtitle": "Tips, recipes and ancestral know-how, inspired by the world's traditional medicines.",
       "viewAll": "All articles"
     },
     "testimonials": {
@@ -51,8 +51,8 @@
       "subtitle": "Authentic testimonials"
     },
     "newsletter": {
-      "title": "Stay informed",
-      "subtitle": "Receive our health tips and exclusive offers",
+      "title": "Grandma's seasonal letter",
+      "subtitle": "One letter per season: new plants, traditional recipes and usage tips — straight to your inbox.",
       "placeholder": "Your email address",
       "cta": "Subscribe",
       "privacy": "By subscribing, you agree to our privacy policy."
@@ -111,8 +111,52 @@
   },
   "wiki": {
     "title": "Plant Encyclopedia",
-    "subtitle": "Everything about medicinal plants and their benefits",
-    "searchPlaceholder": "Search for a plant...",
+    "subtitle": "Traditional uses by medicinal plant",
+    "searchPlaceholder": "Search for a plant…",
+    "noResults": "No results for these criteria",
+    "noResultsHint": "Try other keywords or another family.",
+    "empty": "No plants listed yet",
+    "emptyHint": "The plant almanach will be populated soon.",
+    "clearFilters": "Clear filters",
+    "entries": "entries listed",
+    "entry": "entry listed",
+    "results": "results",
+    "result": "result",
+    "discover": "Discover",
+    "viewAllInCategory": "View all plants",
+    "viewMore": "View more",
+    "categories": {
+      "all": "All categories",
+      "nervous": "Nervous system & mind",
+      "digestive": "Digestion",
+      "respiratory": "Respiratory tract",
+      "female": "Female sphere",
+      "male": "Male sphere",
+      "circulatory": "Circulation",
+      "joints": "Joints & muscles",
+      "immunity": "Immunity & vitality",
+      "skin": "Skin, hair & nails",
+      "metabolism": "Metabolism & balance",
+      "multi": "Versatile plants"
+    },
+    "partsUsed": {
+      "flower": "Flowers",
+      "leaf": "Leaves",
+      "flowering-tops": "Flowering tops",
+      "root": "Root",
+      "rhizome": "Rhizome",
+      "bark": "Bark",
+      "fruit": "Fruit",
+      "seed": "Seed",
+      "berry": "Berry",
+      "bud": "Bud",
+      "stem": "Stem",
+      "bulb": "Bulb",
+      "whole-plant": "Whole plant",
+      "essential-oil": "Essential oil",
+      "resin": "Resin / Gum",
+      "mushroom": "Whole mushroom"
+    },
     "filters": {
       "all": "All",
       "digestive": "Digestive",
@@ -130,7 +174,11 @@
       "precautions": "Precautions for use",
       "contraindications": "Contraindications",
       "relatedProducts": "Related products",
-      "relatedPlants": "Related plants"
+      "relatedPlants": "Related plants",
+      "relatedArticles": "Related articles",
+      "lecture": "Reading",
+      "traditionalUse": "Traditionally used for",
+      "backToList": "All plants"
     }
   },
   "blog": {
@@ -156,16 +204,57 @@
   },
   "benefits": {
     "title": "Benefits",
-    "subtitle": "Discover how plants can help you in your daily life",
+    "subtitle": "Traditional uses by condition",
+    "searchPlaceholder": "Search for a benefit…",
+    "noResults": "No results for these criteria",
+    "noResultsHint": "Try other keywords or another region.",
+    "empty": "No benefits listed yet",
+    "emptyHint": "The benefits table will be populated soon.",
+    "clearFilters": "Clear filters",
+    "entries": "entries listed",
+    "entry": "entry listed",
+    "results": "results",
+    "result": "result",
+    "relatedPlantsCount": "related plants",
+    "relatedPlantCount": "related plant",
+    "discover": "Discover",
+    "regions": {
+      "all": "All regions",
+      "tete": "Head",
+      "gorge": "Throat",
+      "respiration": "Respiration",
+      "digestion": "Digestion",
+      "feminin": "Female",
+      "circulation": "Circulation"
+    },
+    "categories": {
+      "nervous": "Nervous system & mind",
+      "digestive": "Digestion",
+      "respiratory": "Respiratory tract",
+      "female": "Female sphere",
+      "male": "Male sphere",
+      "circulatory": "Circulation",
+      "joints": "Joints & muscles",
+      "immunity": "Immunity & vitality",
+      "skin": "Skin, hair & nails",
+      "metabolism": "Metabolism & balance"
+    },
     "detail": {
       "quickAnswer": "Quick answer",
       "recommendedProducts": "Recommended products",
-      "relatedPlants": "Related plants"
+      "relatedPlants": "Related plants",
+      "relatedArticles": "Related articles",
+      "regulatoryClaim": "Authorised claim",
+      "precautions": "Usage precautions",
+      "redFlags": "When to consult a doctor",
+      "lecture": "Reading",
+      "traditionalUse": "Traditionally used for",
+      "backToList": "All benefits"
     }
   },
   "about": {
     "title": "About",
-    "subtitle": "Our story, our values, our commitment",
+    "subtitle": "At Grandma's, nothing is left to chance: exceptional plants, tested and processed in France for your natural vitality.",
     "values": {
       "title": "Our values",
       "natural": { "title": "100% Natural", "description": "Carefully selected ingredients, free from chemical additives." },
@@ -226,18 +315,22 @@
     "searchPlaceholder": "Search for a question...",
     "categories": {
       "all": "All",
-      "produits": "Products",
-      "commande": "Orders",
-      "livraison": "Shipping",
-      "retour": "Returns"
+      "plantes": "Plants",
+      "utilisation": "Usage",
+      "site": "The site",
+      "sante": "Health"
     },
     "items": [
-      { "question": "How are your products made?", "answer": "All our products are made in France in our workshop, using rigorously selected natural ingredients. Every batch is tested to ensure optimal quality.", "category": "produits" },
-      { "question": "What are the delivery times?", "answer": "Orders are shipped within 24 to 48 business hours. Standard delivery then takes 2 to 4 business days in mainland France.", "category": "livraison" },
-      { "question": "Can I return a product?", "answer": "Yes, you have 14 days after receipt to return an unopened product. Contact our customer service to initiate the return.", "category": "retour" },
-      { "question": "Are your products organic?", "answer": "Most of our ingredients come from certified organic farming. Each product page specifies the applicable certifications.", "category": "produits" },
-      { "question": "How do I place an order?", "answer": "Simply add the desired products to your cart, then follow the secure payment steps. You will receive a confirmation email.", "category": "commande" },
-      { "question": "Do dietary supplements replace medical treatment?", "answer": "No. Our dietary supplements are not medicines and do not replace medical treatment. Always consult a healthcare professional.", "category": "produits" }
+      { "question": "Is your information about plants reliable?", "answer": "All our plant entries are written using recognised scientific sources: the European Pharmacopoeia, published clinical studies and EFSA recommendations. Every piece of content is reviewed by our team of qualified herbalists.", "category": "plantes" },
+      { "question": "How are the plants featured selected?", "answer": "We select plants based on their inclusion in the French and European Pharmacopoeia, their documented traditional use, and the existence of scientific studies confirming their properties. We favour plants that are accessible and commonly used in phytotherapy.", "category": "plantes" },
+      { "question": "How do I use the plant encyclopedia?", "answer": "Browse our plant entries by name or by benefit. Each entry details the properties, active compounds, traditional uses, precautions and contraindications. Use the search bar or filters to quickly find what you are looking for.", "category": "utilisation" },
+      { "question": "How do I prepare a herbal tea or infusion?", "answer": "For a classic infusion, heat water to 80–90°C (do not boil), pour over 1 to 2 teaspoons of dried plant per cup, cover and let steep 5 to 10 minutes depending on the plant. Filter and enjoy. Exact times and temperatures are listed on each plant entry.", "category": "utilisation" },
+      { "question": "Do medicinal plants replace medical treatment?", "answer": "No. The information on our site is for informational and educational purposes only. It does not constitute medical advice and in no way replaces consultation with a healthcare professional. Always consult your doctor or pharmacist before using medicinal plants.", "category": "sante" },
+      { "question": "Can plants be used during pregnancy?", "answer": "Many plants are not recommended during pregnancy and breastfeeding. We systematically indicate contraindications on each plant entry. In all cases, consult your doctor or midwife before any use of medicinal plants during pregnancy.", "category": "sante" },
+      { "question": "Are there interactions between plants and medications?", "answer": "Yes, some plants can interact with medications. For example, St. John's wort can reduce the effectiveness of many drugs. Known contraindications and interactions are listed on each entry. If you are on medical treatment, always seek advice from your doctor or pharmacist.", "category": "sante" },
+      { "question": "Does the site sell products?", "answer": "Currently, our site is dedicated to information and education about medicinal plants. Our online shop is under development and will be available soon. Subscribe to our newsletter to be notified when it opens.", "category": "site" },
+      { "question": "How can I contact you?", "answer": "You can email us at contact@remedes-mamie.com, call us on 01 45 85 88 00 or use the contact form on our site. Our team will reply as soon as possible.", "category": "site" },
+      { "question": "Is the content available in English?", "answer": "Our site is primarily in French, but we are working on the gradual translation of our content into English. Some pages are already available in both languages.", "category": "site" }
     ]
   },
   "search": {
@@ -252,7 +345,7 @@
     }
   },
   "footer": {
-    "description": "Natural remedies from ancestral wisdom, made in France with quality ingredients.",
+    "description": "The mission of Grandma's Remedies is to revive the benefits of natural traditions through simple, sincere and effective recipes.\n\nWe draw on the heritage of ancestral medicines, enlightened by modern science, to offer everyone formulas proven by time. Our standard: ingredients from their lands of origin, processed in France, in an approach that combines quality, authenticity and safety.\n\nBecause caring for yourself also means reconnecting with nature — with love, patience and kindness.",
     "shop": {
       "title": "Shop",
       "tisanes": "Herbal teas",

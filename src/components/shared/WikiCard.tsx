@@ -1,7 +1,5 @@
 import Link from 'next/link'
-import Image from 'next/image'
-
-const DEFAULT_PLANT_IMAGE = 'https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1761295312/Chat_GPT_Image_Oct_24_2025_10_38_36_AM_1_a78649daf4.png'
+import PlantImage from '@/components/plantes/PlantImage'
 
 type WikiCardProps = {
   entry: {
@@ -9,6 +7,8 @@ type WikiCardProps = {
     slug: string
     latinName?: string
     shortDescription?: string
+    referenceNumber?: string
+    externalImageUrl?: string
     heroImage?: { url: string; alt?: string }
     images?: Array<{ image?: { url: string; alt?: string } }>
   }
@@ -16,24 +16,38 @@ type WikiCardProps = {
 }
 
 export function WikiCard({ entry, locale }: WikiCardProps) {
-  const { name, slug, latinName, shortDescription, heroImage, images } = entry
+  const {
+    name,
+    slug,
+    latinName,
+    shortDescription,
+    externalImageUrl,
+    heroImage,
+    images,
+    referenceNumber,
+  } = entry
   const cmsImage = heroImage || (images?.[0] as any)?.image
-  const imageSrc = cmsImage?.url || DEFAULT_PLANT_IMAGE
+  const imageSrc = externalImageUrl || cmsImage?.url || ''
+  const imageAlt = cmsImage?.alt || name
 
   return (
     <Link
       href={`/${locale}/plantes/${slug}`}
       className="block rounded-2xl overflow-hidden bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08),0_1px_2px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group"
     >
-      {/* Rectangular image */}
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <Image
+      {/* Square image (aligned with Nano Banana 1024x1024 output) */}
+      <div className="relative aspect-square overflow-hidden bg-rm-cream">
+        <PlantImage
           src={imageSrc}
-          alt={cmsImage?.alt || name}
-          fill
-          sizes="(max-width: 768px) 100vw, 25vw"
+          alt={imageAlt}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
         />
+        {referenceNumber && (
+          <span className="absolute top-2 right-2 font-mono text-[10px] tracking-[0.2em] uppercase text-rm-burgundy bg-rm-cream/90 px-2 py-0.5 rounded">
+            {referenceNumber}
+          </span>
+        )}
       </div>
 
       {/* Content */}

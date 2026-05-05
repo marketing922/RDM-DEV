@@ -9,3 +9,6 @@ next-env.d.ts
 backups/worm/
 !backups/.gitkeep
 .vercel
+
+# Local nvm-windows install leftover (we use system Node)
+nvm/

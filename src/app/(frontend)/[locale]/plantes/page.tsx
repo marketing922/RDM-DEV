@@ -5,7 +5,6 @@ import type { Locale } from '@/i18n/config'
 import { Breadcrumb } from '@/components/shared/Breadcrumb'
 import { getWikiEntries } from '@/lib/queries'
 import { WikiCard } from '@/components/shared/WikiCard'
-import { resolveMediaUrl } from '@/lib/mediaUrl'
 import PlantesToolbar from '@/components/plantes/PlantesToolbar'
 import Reveal from '@/components/ui/Reveal'
 import { siteMetadataBase } from '@/lib/metadata'
@@ -17,14 +16,21 @@ type Props = {
   searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
-// Filter keys mapped to keywords used for server-side `like` matching.
-// Heuristic — refined later once plants are categorized by bodyRegion/tags.
-const FILTER_KEYWORDS: Record<string, string> = {
-  digestive: 'digest',
-  apaisante: 'apais',
-  tonique: 'tonique',
-  immunite: 'immun',
-}
+const CATEGORY_ORDER = [
+  'nervous',
+  'digestive',
+  'respiratory',
+  'female',
+  'male',
+  'circulatory',
+  'joints',
+  'immunity',
+  'skin',
+  'metabolism',
+  'multi',
+] as const
+
+type CategoryKey = (typeof CATEGORY_ORDER)[number]
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
@@ -34,7 +40,38 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     metadataBase: siteMetadataBase(),
     title: `${dict.wiki.title} | ${dict.meta.siteName}`,
     description: dict.wiki.subtitle,
+    alternates: {
+      canonical: `/${locale}/plantes`,
+      languages: {
+        fr: `/fr/plantes`,
+        en: `/en/plantes`,
+      },
+    },
   }
+}
+
+type PlantLike = {
+  id?: string | number
+  name: string
+  slug: string
+  latinName?: string
+  shortDescription?: string
+  category?: string
+  referenceNumber?: string
+  externalImageUrl?: string
+}
+
+function groupByCategory(list: PlantLike[]) {
+  const map = new Map<string, PlantLike[]>()
+  for (const p of list) {
+    const key = (p.category as CategoryKey) || 'multi'
+    if (!map.has(key)) map.set(key, [])
+    map.get(key)!.push(p)
+  }
+  return CATEGORY_ORDER.filter((k) => map.has(k)).map((k) => ({
+    key: k,
+    items: map.get(k)!.sort((a, b) => a.name.localeCompare(b.name, 'fr')),
+  }))
 }
 
 export default async function PlantesPage({ params, searchParams }: Props) {
@@ -43,56 +80,34 @@ export default async function PlantesPage({ params, searchParams }: Props) {
   const dict = await getDictionary(locale as Locale)
 
   const q = String(sp.q ?? '').trim()
-  const rawFilter = String(sp.filter ?? 'all')
-  const page = Math.max(1, Number(sp.page) || 1)
-  const limit = 12
+  const rawCategory = String(sp.category ?? '')
+  const activeCategory =
+    CATEGORY_ORDER.includes(rawCategory as CategoryKey) ? rawCategory : ''
 
-  const filterKeys = Object.keys(dict.wiki.filters) as Array<
-    keyof typeof dict.wiki.filters
-  >
-  const activeFilter = filterKeys.includes(rawFilter as any) ? rawFilter : 'all'
+  const { docs: entries } = await getWikiEntries({
+    limit: 200,
+    locale,
+    search: q,
+    category: activeCategory,
+  })
 
-  // Build an extra where clause from the active filter (keyword on shortDescription).
-  const kw = FILTER_KEYWORDS[activeFilter]
-  const extraWhere = kw ? { shortDescription: { like: kw } } : undefined
+  const isFiltered = Boolean(q) || Boolean(activeCategory)
+  const plants = entries as PlantLike[]
+  const groups = groupByCategory(plants)
+  const totalCount = plants.length
 
-  const { docs: entries, totalPages, page: currentPage, totalDocs } =
-    await getWikiEntries({
-      limit,
-      page,
-      locale,
-      search: q,
-      where: extraWhere,
-    })
+  const tWiki = dict.wiki as any
+  const categoryLabels = tWiki.categories ?? {}
 
-  const filters = filterKeys.map((k) => ({
-    key: String(k),
-    label: dict.wiki.filters[k],
-  }))
-
-  // Build pagination links preserving existing query params
-  const buildPageHref = (p: number) => {
-    const params = new URLSearchParams()
-    if (q) params.set('q', q)
-    if (activeFilter !== 'all') params.set('filter', activeFilter)
-    if (p > 1) params.set('page', String(p))
-    const qs = params.toString()
-    return qs ? `/${locale}/plantes?${qs}` : `/${locale}/plantes`
-  }
-
-  const pageNumbers: number[] = []
-  if (totalPages && totalPages > 0) {
-    const maxShown = 5
-    const start = Math.max(1, Math.min(currentPage - 2, totalPages - maxShown + 1))
-    const end = Math.min(totalPages, start + maxShown - 1)
-    for (let i = start; i <= end; i++) pageNumbers.push(i)
-  }
-
-  const isFiltered = Boolean(q) || activeFilter !== 'all'
+  // Toolbar filters: 'all' + 10 categories
+  const filters = [
+    { key: 'all', label: categoryLabels.all ?? 'Toutes' },
+    ...CATEGORY_ORDER.map((k) => ({ key: k, label: categoryLabels[k] ?? k })),
+  ]
 
   return (
-    <main className="min-h-screen bg-[#FEF9E9]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+    <main className="min-h-screen bg-rm-cream">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 md:px-10 py-6">
         <Breadcrumb
           items={[
             { label: dict.nav.home, href: `/${locale}` },
@@ -100,9 +115,8 @@ export default async function PlantesPage({ params, searchParams }: Props) {
           ]}
         />
 
-        {/* Header almanach */}
         <Reveal>
-          <header className="mt-8 sm:mt-10 md:mt-14 mb-8 sm:mb-10 md:mb-14 text-center max-w-3xl mx-auto">
+          <header className="mt-8 sm:mt-10 md:mt-14 mb-10 sm:mb-12 md:mb-16 text-center max-w-3xl mx-auto">
             <div className="flex items-center justify-center gap-2.5 mb-4 sm:mb-5">
               <span className="block w-7 h-px bg-rm-burgundy" />
               <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
@@ -111,242 +125,97 @@ export default async function PlantesPage({ params, searchParams }: Props) {
               <span className="block w-7 h-px bg-rm-burgundy" />
             </div>
             <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] text-[32px] sm:text-[44px] md:text-[52px] lg:text-[60px]">
-              L&apos;encyclopédie des{' '}
+              L&apos;almanach des{' '}
               <em className="italic text-rm-burgundy">plantes</em>
             </h1>
             <p className="font-serif italic text-[15px] sm:text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-4 sm:mt-5">
               {dict.wiki.subtitle}
+              {isFiltered && totalCount > 0
+                ? ` — ${totalCount} ${totalCount > 1 ? tWiki.results : tWiki.result}`
+                : totalCount > 0
+                  ? ` — ${totalCount} ${totalCount > 1 ? tWiki.entries : tWiki.entry}`
+                  : ''}
+              .
             </p>
           </header>
         </Reveal>
 
-        {/* Interactive toolbar (URL-driven) */}
+        {/* Toolbar (search + categories) */}
         <PlantesToolbar
           initialSearch={q}
-          initialFilter={activeFilter}
+          initialFilter={activeCategory || 'all'}
           filters={filters}
-          searchPlaceholder={dict.wiki.searchPlaceholder}
+          searchPlaceholder={tWiki.searchPlaceholder}
+          paramName="category"
         />
 
-        {/* Results counter */}
-        {totalDocs !== undefined && (
-          <div className="mb-4 text-center font-mono text-xs tracking-wide uppercase text-[#712E2F]/60">
-            {totalDocs === 0
-              ? 'Aucun résultat'
-              : `${totalDocs} ${totalDocs > 1 ? 'plantes trouvées' : 'plante trouvée'}`}
-          </div>
-        )}
+        <div className="border-t border-dashed border-rm-rule mt-8 mb-10 sm:mb-12 md:mb-14" />
 
-        {/* Desktop grid / Mobile list */}
-        {entries.length > 0 ? (
-          <>
-            {/* Desktop: 4-col grid, Tablet: 2-col grid */}
-            <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6">
-              {entries.map((entry, idx) => (
-                <Reveal key={entry.id} delay={(idx % 4) * 80}>
-                  <WikiCard entry={entry as any} locale={locale} />
-                </Reveal>
-              ))}
-            </div>
-
-            {/* Mobile: list layout */}
-            <div className="sm:hidden divide-y divide-[#DCD8C7]">
-              {entries.map((entry, idx) => {
-                const e = entry as any
-                const image = e.heroImage || e.images?.[0]
-                const imageSrc = resolveMediaUrl(image, 'thumbnail')
-                return (
-                  <Reveal key={entry.id} delay={Math.min(idx, 5) * 60} y={16}>
-                  <Link
-                    href={`/${locale}/plantes/${e.slug}`}
-                    className="flex items-center gap-4 py-4"
-                  >
-                    <div className="flex-shrink-0 w-14 h-14 rounded-full overflow-hidden bg-white border border-[#DCD8C7]">
-                      {imageSrc ? (
-                        <img
-                          src={imageSrc}
-                          alt={image?.alt || e.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center w-full h-full">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#DCD8C7"
-                            strokeWidth="1.5"
-                          >
-                            <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 17 3.5s2.5 3.5.5 9.2A7 7 0 0 1 11 20Z" />
-                            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
-                          </svg>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-base truncate text-[#054A57]">
-                        {e.name}
-                      </p>
-                      {e.latinName && (
-                        <p className="text-sm italic truncate text-[#D0802C]">
-                          {e.latinName}
-                        </p>
-                      )}
-                      {e.shortDescription && (
-                        <p className="text-sm truncate text-[#712E2F]/60">
-                          {e.shortDescription}
-                        </p>
-                      )}
-                    </div>
-                    <div className="flex-shrink-0 text-[#A2211E]">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <polyline points="9 18 15 12 9 6" />
-                      </svg>
-                    </div>
-                  </Link>
+        {groups.length > 0 ? (
+          <div className="space-y-12 sm:space-y-14 md:space-y-20">
+            {groups.map((group) => {
+              // 2 rows on xl (5 cols × 2) = 10 cards. Slice server-side.
+              const PREVIEW_LIMIT = 10
+              const visible = group.items.slice(0, PREVIEW_LIMIT)
+              const hasMore = group.items.length > PREVIEW_LIMIT
+              return (
+                <section key={group.key}>
+                  <Reveal className="flex items-baseline gap-3 sm:gap-5 mb-5 sm:mb-6 md:mb-8">
+                    <span className="font-display italic text-[22px] sm:text-[28px] md:text-[34px] text-rm-burgundy leading-tight">
+                      {categoryLabels[group.key] ?? group.key}
+                    </span>
+                    <span className="flex-1 border-t border-dashed border-rm-rule" />
+                    <span className="font-mono text-[10px] sm:text-[11px] tracking-wide uppercase text-rm-inkSoft/70">
+                      {group.items.length}{' '}
+                      {group.items.length > 1 ? tWiki.entries : tWiki.entry}
+                    </span>
                   </Reveal>
-                )
-              })}
-            </div>
-          </>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6">
+                    {visible.map((plant, idx) => (
+                      <Reveal
+                        key={String(plant.id ?? plant.slug)}
+                        delay={(idx % 5) * 60}
+                      >
+                        <WikiCard entry={plant as any} locale={locale} />
+                      </Reveal>
+                    ))}
+                  </div>
+
+                  {hasMore && (
+                    <div className="mt-6 sm:mt-8 flex justify-center">
+                      <Link
+                        href={`/${locale}/plantes/categorie/${group.key}`}
+                        className="inline-flex items-center gap-2 font-sans text-sm font-semibold uppercase tracking-[0.14em] text-rm-burgundy hover:text-rm-teal transition-colors border border-rm-burgundy hover:border-rm-teal px-5 py-2.5 rounded-full"
+                      >
+                        {tWiki.viewAllInCategory ?? tWiki.viewMore} ({group.items.length})
+                        <span aria-hidden>→</span>
+                      </Link>
+                    </div>
+                  )}
+                </section>
+              )
+            })}
+          </div>
         ) : (
-          /* Empty state */
-          <div className="py-16 text-center">
-            <p className="font-serif italic text-[17px] text-[#712E2F]/70 mb-4">
-              {isFiltered
-                ? 'Aucune plante ne correspond à ces critères.'
-                : 'Encyclopédie en cours d’enrichissement.'}
+          <div className="border border-dashed border-rm-ruleStrong bg-rm-paper p-10 md:p-16 text-center max-w-2xl mx-auto">
+            <h2 className="font-display text-[26px] md:text-[32px] text-rm-teal">
+              <em className="italic">
+                {isFiltered ? tWiki.noResults : tWiki.empty}
+              </em>
+            </h2>
+            <p className="font-serif italic text-[16px] leading-[1.55] text-rm-inkSoft mt-4">
+              {isFiltered ? tWiki.noResultsHint : tWiki.emptyHint}
             </p>
             {isFiltered && (
               <Link
                 href={`/${locale}/plantes`}
-                className="inline-block font-sans text-sm font-semibold text-[#A2211E] underline underline-offset-4 hover:text-[#054A57] transition-colors"
+                className="inline-block mt-6 font-sans text-sm font-semibold text-rm-burgundy underline underline-offset-4 decoration-1 hover:text-rm-teal transition-colors"
               >
-                Effacer les filtres →
+                {tWiki.clearFilters} →
               </Link>
             )}
           </div>
-        )}
-
-        {/* Pagination */}
-        {totalPages && totalPages > 1 && (
-          <nav className="mt-10 sm:mt-12 flex flex-wrap items-center justify-center gap-2">
-            {/* Previous */}
-            {currentPage > 1 ? (
-              <Link
-                href={buildPageHref(currentPage - 1)}
-                className="w-10 h-10 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-sm bg-white border border-[#DCD8C7] text-[#712E2F] hover:border-[#A2211E] hover:text-[#A2211E] transition-colors"
-                aria-label="Page précédente"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="15 18 9 12 15 6" />
-                </svg>
-              </Link>
-            ) : (
-              <span
-                aria-hidden="true"
-                className="w-10 h-10 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-sm bg-white border border-[#DCD8C7] text-[#712E2F]/30"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="15 18 9 12 15 6" />
-                </svg>
-              </span>
-            )}
-            {/* Page numbers */}
-            {pageNumbers.map((n) => {
-              const isActive = n === currentPage
-              return isActive ? (
-                <span
-                  key={n}
-                  aria-current="page"
-                  className="w-10 h-10 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-sm font-medium bg-[#A2211E] text-white"
-                >
-                  {n}
-                </span>
-              ) : (
-                <Link
-                  key={n}
-                  href={buildPageHref(n)}
-                  className="w-10 h-10 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-sm font-medium bg-white border border-[#DCD8C7] text-[#712E2F] hover:border-[#A2211E] hover:text-[#A2211E] transition-colors"
-                >
-                  {n}
-                </Link>
-              )
-            })}
-            {/* Next */}
-            {currentPage < totalPages ? (
-              <Link
-                href={buildPageHref(currentPage + 1)}
-                className="w-10 h-10 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-sm bg-white border border-[#DCD8C7] text-[#712E2F] hover:border-[#A2211E] hover:text-[#A2211E] transition-colors"
-                aria-label="Page suivante"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
-              </Link>
-            ) : (
-              <span
-                aria-hidden="true"
-                className="w-10 h-10 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center text-sm bg-white border border-[#DCD8C7] text-[#712E2F]/30"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
-              </span>
-            )}
-          </nav>
         )}
       </div>
     </main>

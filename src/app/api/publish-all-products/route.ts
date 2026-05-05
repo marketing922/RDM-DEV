@@ -1,6 +1,7 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { NextRequest, NextResponse } from 'next/server'
+import { authenticateSeedRoute } from '@/lib/seed-auth'
 
 export const maxDuration = 120
 
@@ -8,11 +9,13 @@ export async function GET(req: NextRequest) {
   if (process.env.NODE_ENV === 'production') {
     return NextResponse.json({ error: 'Disabled in production.' }, { status: 403 })
   }
+  const auth = await authenticateSeedRoute(req)
+  if (!auth.ok) return NextResponse.json({ error: auth.reason }, { status: auth.status })
   if (req.nextUrl.searchParams.get('confirm') !== 'yes') {
     return NextResponse.json({
       message: 'Add ?confirm=yes to publish all draft products.',
       warning:
-        'This bypasses the EFSA compliance gate (skipCompliance context flag). Use only after reviewing product content.',
+        'Compliance gate (gatePublishCompliance) is enforced. Products with complianceStatus !== "approved" are skipped.',
       usage: 'GET /api/publish-all-products?confirm=yes',
     })
   }
@@ -28,19 +31,26 @@ export async function GET(req: NextRequest) {
     })
 
     let published = 0
+    const skipped: Array<{ id: string | number; name?: string; reason: string }> = []
     const errors: Array<{ id: string | number; name?: string; message: string }> = []
 
     for (const d of docs) {
       try {
+        if ((d as any).complianceStatus !== 'approved') {
+          skipped.push({
+            id: d.id,
+            name: (d as any).name,
+            reason: `complianceStatus=${(d as any).complianceStatus || 'unset'}`,
+          })
+          continue
+        }
         await payload.update({
           collection: 'products',
           id: d.id,
           overrideAccess: true,
-          context: { skipCompliance: true },
           data: {
             status: 'published',
             _status: 'published',
-            complianceStatus: 'approved',
           } as any,
         })
         published++
@@ -53,7 +63,9 @@ export async function GET(req: NextRequest) {
       message: 'Bulk publish complete',
       found: docs.length,
       published,
+      skipped: skipped.length,
       failed: errors.length,
+      skippedDetails: skipped,
       errors,
     })
   } catch (err: any) {

@@ -59,10 +59,22 @@ export const scanForbiddenClaims: CollectionBeforeValidateHook = async ({
     // function is gated separately on isPrivilegedUser.
   }
 
+  // Safety / disclaimer fields are exempt from the forbidden-claim scan:
+  // they are required by design to mention medical conditions, treatments
+  // and pathologies (red flags, precautions, contraindications). The scan
+  // targets marketing claims, not medical safety notices.
+  const SAFETY_FIELDS = new Set([
+    'precautions',
+    'precautionsText',
+    'redFlags',
+    'contraindications',
+  ])
+
   // Collect all text content from rich text fields
   const textsToScan: string[] = []
 
-  for (const [_key, value] of Object.entries(data)) {
+  for (const [key, value] of Object.entries(data)) {
+    if (SAFETY_FIELDS.has(key)) continue
     if (typeof value === 'string') {
       textsToScan.push(value)
     } else if (value && typeof value === 'object' && (value as any).root) {

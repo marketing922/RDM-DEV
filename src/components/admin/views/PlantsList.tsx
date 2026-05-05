@@ -136,6 +136,48 @@ const PlantsList: React.FC<ListViewServerProps> = async (props) => {
     publishedCount = 0
   }
 
+  // Mises à jour 30j — proxy d'activité éditoriale dérivé de updatedAt.
+  // Remplace l'ancienne tuile "Vues ce mois" qui exigeait un tracker externe.
+  let updated30dCount = 0
+  try {
+    if (payload) {
+      const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+      const res = await payload.count({
+        collection: 'wikiEntries',
+        where: { updatedAt: { greater_than: since } },
+        overrideAccess: true,
+      })
+      updated30dCount = res?.totalDocs ?? 0
+    }
+  } catch {
+    updated30dCount = 0
+  }
+
+  // Distinct authors — un seul fetch léger (depth: 0, pagination off)
+  // car la collection wikiEntries est bornée (catalogue éditorial).
+  let contributorsCount = 0
+  try {
+    if (payload) {
+      const res = await payload.find({
+        collection: 'wikiEntries',
+        limit: 0,
+        pagination: false,
+        depth: 0,
+        overrideAccess: true,
+      })
+      const allDocs: any[] = Array.isArray(res?.docs) ? res.docs : []
+      const ids = new Set<string>()
+      for (const d of allDocs) {
+        const a = d?.author
+        const id = typeof a === 'object' && a ? a.id : a
+        if (id !== undefined && id !== null && id !== '') ids.add(String(id))
+      }
+      contributorsCount = ids.size
+    }
+  } catch {
+    contributorsCount = 0
+  }
+
   const rows: PlantRow[] = docs.map((doc, i) => {
     const idStr = String(doc.id ?? '')
     const seq = String((currentPage - 1) * limit + i + 1).padStart(3, '0')
@@ -170,6 +212,8 @@ const PlantsList: React.FC<ListViewServerProps> = async (props) => {
       limit={limit}
       draftsCount={draftsCount}
       publishedCount={publishedCount}
+      updated30dCount={updated30dCount}
+      contributorsCount={contributorsCount}
       initialSearch={search}
       initialStatus={status}
     />

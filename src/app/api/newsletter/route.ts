@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import { checkRateLimit } from '@/lib/rate-limit'
 
 /**
  * POST /api/newsletter
@@ -25,6 +26,16 @@ function isValidEmail(v: string): boolean {
 }
 
 export async function POST(req: Request) {
+  const ip =
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
+  const rl = await checkRateLimit(`newsletter:${ip}`, { limit: 3 })
+  if (!rl.ok) {
+    return NextResponse.json(
+      { error: 'Trop de requêtes' },
+      { status: 429, headers: { 'Retry-After': String(rl.retryAfterSec) } },
+    )
+  }
+
   let body: any
   try {
     body = await req.json()

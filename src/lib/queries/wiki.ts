@@ -5,14 +5,25 @@ export async function getWikiEntries(options?: {
   page?: number
   locale?: string
   search?: string
+  category?: string
+  family?: string
+  sort?: string
+  depth?: number
   where?: Record<string, any>
 }) {
   const payload = await getPayloadClient()
-  const { limit = 12, page = 1, locale = 'fr', search = '', where: extraWhere } =
-    options || {}
+  const {
+    limit = 12,
+    page = 1,
+    locale = 'fr',
+    search = '',
+    category = '',
+    family = '',
+    sort = 'name',
+    depth = 1,
+    where: extraWhere,
+  } = options || {}
 
-  // Compose base `_status: published` AND optional search + caller-provided
-  // where clauses. Search matches name OR shortDescription OR latinName.
   const andClauses: any[] = [{ _status: { equals: 'published' } }]
   if (search.trim()) {
     andClauses.push({
@@ -22,6 +33,12 @@ export async function getWikiEntries(options?: {
         { latinName: { like: search.trim() } },
       ],
     })
+  }
+  if (category.trim()) {
+    andClauses.push({ category: { equals: category.trim() } })
+  }
+  if (family.trim()) {
+    andClauses.push({ family: { equals: family.trim() } })
   }
   if (extraWhere && Object.keys(extraWhere).length > 0) {
     andClauses.push(extraWhere)
@@ -34,8 +51,8 @@ export async function getWikiEntries(options?: {
     limit,
     page,
     locale,
-    sort: 'name',
-    depth: 1,
+    sort,
+    depth,
   }), EMPTY_PAGINATED as any)
 }
 

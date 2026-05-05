@@ -5,6 +5,7 @@ export async function getBenefits(options?: {
   locale?: string
   search?: string
   bodyRegion?: string
+  category?: string
 }) {
   const payload = await getPayloadClient()
   const {
@@ -12,6 +13,7 @@ export async function getBenefits(options?: {
     locale = 'fr',
     search = '',
     bodyRegion = '',
+    category = '',
   } = options || {}
 
   const andClauses: any[] = [{ _status: { equals: 'published' } }]
@@ -25,6 +27,9 @@ export async function getBenefits(options?: {
   }
   if (bodyRegion.trim()) {
     andClauses.push({ bodyRegion: { equals: bodyRegion.trim() } })
+  }
+  if (category.trim()) {
+    andClauses.push({ category: { equals: category.trim() } })
   }
   const where = andClauses.length === 1 ? andClauses[0] : { and: andClauses }
 

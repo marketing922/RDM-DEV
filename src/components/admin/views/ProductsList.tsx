@@ -7,8 +7,6 @@ import ProductsListClient, {
   type ProductStatusKey,
 } from './ProductsListClient'
 
-// TODO: boutique not wired — sales/orders/AOV stats remain placeholders.
-
 const FORMAT_LABELS: Record<string, string> = {
   tisane: 'Tisane',
   poudre: 'Poudre',
@@ -155,6 +153,37 @@ const ProductsList: React.FC<ListViewServerProps> = async (props) => {
     outOfStockCount = 0
   }
 
+  // Prix moyen + nombre de liens marchands — calculés en mémoire sur le
+  // catalogue (borné). Remplacent les tuiles "CA · 30j" et "Commandes en
+  // attente" qui exigeaient une boutique transactionnelle non câblée
+  // (vente via Amazon/Temu en affiliation).
+  let avgPrice = 0
+  let merchantLinksCount = 0
+  try {
+    if (payload) {
+      const res = await payload.find({
+        collection: collectionSlug,
+        limit: 0,
+        pagination: false,
+        depth: 0,
+        overrideAccess: true,
+      })
+      const all: any[] = Array.isArray(res?.docs) ? res.docs : []
+      const prices = all
+        .map((d) => (typeof d?.price === 'number' ? d.price : null))
+        .filter((p): p is number => p !== null && !Number.isNaN(p))
+      avgPrice = prices.length > 0 ? prices.reduce((s, p) => s + p, 0) / prices.length : 0
+      merchantLinksCount = all.filter(
+        (d) => (typeof d?.amazonUrl === 'string' && d.amazonUrl.trim()) ||
+               (typeof d?.temuUrl === 'string' && d.temuUrl.trim()),
+      ).length
+    }
+  } catch {
+    avgPrice = 0
+    merchantLinksCount = 0
+  }
+  const avgPriceLabel = avgPrice > 0 ? formatPrice(avgPrice) : '—'
+
   const rows: ProductRow[] = docs.map((doc) => {
     const idStr = String(doc?.id ?? '')
     const inStock = doc?.inStock !== false
@@ -183,6 +212,8 @@ const ProductsList: React.FC<ListViewServerProps> = async (props) => {
       limit={limit}
       publishedCount={publishedCount}
       outOfStockCount={outOfStockCount}
+      avgPriceLabel={avgPriceLabel}
+      merchantLinksCount={merchantLinksCount}
       initialSearch={search}
       initialStatus={status}
     />

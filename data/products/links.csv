@@ -1,0 +1,558 @@
+SKU,nom,effets,poids,vertus,composition,utilisation,prix,codebarre,nomchinois,couleur,bio,brand,lot,icon,Bio id,Lien Amazon ,Lien Temu,Lien Images
+AHQS,Racines d'Astragale,IMMUNITÉ & ADAPTOGÈNE,100 g,"Adaptogène naturel et anti-oxydant, soutient l'immunité et la vitalité.","Astragale Racines (Huang qi, Astragalus membranaceus) 100 g, d'origine chinoise, qualité supérieure.","Servir en tisane à infuser ou à décocter, ou à ajouter lors de la cuisson mijotée de la viande. 5 à 10 g par jour.",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1728392500/3665346130414_Huang_Qi_Sheng_Astragale_100g_e3514c6cbf.png,黄芪,#DB9331,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,127525A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GXG2W9SG,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603350527539775&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1777458444276_lg9etzavpw&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=33&folderPath=/24/27
+AGQZ,Baies de Goji premium,ANTIOXYDANT DÉTOXIFIANT,200 g,"Surnommé « fruit de la jeunesse éternelle », il est antioxydant, détoxifiant et renforce la vitalité.","Baies de Goji (Gou qi zi, Lycium barbarum) 200 g, d'origine chinoise, qualité pharmacopée.","À consommer en fruit sec, à infuser en tisane, ou à cuire dans une soupe. Les baies de goji ont un goût légèrement sucré avec une note subtilement acidulée.",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1728390605/3665346185018_Baies_de_Goji_gou_qi_zi_200g_dec6472c61.png,枸杞子,#DB9331,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,185025A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GPFWGJB6,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604187995792204&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=43&folderPath=/24/37
+AYYR,Larmes de Job,DRAINEUR,300 g,"Aide au confort urinaire, draine les excès d'eau et rend la peau éclatante.","Larmes de job (Yi yi ren, Coix lacryma-jobi) 300 g, d'origine chinoise, qualité pharmacopée.","Placer 30 à 50 g de graines dans 500 mL d’eau, laisser macérer 20 minutes, porter à ébullition et cuire jusqu’à ramollissement. Consommer toute la soupe.",7.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1728392200/3665346185629_Yi_Yi_Ren_Chao_Larmes_de_Job_jobi_300g_e14c3f596b.png,薏苡仁,#C47F5E,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,169225A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GY4XCSTK,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604125718755445&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=36&folderPath=/24/30
+ACP,Peau de mandarine,CONFORT RESPIRATOIRE,100 g,Libère les voies respiratoires et donne du tonus à l'organisme.,"Peau de Mandarine (Chen pi, Citrus reticulata) 100 g, d'origine chinoise, qualité pharmacopée.","Ajouter 10 g de peau à 500 mL d’eau, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir.",9.70,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1728391666/3665346110232_Chen_Pi_Mandarine_100g_b4780c6dc3.png,陈皮,#778A76,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,110225A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GXFXC21N,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603762794024583&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=160&folderPath=/24/150
+AJHUA,Camomille Chinoise,CONFORT OCULAIRE,100 g,Adoucit la gorge et apaise les yeux sensibles et fatigués.,"Camomille chinoise (Ju hua (hang), Chrysanthellum indicum) 100 g, d'origine chinoise, qualité pharmacopée.",Infuser 5 g de fleurs dans une grande tasse d’eau bouillante pendant 5 minutes.,9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1728391583/3665346185551_Chrysantheme_hang_Ju_Hua_han_100_G_5b1d032902.png,杭菊花,#778A76,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,135425A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GXFXFX4X,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603854062092765&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=157&folderPath=/24/147
+ADZ,Fruits de Jujube,TONIFIER LE SANG,100 g,"Excellente qualité gustative, tonifie le sang et aide à mieux vivre les règles.","Fruits de jujube (Da zao, Ziziphus jujuba) 100 g, d'origine chinoise, qualité pharmacopée.","À consommer en fruit sec, à infuser en tisane, ou à cuire dans une soupe ou avec du riz. Le jujube offre un goût agréablement sucré et une texture moelleuse.",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1728392914/3665346114636_Da_Zao_Grande_jujube_100g_76d2bed165.png,大枣,#DB9331,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,114625A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GPFQCJG2,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604097801496105&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=31&folderPath=/24/25
+ADS,Ginseng Impérial,TONUS ET ANTI-FATIGUE,100 g,"- Donne du tonus à l'organisme <br/>
+- Réduit la fatigue <br/>
+- Contribue à la santé des séniors","Ginseng impérial (Dang shen, Codonopsis pilosula) 100 g, d'origine chinoise, qualité pharmacopée.","
+Placer 10-15 g de racines dans 500 mL d’eau. Macérer 10 minutes, porter à ébullition et laisser mijoter 20 minutes avant de servir.
+",10.70,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730363634/3665346115817_Dang_Shen_Ginseng_imp_rial_Codonopsis_pilosula_302f96a3f6.png,党参,#DB9331,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,115825A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603505146317941&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1777554528105_q1d8xbkz2s&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=158&folderPath=/24/148
+BSMT,"Boisson à base de prunes chinoises - Suan mei tang
+",DIGESTION ET BOISSON D'ÉTÉ,50 g,"- Contribue à une bonne digestion<br/>
+- Clarifie la Chaleur<br/>
+- Apaise la soif","Prune (Wu mei, Prunus mume), Fruits d’Aubépine (Shan zha, Crataegus laevigata), Peau de Mandarine (Chen pi, Citrus reticulata), Réglisse (Gan cao, Glycyrrhiza uralensis), Olivier odorant (Gui hua, Osmanthus fragrantis).","Placer les plantes dans 500 mL d’eau, porter à ébullition et laisser cuire pendant 10 minutes. Filtrer les plantes et mettre de côté le jus de décoction. Répéter deux fois l’opération en utilisant les mêmes plantes, verser les trois jus obtenus dans un même récipient, ajouter du sucre ou du miel.",5.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730386961/3665346394717_Suan_mei_tang_50_PS_a1ad1565ce.png ,酸梅汤,#85839D,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,court,94725A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GY4V5L7Q,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604133234990142&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=35&folderPath=/24/29
+OPASS,Passiflore Partie Aerienne Coupée bio,SOMMEIL ET STRESS,80 g,"- Facilite l'endormissement
+<br/>- Améliore la qualité du sommeil
+<br/>- Chasse la nervosité",Passiflore partie aérienne coupée (Passiflora incarnata) 80 g.,"Ajouter 10 g de plantes à 500 mL d’eau, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir.",8.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1731671462/3665346147917_Passiflore_PA_Xi_fan_lian_Passiflora_incarnata_100g_09de374064.png,,#454760,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_ue_720_b94313ca55.png,long,147925A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio UE,https://www.amazon.fr/dp/B0GYS1QRYT,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603862652025038&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=147&folderPath=/24/137
+OSAUG,Sauge Officinale Feuille Coupée bio,MÉNOPAUSE,50 g,"- Contribue à réguler le cycle<br/>
+- Accompagne la transition vers la ménopause<br/>
+- Soulage les inconforts ménopausiques",Sauge officinale feuille coupée (Salvia officinalis) 50 g.,Prendre 15 g de feuilles et ajouter 500 mL d’eau. Laisser macérer 10 minutes puis bouillir pendant 5 minutes à grand feu avant de servir.,7.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1744291978/3665346155011_Sauge_Shu_Wei_Cao_Salvia_officinalis_c9a47222c8.png,,#D97A8C,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_non_ue_720_7c8be4c53a.png,long,155025A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio Non UE,https://www.amazon.fr/dp/B0GXFXR4KL,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603836882221227&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=146&folderPath=/24/136
+ARS,Racine de Ginseng,VITALITÉ ET CLARTÉ D'ESPRIT,50 g,"- Anti-fatigue en renforçant le Qi<br/>
+- Renforce les défenses naturelles et l’endurance<br/>
+- Améliore la concentration et la mémoire","Racine de Ginseng (Ren shen, Panax ginseng) 50 g ",Infusez 5 fines tranches de ginseng dans de l’eau chaude (80–90 °C) pendant 10 minutes. Buvez l’infusion et consommez également les tranches.,19.80,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1756909547/3665346152911_Ren_Shen_Bai_Ginseng_Panax_ginseng_50g_717f6b4a09.png,人参,#DB9331,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,court,140_H24CX1197,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GY1Q23LV,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603780024246355&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1777554528105_q1d8xbkz2s&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=134&folderPath=/24/124
+AHGQ,Baies de Goji noires,ANTIOXYDANT ET REVITALISANT,100 g,"Surnommé ""Le roi des anthocyanines"", il est antioxydant, revitalisant et fortifiant pour diminuer les effets du vieillissement, garder l'éclat de la jeunesse et renforcer vos défenses.","Baies de Goji Noires (Hei gou qi, Lycium ruthenicum Murray) 100 g d'origine chinoise, qualité pharmacopée.","À consommer en fruit sec, à infuser en tisane, ou à cuire dans une soupe. Les baies de goji noires ont un goût légèrement sucré avec une note subtilement acidulée.",11.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730990902/3665346217313_Baies_de_Goji_Noires_Hei_Gou_Zi_100g_dc3c61bd7f.png,黑枸杞,#DB9331,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,court,17325A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GXFVTH9P,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604385564262780&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=136&folderPath=/24/126
+BYPFT,Tisane Défenses Immunitaires Yu Ping Feng Tang,TISANE IMMUNITÉ ET TONUS,100 g,"- Soutient les défenses naturelles<br/>
+- Donne du tonus à l'organisme<br/>
+- Tonifie le Qi","Astragale Racines (Huang qi, Astragalus membranaceus), Rhizome d'Atractylode (Bai zhu, Atractylodes macrocephala), Silère (Fang feng, Saposhnikovia divaricata).","Ajouter 500 mL d’eau à deux cuillères à soupe (environ 20 g) du mélange, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir. En cure : boire une tasse par jour jusqu'à la fin du sachet.",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730365937/3665346393215_Yu_ping_feng_tang_0b78770c35.png ,玉屏风汤,#DB9331,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,court,93225A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GY4WXXLJ,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603505146362885&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1777554528105_q1d8xbkz2s&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=161&folderPath=/24/151
+AJGL,Herbe de l'immortalité,"ÉQUILIBRE DE LA TENSION, ANTI-OXYDANT & DÉTOX",100 g,"- Favorise le fonctionnement du foie<br/>
+- Maintien des équilibres circulatoires<br/>
+- Contribue à une tension normale","Herbe de l'immortalité (Jiao gu lan, Gynostemma pentaphyllum) 100 g, d'origine chinoise, qualité pharmacopée.","Ajouter 10 g de plantes à 500 mL d’eau, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir.",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730370582/3665346132715_Jiao_Gu_Lan_Herbe_de_l_immortalit_Gynostemma_pentaphyllum_8a5270d06f.png,绞股蓝,#778A76,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,132725A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GPFHT4T6,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603842250913730&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=135&folderPath=/24/125
+AFL,Poria,ELIMINATION ET DRAINEUR,100 g,"- Stimule les fonctions éliminatrices<br/>
+- Draine les excès d'eau","Poria (Fu ling, Poria cocos) 100 g, d'origine chinoise, qualité pharmacopée.","
+Ajouter 10 g de plantes à 500 mL d’eau, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir.
+",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730362902/3665346120217_Fu_Ling_Poria_Poria_cocos_6726f1b78b.png,茯苓,#C47F5E,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,120225A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GXGBKYNV,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604054902154249&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1777554528105_q1d8xbkz2s&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=162&folderPath=/24/152
+AHSW,Renouée à fleurs multiples,SANTÉ CAPILLAIRE,100 g,"- Renforce la santé capillaire<br/>
+- Favorise un taux de cholestérol sain<br/>
+- Freine l'apparition des cheveux blancs","Renouée à fleurs multiples (He shou wu, Polygonum multiflorum) 100 g, d'origine chinoise, qualité pharmacopée.","Placer 10-15 g de racines dans 500 mL d’eau. Macérer 10 minutes, porter à ébullition et laisser mijoter 20 minutes avant de servir.",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730366460/3665346161319_He_Shou_Wu_Sheng_Carpesium_abrotanoides_af97d941c6.png,何首乌,#C47F5E,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,126225A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GXG6Q5R9,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604140751183733&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=163&folderPath=/24/153
+OGUARL,Guarana graines entières bio,MINCEUR,200 g,"- Aide à la perte de poids<br/>
+- Donne du tonus à l'organisme",Guarana graine entière (Paullinia cupana) 200 g.,"Ajouter 5 g de graines à 500 mL d’eau, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir.",24.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1742205741/3665346222454_Guarana_graines_Gua_na_na_guo_Paullinia_cupana_300g_3d76607148.png,,#C47F5E,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_non_ue_720_7c8be4c53a.png,long,174325A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio Non UE,https://www.amazon.fr/dp/B0GYS92KHD,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604271747670913&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=143&folderPath=/24/133
+OTHYM,Thym Feuille entière bio,CONFORT RESPIRATOIRE ET DIGESTIF,50 g,"- Contribue à une bonne digestion<br/>
+- Réduire les flatulences et ballonnements",Thym feuille entière (Thymus vulgaris) 50 g.,Infuser 5 g de plantes dans une grande tasse d’eau bouillante pendant 5 minutes avant de servir. Peut aussi être utilisée en inhalation.,7.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738230808/3665346103319_Bai_Li_Xiang_Thym_Thymus_vulgare_Thymus_L_58b794c04a.png,,#778A76,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_france_720_d2118cd028.png,long,170425A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio France,https://www.amazon.fr/dp/B0GXFYBHYC,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603626428808187&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=155&folderPath=/24/145
+OCAMA,Camomille Matricaire fleur entière bio,ELIMINE DES TOXINES,50 g,"- Détoxifie l'organisme<br/>
+- Libère les voies respiratoires<br/>
+- Soulage les sensibilités de l'estomac",Camomille Matricaire (Matricaria chamomilla) 50 g.,Infuser 5 g de fleurs dans une grande tasse d’eau bouillante pendant 5 minutes.,7.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1739892759/3665346107751_Camomille_romaine_Anthema_nobilis_50g_GL_a113c204a5.png ,,#778A76,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,107725A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,bio UE,https://www.amazon.fr/dp/B0GXFT39QC,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603483621137520&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=142&folderPath=/24/132
+OBLEU,Bleuet Fleur entière bio,IRRITATIONS DES YEUX,30g,"- Réduit la fatigue<br/>
+- Contribue à une bonne digestion<br/>
+- Apaiser la fatigue visuelle",Bleuet fleur entière bio (Centaurea cyanus) 30g.,Infuser 5 g de fleurs dans une grande tasse d’eau bouillante pendant 5 minutes.,12.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1737470597/3665346220016_Bleuet_Shi_Che_Ju_Centaurea_cyanus_30g_1_a83c3e617b.png,,#85839D,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_france_720_d2118cd028.png,long,106625A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio France,https://www.amazon.fr/dp/B0GY4QMRTQ,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603930297791996&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=150&folderPath=/24/140
+AHJ,Cordée des Montagnes - Huang jing,QUINTESSENCE ET LONGÉVITÉ,100 g,"- Donne du tonus à l'organisme<br/>
+- Tonifie le Qi<br/>
+- Contribue à la santé des séniors","Cordée des montagnes (Huang jing, Polygonatum sibiricum) 100 g, d'origine chinoise, qualité pharmacopée.","Ajouter 5-10 g de racines à 500 mL d’eau, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir.",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730370517/3665346130117_Huang_Jing_Zhi_Cord_e_des_montagnes_Polygonatum_kingianum_acf544ef58.png,黄精,#DB9331,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,130125A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GXGBBQPN,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604248125313705&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=32&folderPath=/24/26
+ASY,Igname,TONUS,100 g,"- Soutient les défenses naturelles<br/>
+- Donne du tonus à l'organisme","Igname (Shan yao, Dioscorea oppositifolia) 100 g, d'origine chinoise, qualité pharmacopée.","
+
+Placer 10-15 g de rhizome dans 500 mL d’eau. Macérer 10 minutes, porter à ébullition et laisser mijoter 20 minutes avant de servir.",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730365981/3665346156018_Shan_Yao_Chao_Igname_Dioscorea_opposita_1a4bcfc25a.png,山药,#DB9331,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,156125A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GXG1KMXR,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603926002808770&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=164&folderPath=/24/154
+OMURF,Mûrier Feuille entière bio,APAISE LES YEUX,50 g,Apaise les yeux,Mûrier feuille coupée (Morus alba) 50 g.,Prendre 15 g de feuilles et ajouter 500 mL d’eau. Laisser macérer 10 minutes puis bouillir pendant 5 minutes à grand feu avant de servir.,8.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1748367321/3665346228012_M_rier_feuille_coup_e_bio_50g_cd31095c29.png,,#778A76,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_france_720_d2118cd028.png,long,128025A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio France,https://www.amazon.fr/dp/B0GXFTVB5N,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604055388680907&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=141&folderPath=/24/131
+AGH,Fleur d'Osmanthus,DÉTOXIFIE LES VOIES RESPIRATOIRES,50 g,"- Libère les voies respiratoires<br/>
+- Apaise la gorge","Olivier odorant (Gui hua, Osmanthus fragrans) 50 g, d'origine chinoise, qualité pharmacopée.",Infuser 5 g de fleurs dans une grande tasse d’eau bouillante pendant 5 minutes.,13.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730729971/3665346198711_Gui_Hua_Olivier_odorant_Osmanthus_Fragrans_50g_PS_99a18b6547.png,桂花,#778A76,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,124125A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GXG3ZJQP,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604393667661602&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1777554528105_q1d8xbkz2s&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=139&folderPath=/24/129
+ALZ,Reishi (Ganoderma),TONUS ET IMMUNITÉ,100 g,"Fortifie l'organisme, stimule le foie, favorise la circulation sanguine.","Reishi (Ling zhi, Ganoderma lucidum) 100 g, d'origine chinoise, qualité supérieure.","Ajouter 300 mL d’eau à 5-10 g, macérer 10 minutes, porter à ébullition et laisser mijoter 20 minutes à petit feu. Servir matin et soir.",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1728393013/3665346185315_Rei_shi_100g_f44ef490e5.png,灵芝,#DB9331,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,139025A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GPFSNKYL,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603370341400809&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=140&folderPath=/24/130
+AHQMEI,Gomphrena Prunier,JEUNESSE CUTANÉE,50 g,"- Retarde le vieillissement cutané<br/>
+- Apaise les yeux","Gomphrena prunier (Hong qiao mei, Gomphrena globosa) 50 g, d'origine chinoise, qualité pharmacopée.",Infuser 5 g de fleurs dans une grande tasse d’eau bouillante pendant 5 minutes.,7.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730717104/3665346194812_Hong_Qiao_Mei_Prunier_rouge_Gomphrena_globosa_50g_PS_ffb794d09a.png ,红巧梅,#C47F5E,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,127925A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GXFSFCF7,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604313086715731&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=159&folderPath=/24/149
+ORÉGL,"Réglisse bâton entier bio",PROTECTION</BR> DU FOIE,60 g,"- Soulage les sensibilités de l'estomac<br/>
+- Favorise le fonctionnement du foie<br/>
+- Protège la fonction hépatique<br/>
+- Stimule le foie",Réglisse bâton entier (Glycyrrhiza glabra) 60 g.,"Ajouter 5-10 g de racines à 500 mL d’eau, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir.",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1737711639/3665346221112_B_tons_de_R_glisse_80g_205b00989f.png,,#85839D,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_ue_720_b94313ca55.png,long,165025A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio UE,https://www.amazon.fr/dp/B0GXG47JCH,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603555561879243&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=156&folderPath=/24/146
+OCHAR,Chardon-Marie graine entière bio,DÉTOXIFIANT DU FOIE,50 g,"- Contribue à une bonne digestion<br/>
+- Favorise le fonctionnement du foie<br/>
+- Protège la fonction hépatique<br/>
+- Stimule le foie",Chardon-Marie graine entière (Silybum marianum) 50 g.,"Ajouter 10 g de graines à 500 mL d’eau, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir.",6.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1731675884/3665346109915_Chardon_Marie_FR_Shui_Fei_Ji_fa_guo_Silybum_marianum_100g_1ca249aea1.png,,#85839D,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_france_720_d2118cd028.png,long,109925A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio France,https://www.amazon.fr/dp/B0GXG1BB1H,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604100485843751&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=154&folderPath=/24/144
+OHIBI,Hibiscus fleur coupée bio,CONFORT DIGESTIF,50 g,"- Contribue à une bonne digestion<br/>
+- Stimule le transit intestinal<br/>
+- Stimule l'appétit",Hibiscus fleur coupée (Hibiscus sabdariffa) 50 g.,Infuser 5 g de fleurs dans une grande tasse d’eau bouillante pendant 5 minutes.,7.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1739199121/3665346203019_Hibiscus_Hibiscus_sabdariffa_6ab9443325.png,,#85839D,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_non_ue_720_7c8be4c53a.png,long,174225A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio Non UE,https://www.amazon.fr/dp/B0GXGBG9DF,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604031766365380&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=153&folderPath=/24/143
+OMELS,Mélisse feuille coupée bio,DIGESTION ET BALLONNEMENT,80 g,"- Contribue à une bonne digestion<br/>
+- Réduire les flatulences et ballonnements<br/>
+- Favorise le fonctionnement du foie<br/>
+- Stimule le foie",Mélisse feuille coupée (Melissa officinalis) 80 g.,"Ajouter 10 g de plantes à 500 mL d’eau, porter à ébullition et laisser mijoter 5 minutes à petit feu avant de servir.",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1757493936/3665346143827_Melisse_feuille_coupee_bio_Mi_feng_hua_Melissa_officinalis_80g_a7d6b2c247.png,,#85839D,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_france_720_d2118cd028.png,long,143825A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio France,https://www.amazon.fr/dp/B0GXFYDQJ7,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604143972394350&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=144&folderPath=/24/134
+OVALÉ,Valériane racine coupée bio,CALME ET DÉTENTE,80 g,"- Facilite l'endormissement<br/>
+- Améliore la qualité du sommeil<br/>
+- Chasse la nervosité",Valériane racine coupée (Valeriana officinalis) 80 g.,"Ajouter 5 g de racines à 500 mL d’eau, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir.",8.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1737711774/3665346162811_Val_riane_Xie_Cao_Valeriana_officinalis_96aa458abd.png,,#454760,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_france_720_d2118cd028.png,long,162825A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio France,https://www.amazon.fr/dp/B0GY1VNW3C,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604231482316809&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=151&folderPath=/24/141
+OORRA,Ortie piquante racine entière bio,CONFORT DE LA PROSTATE,80 g,"- Aide au confort urinaire<br/>
+- Stimule les fonctions éliminatrices<br/>
+- Préserve la fonction de la prostate",Ortie piquante racine coupée (Urtica dioica) 80 g.,"Ajouter 10 g de plantes à 500 mL d’eau, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir.",8.50,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1744213567/3665346225714_Ortie_piquante_racine_coup_e_bio_Urtica_dioica_50g_4d153f1388.png,,#2B4A52,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_ue_720_b94313ca55.png,long,147325A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio UE,https://www.amazon.fr/dp/B0GXG5X2F4,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604081158488909&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=148&folderPath=/24/138
+OGUIR,Guimauve racine coupée bio,"<SPAN STYLE=""FONT-SIZE:0.7EM"">DÉPURATIF ET CONFORT RESPIRATOIRE</SPAN>",50 g,"- Apaise la gorge <br/>
+- Libère les voies respiratoires",Guimauve racine coupée (Althaea officinalis) 50 g.,"Placer 10-15 g de racines dans 500 mL d’eau. Macérer 10 minutes, porter à ébullition et laisser mijoter 20 minutes avant de servir.",7.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1737124456/3665346219614_Racine_de_Guimauve_Althaea_officinalis_100_g_5996b244b4.png,,#778A76,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_ue_720_b94313ca55.png,long,124625A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio UE,https://www.amazon.fr/dp/B0GXG21HQP,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603552877493713&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=149&folderPath=/24/139
+OTLAU,Tilleul rouge aubier coupé bio,DÉTOXIFIANT DU FOIE,80 g,"- Contribue à une bonne digestion<br/>
+- Soulage les sensibilités de l'estomac<br/>
+- Favorise le fonctionnement du foie<br/>
+- Stimule le foie",Tilleul rouge aubier coupé (Tilia cordata) 80 g.,"Ajouter 15 g d'écorces à 500 mL d’eau, porter à ébullition et laisser mijoter 15 minutes à petit feu avant de servir.",8.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738230779/3665346161715_Tilleul_aubier_Xiao_Ye_Duan_pi_Tilia_cordata_86a8baab7b.png,,#85839D,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_france_720_d2118cd028.png,long,170425A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio France,https://www.amazon.fr/dp/B0GXG7WJS9,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604308791742611&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=10&folder=165&folderPath=/24/155
+ORADI,Radis noir racine coupée bio,DÉTOXIFIANT DU FOIE,80 g,"- Réduire les flatulences et ballonnements<br/>
+- Favorise le fonctionnement du foie<br/>
+- Stimule le foie",Radis noir racine coupée (Raphanus raphanistrum) 80 g.,"Ajouter 5-10 g de racines à 500 mL d’eau, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir.",8.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738675251/3665346152119_Radis_noir_Hei_luo_bo_Raphanus_raphanistrum_e3b9921f3e.png,,#85839D,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_france_720_d2118cd028.png,long,152125A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio France,https://www.amazon.fr/dp/B0GXFS7TKN,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603770310210143&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=145&folderPath=/24/135
+OAUBÉ,Aubépine sommité fleurie coupée bio,ENTRETIEN DES ARTÈRES,70 g,"- Soulage les jambes lourdes<br/>
+- Favorise le confort cardiovasculaire<br/>
+- Maintien des équilibres circulatoires",Aubépine sommité fleurie coupée (Crataegus laevigata) 70 g.,Infuser 5 g de fleurs dans une grande tasse d’eau bouillante pendant 5 minutes.,7.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1739199009/3665346206416_AUBEPINE_somit_s_fleuries_Craegus_monogyna_24337f8cc8.png,,#62ABA5,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738750260/bio_france_720_d2118cd028.png,long,174225A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/conditionnee_en_france_8364b9bd09.png,bio France,https://www.amazon.fr/dp/B0GXG23347,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603415438537731&refer_page_name=manage_products&refer_page_id=20365_1761226431288_4mfjc7mtly&refer_page_sn=20365&_x_sessn_id=esth2usezm,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=152&folderPath=/24/142
+ASZ,Fruits d'Aubépine,DIGESTION,100 g,"- Contribue à une bonne digestion<br/>
+- Favorise le confort cardiovasculaire<br/>
+- Maintien des équilibres circulatoires","Fruits d’Aubépine (Shan zha, Crataegus laevigata) 100 g, d'origine chinoise, qualité pharmacopée.","
+Ajouter 10 g de fruits à 500 mL d’eau, porter à ébullition et laisser mijoter 10 minutes à petit feu avant de servir.
+",9.80,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730363785/3665346178010_Shan_Zha_Chao_c6e9fabbe5.png,山楂,#85839D,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,156325A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GXG4CL8Q,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604009469444968&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1776421534671_setu2vx9gt&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=138&folderPath=/24/128
+ABS,Racines de Pivoine Blanche,ÉQUILIBRE FÉMININ,100 g,"- Favorise l'équilibre féminin<br/>
+- Calme l’esprit","Pivoine blanche racines (Bai shao yao, Paeonia lactiflora) 100 g, d'origine chinoise, qualité pharmacopée.","
+Placer 10-15 g de racines dans 500 mL d’eau. Macérer 10 minutes, porter à ébullition et laisser mijoter 20 minutes avant de servir.
+",9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730365068/3665346104118_Bai_Shao_Sheng_Pivoine_blanche_Paeonia_lactiflora_0d75ef7c54.png,白芍药,#D97A8C,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,104125A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GXG4T3SB,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604284347334064&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1776421534671_setu2vx9gt&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=10&folder=166&folderPath=/24/156
+AMGH,Boutons de roses,CALME ET DÉTENTE,100 g,"- Améliore la qualité du sommeil<br/>
+- Apaise l’esprit<br/>
+- Tranquillise le Shen","Boutons de Rose (Mei gui hua, Rosa rugosa) 100 g, qualité pharmacopée.",Infuser 5 g de fleurs dans une grande tasse d’eau bouillante pendant 5 minutes.,9.90,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1730362865/3665346143612_Mei_Gui_Hua_Rosier_Rosa_rugosa_9b252af881.png ,玫瑰花,#454760,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,143625A,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,Non bio,https://www.amazon.fr/dp/B0GY4R86P6,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603734591566487&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1776421534671_setu2vx9gt&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=100&folder=137&folderPath=/24/127
+ASFHO,Supergreen Herbe d'Orge,DETOX & ALCANISANT,100 g,"Soulage la sensation de lourdeur digestive
+Aide en cas de ballonnements ou de transit lent
+Effet alcalinisant puissant
+Apporte de l’énergie naturellement",,,,,,,,,,,,https://www.amazon.fr/dp/B0GXG85BL7,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604073642291147&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1777561719464_swye1pwj8d&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=10&folder=167&folderPath=/24/1577
+ASFCK,Supergreen Chou Kale,ANTIOXYDANTE & NOURRISSANTE,150 g,"Source naturelle de vitamines et minéraux
+Soutien en cas de fatigue
+Utile en période de stress
+Aide à lutter contre le stress oxydatif",,,,,,,,,,,,https://www.amazon.fr/dp/B0GXG3RFTT,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604036061359556&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1777561719464_swye1pwj8d&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=10&folder=168&folderPath=/24/158
+BSFHOAK,Supergreen Combo Herbe d'orge et Ashitaba,SILHOUETTE & PEAU,100 g,"Régule naturellement les graisses
+Favorise une peau nette et lumineuse
+Soutient la digestion et allège les ballonnements
+Effet alcalinisant et détox doux
+Source d’énergie végétale sans excitant",,,,,,,,,,,,https://www.amazon.fr/dp/B0GXFTF8F7,https://www.temu.com/goods.html?_bg_fs=1&goods_id=603964120599359&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1777561719464_swye1pwj8d&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=10&folder=169&folderPath=/24/159
+BSFHOFM,Supergreen combo Herbe d'orge et extrait de feuilles de Mûrier,EQUILIBRE DU SUCRE,100 g,"Aide à réguler naturellement le sucre
+Énergie stable sans pics ni creux
+Soutient la digestion et l’équilibre interne
+Riche en chlorophylle, fibres et antioxydants
+Alternative douce aux envies sucrées",,,,,,,,,,,,https://www.amazon.fr/dp/B0GY1LBQ7C,https://www.temu.com/goods.html?_bg_fs=1&goods_id=604041631396357&_x_sessn_id=ryiuy1wvct&refer_page_name=manage_products&refer_page_id=20365_1777561719464_swye1pwj8d&refer_page_sn=20365,https://prod.strapi.calebasse.com/admin/plugins/upload?sort=createdAt:DESC&page=1&pageSize=10&folder=170&folderPath=/24/160
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,#REF!,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,long,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,
+,,,,,,,,,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1735901160/Label_bio_transparent_44ff6652a3.png,,,https://res.cloudinary.com/laboratoire-calebasse/image/upload/v1738682686/made_in_france_d664350e47.png,,,,

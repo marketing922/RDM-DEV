@@ -120,6 +120,7 @@ type Props = {
   limit: number
   draftCount: number
   publishedCount: number
+  published30dCount: number
   contributorsCount: number
   initialSearch: string
   initialStatus: StatusKey
@@ -143,6 +144,7 @@ const ArticlesListClient: React.FC<Props> = ({
   limit,
   draftCount,
   publishedCount,
+  published30dCount,
   contributorsCount,
   initialSearch,
   initialStatus,
@@ -264,12 +266,11 @@ const ArticlesListClient: React.FC<Props> = ({
           dotColor={RM.teal}
           href="/admin/collections/blogPosts?status=published"
         />
-        {/* TODO: wire real analytics */}
         <StatCard
-          label="Lectures · 30j"
-          value="—"
-          delta="Analytics à venir"
-          deltaColor={RM.inkSoft}
+          label="Publiés · 30j"
+          value={published30dCount}
+          delta={published30dCount > 0 ? 'rythme éditorial' : 'aucun récemment'}
+          deltaColor={published30dCount > 0 ? RM.teal : RM.inkSoft}
           dotColor={RM.ochre}
         />
         <StatCard
