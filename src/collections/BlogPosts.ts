@@ -136,7 +136,9 @@ export const BlogPosts: CollectionConfig = {
               labels: { singular: 'Image', plural: 'Images' },
               admin: {
                 description:
-                  "URLs externes (Cloudinary, etc.) inject\u00e9es dans le corps de l'article. " +
+                  "URLs externes inject\u00e9es dans le corps de l'article. Hosts " +
+                  'autoris\u00e9s : res.cloudinary.com, images.unsplash.com (URL ' +
+                  "directe de l'image, pas la page Unsplash), cdn.sanity.io. " +
                   'Plusieurs images peuvent cibler la m\u00eame section. Laisser ' +
                   '\u00ab Section n\u00b0 \u00bb vide pour les afficher en fin d\u2019article.',
               },

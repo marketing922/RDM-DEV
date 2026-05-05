@@ -326,11 +326,34 @@ export default async function BlogDetailPage({ params }: Props) {
   // les sections. `sectionIndex` est 1-based (1 = première section). Plusieurs
   // images peuvent cibler la même section. Les entrées sans index ou hors
   // bornes sont collectées dans `trailingImages` et rendues en fin d'article.
+  //
+  // Sécurité : on ne rend que les URLs hébergées sur des hosts whitelistés
+  // dans `next.config.mjs > images.remotePatterns` — sinon Next/Image jette
+  // une erreur runtime et casse la page entière. Une URL hors whitelist
+  // (ou une URL de page HTML, ex. unsplash.com/photos/<id> au lieu de
+  // images.unsplash.com/photo-<id>) est silencieusement ignorée au rendu.
+  const ALLOWED_IMAGE_HOSTS = [
+    'res.cloudinary.com',
+    'images.unsplash.com',
+    'cdn.sanity.io',
+  ]
+  const isAllowedImageUrl = (url: string): boolean => {
+    try {
+      const u = new URL(url)
+      if (u.protocol !== 'https:') return false
+      return ALLOWED_IMAGE_HOSTS.some(
+        (h) => u.hostname === h || u.hostname.endsWith('.public.blob.vercel-storage.com'),
+      )
+    } catch {
+      return false
+    }
+  }
+
   const trailingImages: SectionImage[] = []
   if (Array.isArray((p as any).galleryUrls)) {
     for (const entry of (p as any).galleryUrls as any[]) {
       const url = typeof entry?.url === 'string' ? entry.url.trim() : ''
-      if (!url) continue
+      if (!url || !isAllowedImageUrl(url)) continue
       const img: SectionImage = {
         url,
         caption: typeof entry?.caption === 'string' ? entry.caption : undefined,
