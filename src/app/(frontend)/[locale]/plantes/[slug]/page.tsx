@@ -172,11 +172,29 @@ export default async function PlantDetailPage({ params }: Props) {
 
   // Galerie : URLs Cloudinary additionnelles (galleryUrls) + uploads Payload (images[1+])
   // + auto-détection live des variants Cloudinary (slug-2, slug-tisane, ...).
+  // Dédupe sur une URL normalisée : on retire le segment `/vNNNN/` (version
+  // Cloudinary) et la query string, sinon `image/upload/v1778143602/...` et
+  // `image/upload/...` (auto-détecté) sont considérés comme distincts alors
+  // qu'ils servent le même asset.
   const galleryItems: Array<{ src: string; alt?: string; caption?: string }> = []
   const seen = new Set<string>()
+  const normalizeForDedupe = (url: string): string => {
+    try {
+      const u = new URL(url)
+      const path = u.pathname
+        .replace(/\/v\d+\//, '/')
+        .replace(/\.(png|jpe?g|webp|avif)$/i, '')
+      return `${u.host}${path}`.toLowerCase()
+    } catch {
+      return url.toLowerCase()
+    }
+  }
+  const heroKey = heroSrc ? normalizeForDedupe(heroSrc) : ''
   const pushGallery = (src: string, extra?: { alt?: string; caption?: string }) => {
-    if (!src || seen.has(src) || src === heroSrc) return
-    seen.add(src)
+    if (!src) return
+    const key = normalizeForDedupe(src)
+    if (seen.has(key) || key === heroKey) return
+    seen.add(key)
     galleryItems.push({ src, ...extra })
   }
   if (Array.isArray(e.galleryUrls)) {
