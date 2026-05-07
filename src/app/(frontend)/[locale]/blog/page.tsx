@@ -194,8 +194,8 @@ export default async function BlogPage({ params, searchParams }: Props) {
                       src={blogPostImage(featuredPost, 'card') ?? ''}
                       alt={featuredPost.featuredImage?.alt || featuredPost.title}
                       fill
-                      sizes="(max-width: 768px) 100vw, 320px"
-                      className="object-contain object-center p-3 transition-transform duration-500 group-hover:scale-[1.02]"
+                      sizes="(max-width: 768px) 100vw, 480px"
+                      className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]"
                       priority
                     />
                   ) : (
