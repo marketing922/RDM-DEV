@@ -18,6 +18,18 @@ import { revalidateTag, revalidatePath } from 'next/cache'
  * Le hook reste safe même si aucun consumer n'a posé de tag — revalidateTag
  * est silencieux pour les tags non utilisés.
  */
+/**
+ * Mapping entre slug de collection Payload et segment d'URL public.
+ * Sans ce mapping, `revalidatePath` cible un path inexistant
+ * (ex. /[locale]/blogPosts/... au lieu de /[locale]/blog/...).
+ */
+const COLLECTION_TO_ROUTE: Record<string, string> = {
+  blogPosts: 'blog',
+  wikiEntries: 'plantes',
+  benefits: 'bienfaits',
+  products: 'produits',
+}
+
 export const revalidateAfterChange: CollectionAfterChangeHook = async ({
   doc,
   req,
@@ -29,13 +41,18 @@ export const revalidateAfterChange: CollectionAfterChangeHook = async ({
 
   const slug = (doc as any)?.slug
   const collectionSlug = collection.slug
+  const routeSegment = COLLECTION_TO_ROUTE[collectionSlug] ?? collectionSlug
 
   try {
     revalidateTag(`${collectionSlug}:list`)
     if (slug) {
       revalidateTag(`${collectionSlug}:${slug}`)
-      // Path-based revalidation en complément, indépendant des tags.
-      revalidatePath(`/[locale]/${collectionSlug}/${slug}`, 'page')
+      // Path-based revalidation : cible la route publique réelle, pour les
+      // 2 locales. `revalidatePath` avec `page` invalide la route paramétrée.
+      revalidatePath(`/fr/${routeSegment}/${slug}`, 'page')
+      revalidatePath(`/en/${routeSegment}/${slug}`, 'page')
+      revalidatePath(`/fr/${routeSegment}`, 'page')
+      revalidatePath(`/en/${routeSegment}`, 'page')
     }
     revalidateTag('nav-counts')
   } catch (err) {
