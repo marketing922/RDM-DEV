@@ -47,13 +47,15 @@ export const revalidateAfterChange: CollectionAfterChangeHook = async ({
     revalidateTag(`${collectionSlug}:list`)
     if (slug) {
       revalidateTag(`${collectionSlug}:${slug}`)
-      // Path-based revalidation : cible la route publique réelle, pour les
-      // 2 locales. `revalidatePath` avec `page` invalide la route paramétrée.
-      revalidatePath(`/fr/${routeSegment}/${slug}`, 'page')
-      revalidatePath(`/en/${routeSegment}/${slug}`, 'page')
-      revalidatePath(`/fr/${routeSegment}`, 'page')
-      revalidatePath(`/en/${routeSegment}`, 'page')
     }
+    // Path-based revalidation : on purge la ROUTE DYNAMIQUE entière (toutes
+    // les instances de /[locale]/<segment>/[slug]) — pas juste le slug courant.
+    // Sinon, sauver l'article B ne purge pas la page de l'article A qui
+    // l'affiche dans sa sidebar "À lire aussi" → ancienne carte sans image.
+    // Idem pour la liste qui dépend du featured + sidebar latest.
+    revalidatePath(`/[locale]/${routeSegment}/[slug]`, 'page')
+    revalidatePath(`/[locale]/${routeSegment}`, 'page')
+    revalidatePath(`/[locale]`, 'page') // home agrège articles/plantes/produits
     revalidateTag('nav-counts')
   } catch (err) {
     // Ne pas casser le save si Next n'a pas le runtime côté serveur (cas rare).
