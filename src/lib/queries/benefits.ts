@@ -7,7 +7,6 @@ export async function getBenefits(options?: {
   bodyRegion?: string
   category?: string
 }) {
-  const payload = await getPayloadClient()
   const {
     limit = 20,
     locale = 'fr',
@@ -33,19 +32,22 @@ export async function getBenefits(options?: {
   }
   const where = andClauses.length === 1 ? andClauses[0] : { and: andClauses }
 
-  return safeQuery(() => payload.find({
-    collection: 'benefits',
-    where,
-    limit,
-    locale,
-    sort: 'name',
-    depth: 0,
-  }), EMPTY_PAGINATED as any)
+  return safeQuery(async () => {
+    const payload = await getPayloadClient()
+    return payload.find({
+      collection: 'benefits',
+      where,
+      limit,
+      locale,
+      sort: 'name',
+      depth: 0,
+    })
+  }, EMPTY_PAGINATED as any)
 }
 
 export async function getBenefitBySlug(slug: string, locale = 'fr') {
-  const payload = await getPayloadClient()
   return safeQuery(async () => {
+    const payload = await getPayloadClient()
     const result = await payload.find({
       collection: 'benefits',
       where: { slug: { equals: slug }, _status: { equals: 'published' } },

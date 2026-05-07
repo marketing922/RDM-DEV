@@ -8,7 +8,6 @@ export async function getProducts(options?: {
   benefitIds?: Array<string | number>
   locale?: string
 }) {
-  const payload = await getPayloadClient()
   const { limit = 12, page = 1, locale = 'fr' } = options || {}
 
   const where: any = { _status: { equals: 'published' } }
@@ -18,26 +17,29 @@ export async function getProducts(options?: {
     where.benefits = { in: options.benefitIds }
   }
 
-  return safeQuery(() => payload.find({
-    collection: 'products',
-    where,
-    limit,
-    page,
-    locale,
-    sort: '-createdAt',
-    depth: 1,
-  }), EMPTY_PAGINATED as any)
+  return safeQuery(async () => {
+    const payload = await getPayloadClient()
+    return payload.find({
+      collection: 'products',
+      where,
+      limit,
+      page,
+      locale,
+      sort: '-createdAt',
+      depth: 1,
+    })
+  }, EMPTY_PAGINATED as any)
 }
 
 export async function getProductBySlug(slug: string, locale = 'fr') {
-  const payload = await getPayloadClient()
   return safeQuery(async () => {
+    const payload = await getPayloadClient()
     const result = await payload.find({
       collection: 'products',
       where: { slug: { equals: slug }, _status: { equals: 'published' } },
       limit: 1,
       locale,
-      depth: 2, // populate category + tags + benefits
+      depth: 2,
     })
     return result.docs[0] || null
   }, null)

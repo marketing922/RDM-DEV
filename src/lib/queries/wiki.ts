@@ -11,7 +11,6 @@ export async function getWikiEntries(options?: {
   depth?: number
   where?: Record<string, any>
 }) {
-  const payload = await getPayloadClient()
   const {
     limit = 12,
     page = 1,
@@ -45,20 +44,23 @@ export async function getWikiEntries(options?: {
   }
   const where = andClauses.length === 1 ? andClauses[0] : { and: andClauses }
 
-  return safeQuery(() => payload.find({
-    collection: 'wikiEntries',
-    where,
-    limit,
-    page,
-    locale,
-    sort,
-    depth,
-  }), EMPTY_PAGINATED as any)
+  return safeQuery(async () => {
+    const payload = await getPayloadClient()
+    return payload.find({
+      collection: 'wikiEntries',
+      where,
+      limit,
+      page,
+      locale,
+      sort,
+      depth,
+    })
+  }, EMPTY_PAGINATED as any)
 }
 
 export async function getWikiEntryBySlug(slug: string, locale = 'fr') {
-  const payload = await getPayloadClient()
   return safeQuery(async () => {
+    const payload = await getPayloadClient()
     const result = await payload.find({
       collection: 'wikiEntries',
       where: { slug: { equals: slug }, _status: { equals: 'published' } },

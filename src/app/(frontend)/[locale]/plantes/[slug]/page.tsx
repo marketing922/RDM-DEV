@@ -39,21 +39,10 @@ type Props = {
 // ───────────────────────────────────────────────────────────
 
 export async function generateStaticParams() {
-  try {
-    // Top 30 plus récentes au build, le reste à la demande (dynamicParams=true).
-    const { docs: plants } = await getWikiEntries({ limit: 30, sort: '-updatedAt' })
-    const params: Array<{ locale: string; slug: string }> = []
-    for (const plant of plants) {
-      const slug = (plant as any).slug
-      if (slug) {
-        params.push({ locale: 'fr', slug })
-        params.push({ locale: 'en', slug })
-      }
-    }
-    return params
-  } catch {
-    return []
-  }
+  // Aucune page pré-générée au build — toutes générées à la demande
+  // (dynamicParams=true) puis cachées via ISR. Réduit drastiquement la
+  // consommation BD au build (Neon free tier).
+  return []
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

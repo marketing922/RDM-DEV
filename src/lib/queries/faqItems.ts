@@ -13,7 +13,6 @@ export async function getFaqItems(options?: {
   category?: string
   limit?: number
 }): Promise<FaqItemDoc[]> {
-  const payload = await getPayloadClient()
   const { locale = 'fr', category = '', limit = 200 } = options || {}
 
   const where: Record<string, any> = {}
@@ -22,15 +21,17 @@ export async function getFaqItems(options?: {
   }
 
   const result = await safeQuery(
-    () =>
-      payload.find({
+    async () => {
+      const payload = await getPayloadClient()
+      return payload.find({
         collection: 'faqItems' as any,
         where,
         limit,
         locale: locale as any,
         sort: 'order',
         depth: 0,
-      }),
+      })
+    },
     { docs: [] } as any,
   )
 

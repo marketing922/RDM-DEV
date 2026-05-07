@@ -8,7 +8,6 @@ export async function getBlogPosts(options?: {
   locale?: string
   benefitIds?: Array<string | number>
 }) {
-  const payload = await getPayloadClient()
   const { limit = 9, page = 1, locale = 'fr', category = '', search = '' } =
     options || {}
 
@@ -29,20 +28,23 @@ export async function getBlogPosts(options?: {
   }
   const where = andClauses.length === 1 ? andClauses[0] : { and: andClauses }
 
-  return safeQuery(() => payload.find({
-    collection: 'blogPosts',
-    where,
-    limit,
-    page,
-    locale,
-    sort: '-publishedAt',
-    depth: 1, // populate author, category
-  }), EMPTY_PAGINATED as any)
+  return safeQuery(async () => {
+    const payload = await getPayloadClient()
+    return payload.find({
+      collection: 'blogPosts',
+      where,
+      limit,
+      page,
+      locale,
+      sort: '-publishedAt',
+      depth: 1,
+    })
+  }, EMPTY_PAGINATED as any)
 }
 
 export async function getBlogPostBySlug(slug: string, locale = 'fr') {
-  const payload = await getPayloadClient()
   return safeQuery(async () => {
+    const payload = await getPayloadClient()
     const result = await payload.find({
       collection: 'blogPosts',
       where: { slug: { equals: slug }, _status: { equals: 'published' } },
@@ -55,8 +57,8 @@ export async function getBlogPostBySlug(slug: string, locale = 'fr') {
 }
 
 export async function getFeaturedBlogPost(locale = 'fr') {
-  const payload = await getPayloadClient()
   return safeQuery(async () => {
+    const payload = await getPayloadClient()
     const result = await payload.find({
       collection: 'blogPosts',
       where: { _status: { equals: 'published' } },

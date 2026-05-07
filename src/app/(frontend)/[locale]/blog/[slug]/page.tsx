@@ -223,21 +223,9 @@ function extractSections(content: unknown): ExtractedSection[] {
 /* ─── generateStaticParams / generateMetadata ────────────────────── */
 
 export async function generateStaticParams() {
-  try {
-    // Top 20 articles au build, le reste à la demande (dynamicParams=true).
-    const { docs: posts } = await getBlogPosts({ limit: 20 })
-    const params: Array<{ locale: string; slug: string }> = []
-    for (const post of posts) {
-      const slug = (post as any).slug
-      if (slug) {
-        params.push({ locale: 'fr', slug })
-        params.push({ locale: 'en', slug })
-      }
-    }
-    return params
-  } catch {
-    return []
-  }
+  // Aucune page pré-générée au build — ISR à la demande via dynamicParams=true.
+  // Économise ~20× les lectures BD au build (Neon free tier).
+  return []
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

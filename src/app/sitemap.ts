@@ -2,6 +2,11 @@ import type { MetadataRoute } from 'next'
 import { getWikiEntries, getBlogPosts, getBenefits, getProducts } from '@/lib/queries'
 import { getPayloadClient, safeQuery, EMPTY_PAGINATED } from '@/lib/payload'
 
+// ISR : sitemap régénéré max 1×/24h. Si la BD est down/quota dépassé au
+// build, on retombe juste sur les pages statiques (safeQuery → []) plutôt
+// que d'échouer le build entier.
+export const revalidate = 86400
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://remedes-mamie.com'
 
 const LOCALES = ['fr', 'en'] as const
@@ -30,18 +35,16 @@ function buildLanguageAlternates(path: string): Record<string, string> {
 }
 
 async function getPagesList(locale: Locale) {
-  const payload = await getPayloadClient()
-  return safeQuery(
-    () =>
-      payload.find({
-        collection: 'pages',
-        where: { _status: { equals: 'published' } },
-        limit: 500,
-        locale,
-        depth: 0,
-      }),
-    EMPTY_PAGINATED,
-  )
+  return safeQuery(async () => {
+    const payload = await getPayloadClient()
+    return payload.find({
+      collection: 'pages',
+      where: { _status: { equals: 'published' } },
+      limit: 500,
+      locale,
+      depth: 0,
+    })
+  }, EMPTY_PAGINATED)
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

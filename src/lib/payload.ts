@@ -45,6 +45,21 @@ export async function safeQuery<T>(fn: () => Promise<T>, fallback: T): Promise<T
       )
       return fallback
     }
+    // Case 3: DB unreachable (Neon quota/sleep, network, pool exhaustion).
+    // En build, on doit pouvoir échouer gracieusement — sitemap, listes,
+    // generateStaticParams ne doivent pas tuer le deploy si la BD est ko.
+    const msg = error?.message || ''
+    if (
+      msg.includes('cannot connect') ||
+      msg.includes('exceeded the data transfer') ||
+      msg.includes('ECONNREFUSED') ||
+      msg.includes('timeout') ||
+      error?.code === 'XX000' ||
+      error?.payloadInitError === true
+    ) {
+      console.warn('[Payload] DB unreachable, returning empty fallback:', msg)
+      return fallback
+    }
     throw error
   }
 }

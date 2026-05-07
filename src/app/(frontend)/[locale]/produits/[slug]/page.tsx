@@ -22,21 +22,8 @@ type Props = {
 }
 
 export async function generateStaticParams() {
-  try {
-    // Top 30 produits au build, le reste à la demande (dynamicParams=true).
-    const { docs: products } = await getProducts({ limit: 30 })
-    const params: Array<{ locale: string; slug: string }> = []
-    for (const p of products) {
-      const slug = (p as any).slug
-      if (slug) {
-        params.push({ locale: 'fr', slug })
-        params.push({ locale: 'en', slug })
-      }
-    }
-    return params
-  } catch {
-    return []
-  }
+  // Aucune page pré-générée au build — ISR à la demande via dynamicParams=true.
+  return []
 }
 
 function formatPrice(value: number | null | undefined): string {
