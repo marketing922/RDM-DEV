@@ -1,7 +1,7 @@
 {
   "crons": [
-    { "path": "/api/cron/autopilot/tick", "schedule": "0,30 * * * *" },
+    { "path": "/api/cron/autopilot/tick", "schedule": "0 4 * * *" },
     { "path": "/api/cron/purge-embeddings", "schedule": "0 4 * * 0" },
-    { "path": "/api/cron/purge-rate-limits", "schedule": "0 * * * *" }
+    { "path": "/api/cron/purge-rate-limits", "schedule": "30 4 * * *" }
   ]
 }
