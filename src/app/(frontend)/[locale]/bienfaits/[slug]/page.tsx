@@ -19,6 +19,7 @@ import {
   getBenefits,
   getProducts,
   getBlogPosts,
+  getWikiEntries,
 } from '@/lib/queries'
 import { resolveMediaUrl } from '@/lib/mediaUrl'
 import { siteMetadataBase } from '@/lib/metadata'
@@ -95,14 +96,19 @@ export default async function BienfaitDetailPage({ params }: Props) {
   const benefitNumber: string = b.referenceNumber || ''
   const tDetail = (dict.benefits as any).detail ?? {}
 
-  // Related plants (from benefit.relatedPlants relationship, depth:2)
-  const relatedPlants: Array<{
+  // Related plants — d'abord la relation explicite `b.relatedPlants`, puis
+  // fallback inverse sur les plantes dont le champ `benefits` cite ce
+  // bienfait. Sans ce fallback, un bienfait qui n'a pas été lié manuellement
+  // côté admin affiche toujours « 00 plantes », alors que les plantes elles
+  // pointent bien vers lui.
+  type PlantLite = {
     id?: string | number
     name: string
     slug?: string
     latinName?: string
     shortDescription?: string
-  }> = Array.isArray(b.relatedPlants)
+  }
+  let relatedPlants: PlantLite[] = Array.isArray(b.relatedPlants)
     ? b.relatedPlants
         .filter((p: any) => p && typeof p === 'object' && p.name && p.slug)
         .map((p: any) => ({
@@ -113,6 +119,31 @@ export default async function BienfaitDetailPage({ params }: Props) {
           shortDescription: p.shortDescription,
         }))
     : []
+
+  if (relatedPlants.length === 0 && b.id) {
+    try {
+      const { docs } = await getWikiEntries({ limit: 100, locale })
+      relatedPlants = (docs as any[])
+        .filter((plant) => {
+          const bs = plant?.benefits
+          if (!Array.isArray(bs)) return false
+          return bs.some((x: any) => {
+            if (typeof x === 'string' || typeof x === 'number') return x === b.id
+            return x?.id === b.id || x?.slug === slug
+          })
+        })
+        .map((plant: any) => ({
+          id: plant.id,
+          name: plant.name,
+          slug: plant.slug,
+          latinName: plant.latinName,
+          shortDescription: plant.shortDescription,
+        }))
+        .slice(0, 8)
+    } catch {
+      relatedPlants = []
+    }
+  }
 
   // Related products — first try the explicit relatedProducts on the benefit,
   // then fall back to products that reference this benefit via their `benefits` field.
@@ -139,18 +170,30 @@ export default async function BienfaitDetailPage({ params }: Props) {
   }
   relatedProducts = relatedProducts.slice(0, 4)
 
-  // Related articles — explicit relation on the benefit (preferred), with a
-  // best-effort tag-matching fallback when the editor hasn't linked any.
+  // Related articles — d'abord la relation explicite, puis fallback inverse
+  // sur les articles dont `relatedBenefits` cite ce bienfait. Le tag-matching
+  // est conservé en dernier recours pour les articles legacy sans
+  // `relatedBenefits` (rares).
   let relatedArticles: any[] = Array.isArray(b.relatedArticles)
     ? b.relatedArticles
         .filter((p: any) => p && typeof p === 'object' && p.slug && p.title)
     : []
 
-  if (relatedArticles.length === 0) {
+  if (relatedArticles.length === 0 && b.id) {
     try {
-      const { docs: allPosts } = await getBlogPosts({ limit: 12, locale })
-      relatedArticles = (allPosts as any[])
-        .filter((post) => {
+      const { docs: allPosts } = await getBlogPosts({ limit: 50, locale })
+      relatedArticles = (allPosts as any[]).filter((post) => {
+        const rb = post?.relatedBenefits
+        if (!Array.isArray(rb)) return false
+        return rb.some((x: any) => {
+          if (typeof x === 'string' || typeof x === 'number') return x === b.id
+          return x?.id === b.id || x?.slug === slug
+        })
+      })
+
+      // Dernier filet de sécurité (legacy) : tag-matching.
+      if (relatedArticles.length === 0) {
+        relatedArticles = (allPosts as any[]).filter((post) => {
           const tags = Array.isArray(post.tags) ? post.tags : []
           return tags.some((t: any) => {
             const tSlug = typeof t === 'object' ? t?.slug : null
@@ -158,7 +201,7 @@ export default async function BienfaitDetailPage({ params }: Props) {
             return tSlug === slug || tName?.toLowerCase() === benefitName.toLowerCase()
           })
         })
-        .slice(0, 3)
+      }
     } catch {
       relatedArticles = []
     }
@@ -252,279 +295,198 @@ export default async function BienfaitDetailPage({ params }: Props) {
           </p>
         )}
 
-        {/* Filet pointillé */}
-        <div
-          aria-hidden
-          className="mt-8 h-px w-full border-t border-dotted border-rm-ruleStrong"
-        />
-
-        {/* Meta stats */}
-        <dl className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 font-sans text-sm text-rm-inkSoft">
-          <div className="flex items-baseline gap-1.5">
-            <dt className="font-mono text-rm-burgundy">
-              {String(relatedPlants.length).padStart(2, '0')}
-            </dt>
-            <dd>
-              {relatedPlants.length > 1
-                ? 'plantes associées'
-                : 'plante associée'}
-            </dd>
-          </div>
-          {relatedArticles.length > 0 && (
-            <div className="flex items-baseline gap-1.5">
-              <dt className="font-mono text-rm-burgundy">
-                {String(relatedArticles.length).padStart(2, '0')}
-              </dt>
-              <dd>
-                {relatedArticles.length > 1 ? 'articles' : 'article'}
-              </dd>
-            </div>
-          )}
-          {relatedProducts.length > 0 && (
-            <div className="flex items-baseline gap-1.5">
-              <dt className="font-mono text-rm-burgundy">
-                {String(relatedProducts.length).padStart(2, '0')}
-              </dt>
-              <dd>
-                {relatedProducts.length > 1 ? 'produits' : 'produit'}
-              </dd>
-            </div>
-          )}
-        </dl>
       </section>
 
-      {/* ═══════════════ CORPS ÉDITORIAL ═══════════════ */}
-      <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-12">
-        <DirectAnswerBox text={b.directAnswer} />
+      {/* ═══════════════ CORPS + SIDEBARS GAUCHE/DROITE ═══════════════
+        Container élargi à 1440px (vs 1280px) pour profiter des écrans
+        larges, et grille rééquilibrée 3/6/3 — la colonne centrale double
+        de largeur effective vs l'ancien 8/12 (avec marges) et reste
+        confortable à lire (~720px). */}
+      <section className="border-t border-rm-rule">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10 py-10 sm:py-14 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+          {/* ── Sidebar gauche : À retenir (sticky) ── */}
+          {Array.isArray(b.keyTakeaways) && b.keyTakeaways.length > 0 && (
+            <aside className="lg:col-span-3 lg:sticky lg:top-20 lg:self-start lg:order-1 order-2">
+              <KeyTakeawaysBox items={b.keyTakeaways} />
+            </aside>
+          )}
 
-        {descriptionParagraphs.length > 0 && (
-          <article className="mt-8">
-            <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
-              {tDetail.lecture}
-            </p>
-            <h2 className="mt-2 font-display text-xl sm:text-2xl md:text-3xl text-rm-teal border-l-4 border-rm-ochre pl-3 sm:pl-4">
-              {tDetail.traditionalUse} {benefitName.toLowerCase()}
-            </h2>
-            <div className="mt-5 sm:mt-6 space-y-4 sm:space-y-5 font-serif text-[16px] sm:text-[18px] leading-[1.7] sm:leading-[1.75] text-rm-inkSoft">
-              {descriptionParagraphs.map((paragraph, i) => (
-                <p
-                  key={i}
-                  className={
-                    i === 0
-                      ? "first-letter:float-left first-letter:font-display first-letter:text-[44px] sm:first-letter:text-[56px] first-letter:leading-[0.9] first-letter:text-rm-burgundy first-letter:mr-2 first-letter:mt-1"
-                      : ''
-                  }
-                >
-                  {paragraph}
+          {/* ── Colonne centrale : éditorial ── */}
+          <article className="lg:col-span-6 lg:order-2 order-1 min-w-0">
+            <DirectAnswerBox text={b.directAnswer} />
+
+            {descriptionParagraphs.length > 0 && (
+              <div className="mt-8">
+                <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
+                  {tDetail.lecture}
                 </p>
-              ))}
-            </div>
-          </article>
-        )}
-
-        {precautionsParagraphs.length > 0 && (
-          <aside className="mt-10 rounded-r-xl border-l-4 border-rm-burgundy bg-rm-creamSoft px-5 py-4">
-            <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
-              {tDetail.precautions}
-            </p>
-            <div className="mt-2 space-y-2 font-serif text-[15px] leading-relaxed text-rm-ink">
-              {precautionsParagraphs.map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
-            </div>
-          </aside>
-        )}
-
-        {redFlagItems.length > 0 && (
-          <aside className="mt-6 border border-rm-burgundy/40 bg-rm-burgundy/5 px-5 py-4">
-            <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
-              {tDetail.redFlags}
-            </p>
-            <ul className="mt-2 list-disc list-inside font-serif text-[15px] leading-relaxed text-rm-ink space-y-1">
-              {redFlagItems.map((item, i) => (
-                <li key={i}>{item}</li>
-              ))}
-            </ul>
-          </aside>
-        )}
-
-        <KeyTakeawaysBox items={b.keyTakeaways} />
-      </section>
-
-      {/* ═══════════════ PLANTES + PRODUITS (côte à côte) ═══════════════ */}
-      {(relatedPlants.length > 0 || relatedProducts.length > 0) && (
-        <section className="border-t border-rm-rule bg-rm-paper/40">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
-
-              {/* ── Plantes (colonne gauche) ── */}
-              {relatedPlants.length > 0 && (
-                <div className={relatedProducts.length > 0 ? 'lg:col-span-5' : 'lg:col-span-12'}>
-                  <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
-                    Plantes traditionnellement utilisées
-                  </p>
-                  <h2 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl text-rm-teal">
-                    Les plantes de l’almanach
-                  </h2>
-                  <div
-                    aria-hidden
-                    className="mt-4 h-px w-full border-t border-dotted border-rm-ruleStrong"
-                  />
-
-                  <ul className={`mt-8 grid gap-4 sm:gap-5 ${
-                    relatedProducts.length > 0
-                      ? 'grid-cols-1 sm:grid-cols-2'
-                      : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-                  }`}>
-                    {relatedPlants.map((plant) => (
-                      <li key={plant.slug ?? plant.name}>
-                        <Link
-                          href={`/${locale}/plantes/${plant.slug}`}
-                          className="group block h-full rounded-xl bg-rm-cream border border-rm-stone p-5 transition-all hover:-translate-y-0.5 hover:border-rm-burgundy hover:shadow-[0_10px_24px_rgba(5,74,87,0.08)]"
-                        >
-                          <h3 className="font-display text-xl text-rm-teal group-hover:text-rm-burgundy transition-colors">
-                            {plant.name}
-                          </h3>
-                          {plant.latinName && (
-                            <p className="mt-1 font-serif italic text-sm text-rm-burgundy">
-                              {plant.latinName}
-                            </p>
-                          )}
-                          {plant.shortDescription && (
-                            <p className="mt-3 font-serif text-[15px] leading-snug text-rm-inkSoft line-clamp-2">
-                              {plant.shortDescription}
-                            </p>
-                          )}
-                          <span className="mt-4 inline-flex items-center gap-1 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-rm-burgundy">
-                            Découvrir la fiche
-                            <span aria-hidden>→</span>
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                <h2 className="mt-2 font-display text-xl sm:text-2xl md:text-3xl text-rm-teal border-l-4 border-rm-ochre pl-3 sm:pl-4">
+                  {tDetail.traditionalUse} {benefitName.toLowerCase()}
+                </h2>
+                <div className="mt-5 sm:mt-6 space-y-4 sm:space-y-5 font-serif text-[16px] sm:text-[18px] leading-[1.7] sm:leading-[1.75] text-rm-inkSoft">
+                  {descriptionParagraphs.map((paragraph, i) => (
+                    <p
+                      key={i}
+                      className={
+                        i === 0
+                          ? "first-letter:float-left first-letter:font-display first-letter:text-[44px] sm:first-letter:text-[56px] first-letter:leading-[0.9] first-letter:text-rm-burgundy first-letter:mr-2 first-letter:mt-1"
+                          : ''
+                      }
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* ── Produits (colonne droite) ── */}
-              {relatedProducts.length > 0 && (
-                <div className={relatedPlants.length > 0 ? 'lg:col-span-7' : 'lg:col-span-12'}>
-                  <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
-                    Dans notre boutique
-                  </p>
-                  <h2 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl text-rm-teal">
-                    Produits recommandés
-                  </h2>
-                  <div
-                    aria-hidden
-                    className="mt-4 h-px w-full border-t border-dotted border-rm-ruleStrong"
-                  />
+            {precautionsParagraphs.length > 0 && (
+              <aside className="mt-10 rounded-r-xl border-l-4 border-rm-burgundy bg-rm-creamSoft px-5 py-4">
+                <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
+                  {tDetail.precautions}
+                </p>
+                <div className="mt-2 space-y-2 font-serif text-[15px] leading-relaxed text-rm-ink">
+                  {precautionsParagraphs.map((p, i) => (
+                    <p key={i}>{p}</p>
+                  ))}
+                </div>
+              </aside>
+            )}
 
-                  <div className={`mt-8 grid gap-4 sm:gap-5 ${
-                    relatedPlants.length > 0
-                      ? 'grid-cols-1 sm:grid-cols-2'
-                      : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
-                  }`}>
-                    {relatedProducts.map((product: any) => {
-                      const img =
-                        resolveMediaUrl(
-                          (product.images?.[0] as any)?.image,
-                          'card',
-                        ) ??
-                        (product.externalImageUrl as string | undefined) ??
-                        DEFAULT_PRODUCT_IMAGE
-                      return (
+            {redFlagItems.length > 0 && (
+              <aside className="mt-6 border border-rm-burgundy/40 bg-rm-burgundy/5 px-5 py-4">
+                <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
+                  {tDetail.redFlags}
+                </p>
+                <ul className="mt-2 list-disc list-inside font-serif text-[15px] leading-relaxed text-rm-ink space-y-1">
+                  {redFlagItems.map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+              </aside>
+            )}
+
+            {/* FAQ — gardée dans la colonne centrale (lecture longue, accordéon
+                volumineux qui n'a pas sa place en sidebar). */}
+            {Array.isArray(b.faq) && b.faq.length > 0 && (
+              <div className="mt-12">
+                <FaqAccordion items={b.faq} />
+              </div>
+            )}
+          </article>
+
+          {/* ── Sidebar droite : plantes / produits / articles ── */}
+          <aside className="lg:col-span-3 lg:order-3 order-3 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:pr-1 space-y-6">
+            {/* Plantes associées */}
+            {relatedPlants.length > 0 && (
+              <div className="rounded-xl border border-rm-stone bg-rm-cream p-5">
+                <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
+                  Plantes associées
+                </p>
+                <ul className="mt-3 divide-y divide-rm-rule">
+                  {relatedPlants.map((plant) => (
+                    <li key={plant.slug ?? plant.name} className="py-3 first:pt-0 last:pb-0">
+                      <Link
+                        href={`/${locale}/plantes/${plant.slug}`}
+                        className="group block"
+                      >
+                        <h3 className="font-display text-[17px] text-rm-teal group-hover:text-rm-burgundy transition-colors">
+                          {plant.name}
+                        </h3>
+                        {plant.latinName && (
+                          <p className="mt-0.5 font-serif italic text-[13px] text-rm-burgundy">
+                            {plant.latinName}
+                          </p>
+                        )}
+                        {plant.shortDescription && (
+                          <p className="mt-1 font-serif text-[13px] leading-snug text-rm-inkSoft line-clamp-2">
+                            {plant.shortDescription}
+                          </p>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Produits associés */}
+            {relatedProducts.length > 0 && (
+              <div className="rounded-xl border border-rm-stone bg-rm-cream p-5">
+                <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
+                  Produits associés
+                </p>
+                <ul className="mt-3 space-y-3">
+                  {relatedProducts.map((product: any) => {
+                    const img =
+                      resolveMediaUrl(
+                        (product.images?.[0] as any)?.image,
+                        'card',
+                      ) ??
+                      (product.externalImageUrl as string | undefined) ??
+                      DEFAULT_PRODUCT_IMAGE
+                    return (
+                      <li key={product.slug}>
                         <Link
-                          key={product.slug}
                           href={`/${locale}/produits/${product.slug}`}
-                          className="group flex flex-col overflow-hidden rounded-xl border border-rm-stone bg-rm-cream transition-all hover:-translate-y-0.5 hover:border-rm-burgundy hover:shadow-[0_10px_24px_rgba(5,74,87,0.08)]"
+                          className="group flex gap-3 items-start"
                         >
-                          <div className="relative aspect-[4/3] overflow-hidden bg-rm-creamSoft">
+                          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-md bg-rm-creamSoft border border-rm-rule">
                             <Image
                               src={img}
                               alt={product.name}
                               fill
-                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                              sizes="64px"
                               className="object-cover transition-transform duration-500 group-hover:scale-105"
                             />
                           </div>
-                          <div className="flex flex-1 flex-col p-4">
-                            <h3 className="font-display text-lg text-rm-teal group-hover:text-rm-burgundy transition-colors">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-display text-[15px] leading-tight text-rm-teal group-hover:text-rm-burgundy transition-colors line-clamp-2">
                               {product.name}
                             </h3>
-                            {product.shortDescription && (
-                              <p className="mt-1 font-serif text-sm text-rm-inkSoft line-clamp-2">
-                                {product.shortDescription}
+                            {typeof product.price === 'number' && (
+                              <p className="mt-1 font-mono text-[13px] font-semibold text-rm-teal">
+                                {product.price.toFixed(2).replace('.', ',')} €
                               </p>
                             )}
-                            <div className="mt-auto pt-3 flex items-baseline justify-between">
-                              {typeof product.price === 'number' && (
-                                <span className="font-mono text-base font-semibold text-rm-teal">
-                                  {product.price.toFixed(2).replace('.', ',')} €
-                                </span>
-                              )}
-                              <span className="font-sans text-xs font-semibold uppercase tracking-[0.12em] text-rm-burgundy">
-                                Voir
-                              </span>
-                            </div>
                           </div>
                         </Link>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )}
 
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ═══════════════ ARTICLES LIÉS ═══════════════ */}
-      {relatedArticles.length > 0 && (
-        <section className="border-t border-rm-rule">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 py-10 sm:py-14">
-            <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
-              En savoir plus
-            </p>
-            <h2 className="mt-2 font-display text-2xl sm:text-3xl md:text-4xl text-rm-teal">
-              Articles liés
-            </h2>
-            <div
-              aria-hidden
-              className="mt-4 h-px w-full border-t border-dotted border-rm-ruleStrong"
-            />
-
-            <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {relatedArticles.map((post: any) => (
-                <li key={post.slug}>
-                  <Link
-                    href={`/${locale}/blog/${post.slug}`}
-                    className="group block h-full rounded-xl bg-rm-cream border border-rm-stone p-5 transition-all hover:-translate-y-0.5 hover:border-rm-burgundy hover:shadow-[0_10px_24px_rgba(5,74,87,0.08)]"
-                  >
-                    <h3 className="font-display text-lg text-rm-teal group-hover:text-rm-burgundy transition-colors">
-                      {post.title}
-                    </h3>
-                    {post.excerpt && (
-                      <p className="mt-2 font-serif text-[15px] leading-snug text-rm-inkSoft line-clamp-3">
-                        {post.excerpt}
-                      </p>
-                    )}
-                    <span className="mt-4 inline-flex items-center gap-1 font-sans text-xs font-semibold uppercase tracking-[0.12em] text-rm-burgundy">
-                      Lire l’article
-                      <span aria-hidden>→</span>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
-
-      {/* ═══════════════ GEO SECTIONS ═══════════════ */}
-      <section className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-10">
-        <FaqAccordion items={b.faq} />
+            {/* Articles associés */}
+            {relatedArticles.length > 0 && (
+              <div className="rounded-xl border border-rm-stone bg-rm-cream p-5">
+                <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.18em] text-rm-burgundy">
+                  Articles associés
+                </p>
+                <ul className="mt-3 divide-y divide-rm-rule">
+                  {relatedArticles.map((post: any) => (
+                    <li key={post.slug} className="py-3 first:pt-0 last:pb-0">
+                      <Link
+                        href={`/${locale}/blog/${post.slug}`}
+                        className="group block"
+                      >
+                        <h3 className="font-display text-[15px] leading-tight text-rm-teal group-hover:text-rm-burgundy transition-colors line-clamp-2">
+                          {post.title}
+                        </h3>
+                        {post.excerpt && (
+                          <p className="mt-1 font-serif text-[13px] leading-snug text-rm-inkSoft line-clamp-2">
+                            {post.excerpt}
+                          </p>
+                        )}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </aside>
+        </div>
       </section>
 
       {/* ═══════════════ DISCLAIMER + RETOUR ═══════════════ */}

@@ -13,6 +13,7 @@ import {
   EditorialAside,
   EditorialChapo,
   CrossCard,
+  FAQList,
 } from '@/components/editorial/primitives'
 import Reveal from '@/components/ui/Reveal'
 import {
@@ -446,12 +447,32 @@ export default async function BlogDetailPage({ params }: Props) {
         .slice(0, 4)
     : []
 
-  // Build sommaire entries
-  const sommaire = sections.map((s, i) => ({
-    id: s.id,
-    label: s.title,
-    num: String(i + 1).padStart(2, '0'),
-  }))
+  // FAQ — alimentée par le champ `faq` du tab GEO (array localized de
+  // {question, answer}). Affichée comme dernière section de l'article si
+  // au moins une entrée valide est saisie.
+  const faqItems: Array<{ question: string; answer: string }> = Array.isArray(
+    (p as any).faq,
+  )
+    ? ((p as any).faq as any[]).filter((q) => q && q.question && q.answer)
+    : []
+
+  // Build sommaire entries (ajoute la FAQ en dernière entrée si présente)
+  const sommaire = [
+    ...sections.map((s, i) => ({
+      id: s.id,
+      label: s.title,
+      num: String(i + 1).padStart(2, '0'),
+    })),
+    ...(faqItems.length > 0
+      ? [
+          {
+            id: 'faq',
+            label: 'FAQ',
+            num: String(sections.length + 1).padStart(2, '0'),
+          },
+        ]
+      : []),
+  ]
 
   return (
     <main className="min-h-screen bg-rm-cream text-rm-ink font-sans">
@@ -825,6 +846,32 @@ export default async function BlogDetailPage({ params }: Props) {
                 </EditorialSection>
               )
             })}
+
+            {/* FAQ de l'article (champ `faq` du tab GEO) */}
+            {faqItems.length > 0 && (
+              <Reveal>
+                <EditorialSection
+                  id="faq"
+                  num={String(sections.length + 1).padStart(2, '0')}
+                  title="FAQ"
+                >
+                  <FAQList
+                    items={faqItems.map((item) => ({
+                      q: item.question,
+                      a: (
+                        <div className="space-y-3">
+                          {String(item.answer)
+                            .split('\n\n')
+                            .map((para, i) => (
+                              <p key={i}>{para}</p>
+                            ))}
+                        </div>
+                      ),
+                    }))}
+                  />
+                </EditorialSection>
+              </Reveal>
+            )}
 
             {/* Galerie en fin d'article (URLs sans sectionIndex ou hors bornes) */}
             {trailingImages.length > 0 && (

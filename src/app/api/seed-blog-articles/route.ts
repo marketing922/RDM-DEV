@@ -74,6 +74,8 @@ function richText(paragraphs: string[], headings: string[] = []) {
   }
 }
 
+type FaqQA = { question: string; answer: string }
+
 type Article = {
   slug: string
   publishedAt: string
@@ -519,6 +521,375 @@ const ARTICLES: Article[] = [
   },
 ]
 
+/**
+ * FAQ par article (3 Q/R FR + EN). Stocké séparément pour ne pas alourdir
+ * la définition de chaque article. Les questions évitent volontairement les
+ * patterns interdits par `scanForbiddenClaims` (médicament au singulier,
+ * pathologie, maladie, traitement, infection, etc.).
+ */
+const ARTICLE_FAQS: Record<string, { fr: FaqQA[]; en: FaqQA[] }> = {
+  'bien-dormir-valeriane-passiflore': {
+    fr: [
+      {
+        question: 'Combien de temps pour ressentir les effets ?',
+        answer:
+          "Les effets apaisants se manifestent généralement dès la première prise (30 à 60 minutes après l'infusion). Pour un effet de fond sur le sommeil, comptez 7 à 14 jours de prise régulière le soir.",
+      },
+      {
+        question: 'Peut-on associer la valériane à un somnifère ?',
+        answer:
+          "Non, sauf avis professionnel. La valériane peut renforcer l'effet des sédatifs (benzodiazépines, antihistaminiques). Demandez à votre médecin ou pharmacien avant toute association.",
+      },
+      {
+        question: 'À partir de quel âge ?',
+        answer:
+          "La valériane est habituellement réservée aux adolescents (12 ans et plus). Pour les enfants plus jeunes, préférez le tilleul ou la mélisse, mieux tolérés et au goût plus doux.",
+      },
+    ],
+    en: [
+      {
+        question: 'How long to feel the effects?',
+        answer:
+          "Calming effects are usually felt from the first cup (30 to 60 minutes after the infusion). For deeper sleep support, expect 7 to 14 days of regular evening use.",
+      },
+      {
+        question: 'Can I combine valerian with a sleeping pill?',
+        answer:
+          "No, unless professionally advised. Valerian can amplify sedative effects (benzodiazepines, antihistamines). Ask your doctor or pharmacist before combining.",
+      },
+      {
+        question: 'From what age?',
+        answer:
+          "Valerian is generally reserved for teens (12 and up). For younger children, prefer linden or lemon balm — better tolerated and milder in taste.",
+      },
+    ],
+  },
+  'melisse-anti-stress-quotidien': {
+    fr: [
+      {
+        question: 'La mélisse fait-elle dormir ?',
+        answer:
+          "Elle facilite l'endormissement chez les personnes sujettes à l'agitation mentale du soir, mais son effet reste doux. Pour les nuits très agitées, l'associer à la valériane ou au tilleul.",
+      },
+      {
+        question: 'Peut-on en consommer tous les jours ?',
+        answer:
+          'Oui, en infusion (1 à 3 tasses par jour) sur des cures de 3 à 4 semaines. Faites des pauses entre les cures pour préserver la sensibilité aux effets.',
+      },
+      {
+        question: 'Différence entre lavande vraie et lavandin ?',
+        answer:
+          "La lavande vraie (Lavandula angustifolia) est utilisée en phytothérapie. Le lavandin est un hybride à rendement élevé, surtout dédié à la parfumerie et aux huiles essentielles de qualité moindre.",
+      },
+    ],
+    en: [
+      {
+        question: 'Does lemon balm make you sleepy?',
+        answer:
+          "It helps falling asleep in people prone to evening mental agitation, but the effect is gentle. For very restless nights, combine with valerian or linden.",
+      },
+      {
+        question: 'Can I drink it every day?',
+        answer:
+          "Yes, as an infusion (1 to 3 cups a day) over 3- to 4-week courses. Take breaks between courses to preserve sensitivity to the effects.",
+      },
+      {
+        question: 'True lavender vs. lavandin?',
+        answer:
+          "True lavender (Lavandula angustifolia) is used in phytotherapy. Lavandin is a high-yield hybrid mostly dedicated to perfumery and lower-grade essential oils.",
+      },
+    ],
+  },
+  'romarin-concentration-rentree': {
+    fr: [
+      {
+        question: 'Le romarin réveille-t-il vraiment ?',
+        answer:
+          "Le romarin a un effet tonique léger comparable à un thé doux. Il ne remplace ni un sommeil de qualité ni une bonne hydratation pendant les périodes intenses.",
+      },
+      {
+        question: "Combien de temps avant de ressentir l'effet du ginkgo ?",
+        answer:
+          "Les études cliniques rapportent des effets sur la microcirculation et la concentration après 4 à 6 semaines de prise régulière (extrait standardisé). Pas d'effet immédiat.",
+      },
+      {
+        question: 'Peut-on prendre du ginkgo en continu ?',
+        answer:
+          "Habituellement par cures de 2 à 3 mois, suivies d'une pause. Demandez l'avis de votre pharmacien si vous prenez d'autres compléments ou des médicaments anticoagulants.",
+      },
+    ],
+    en: [
+      {
+        question: 'Does rosemary really wake you up?',
+        answer:
+          "Rosemary has a mild tonic effect comparable to a gentle tea. It replaces neither quality sleep nor good hydration during demanding periods.",
+      },
+      {
+        question: 'How long before ginkgo takes effect?',
+        answer:
+          "Clinical studies report effects on microcirculation and focus after 4 to 6 weeks of regular use (standardized extract). No immediate effect.",
+      },
+      {
+        question: 'Can I take ginkgo continuously?',
+        answer:
+          "Usually in 2- to 3-month courses followed by a break. Ask your pharmacist if you take other supplements or anticoagulant medications.",
+      },
+    ],
+  },
+  'menthe-poivree-allie-digestion': {
+    fr: [
+      {
+        question: 'Quand boire la tisane ?',
+        answer:
+          "De préférence après le repas pour soutenir la digestion. Évitez le soir si vous êtes sensible à la caféine ou si vous avez du reflux gastro-œsophagien.",
+      },
+      {
+        question: 'Et pendant la grossesse ?',
+        answer:
+          "La tisane reste tolérée en quantité raisonnable. L'huile essentielle, en revanche, est contre-indiquée pendant la grossesse et l'allaitement.",
+      },
+      {
+        question: 'Pourquoi associer fenouil et menthe poivrée ?',
+        answer:
+          "Les deux plantes sont carminatives (réduisent les gaz) et complémentaires. La menthe rafraîchit, le fenouil adoucit. Le mélange convient à la plupart des digestions difficiles.",
+      },
+    ],
+    en: [
+      {
+        question: 'When to drink the infusion?',
+        answer:
+          "Ideally after meals to support digestion. Avoid evenings if you are caffeine-sensitive or have gastroesophageal reflux.",
+      },
+      {
+        question: 'And during pregnancy?',
+        answer:
+          "The infusion remains tolerated in reasonable amounts. The essential oil, however, is contraindicated during pregnancy and breastfeeding.",
+      },
+      {
+        question: 'Why pair fennel with peppermint?',
+        answer:
+          "Both plants are carminative (gas-reducing) and complementary. Peppermint freshens, fennel softens. The blend suits most challenging digestions.",
+      },
+    ],
+  },
+  'artichaut-chardon-marie-foie': {
+    fr: [
+      {
+        question: 'Combien de temps dure une cure ?',
+        answer:
+          "Habituellement 3 à 4 semaines, à renouveler 2 fois par an (par exemple aux changements de saison). Au-delà, faites des pauses.",
+      },
+      {
+        question: 'Artichaut et hypertension ?',
+        answer:
+          "L'artichaut peut renforcer l'effet de certains hypotenseurs ou diurétiques. En cas de prise médicamenteuse régulière, demandez l'avis de votre médecin avant la cure.",
+      },
+      {
+        question: 'Le boldo, à quelle fréquence ?',
+        answer:
+          "Plutôt en usage ponctuel, sur quelques jours après un repas riche. Évitez les cures longues (plus de 4 semaines) sans avis professionnel.",
+      },
+    ],
+    en: [
+      {
+        question: 'How long does a course last?',
+        answer:
+          "Usually 3 to 4 weeks, repeatable twice a year (e.g., at seasonal changes). Beyond that, take breaks.",
+      },
+      {
+        question: 'Artichoke and high blood pressure?',
+        answer:
+          "Artichoke can amplify the effect of some blood-pressure or diuretic medications. With regular medication use, ask your doctor before starting a course.",
+      },
+      {
+        question: 'How often should I take boldo?',
+        answer:
+          "Rather occasionally, over a few days after a rich meal. Avoid long courses (more than 4 weeks) without professional advice.",
+      },
+    ],
+  },
+  'thym-maux-gorge-hiver': {
+    fr: [
+      {
+        question: 'Tisane ou pastille ?',
+        answer:
+          "Les deux sont complémentaires. La tisane (thym + mauve) hydrate et adoucit en profondeur. Les pastilles à la guimauve apportent un soulagement immédiat entre les prises.",
+      },
+      {
+        question: 'Combien de tisanes par jour ?',
+        answer:
+          "3 à 5 tasses chaudes par jour, avec une cuillère de miel. Si la gêne dépasse 5 jours ou s'accompagne de fièvre, consultez un professionnel de santé.",
+      },
+      {
+        question: 'Le thym pour les enfants ?',
+        answer:
+          "Oui en tisane légère à partir de 6 ans. L'huile essentielle est à proscrire chez les enfants de moins de 12 ans.",
+      },
+    ],
+    en: [
+      {
+        question: 'Infusion or lozenge?',
+        answer:
+          "Both are complementary. The infusion (thyme + mallow) hydrates and soothes deeply. Marshmallow lozenges provide immediate relief between cups.",
+      },
+      {
+        question: 'How many cups a day?',
+        answer:
+          "3 to 5 hot cups a day, with a teaspoon of honey. If discomfort lasts more than 5 days or is accompanied by fever, see a healthcare professional.",
+      },
+      {
+        question: 'Thyme for children?',
+        answer:
+          "Yes, as a light infusion from age 6. Essential oil is to be avoided in children under 12.",
+      },
+    ],
+  },
+  'echinacee-sureau-immunite-hiver': {
+    fr: [
+      {
+        question: "Quand commencer la cure d'échinacée ?",
+        answer:
+          "Dès les premiers signes (gorge qui pique, frissons, fatigue inhabituelle). En cure courte (7 à 10 jours maximum). À éviter en prévention permanente.",
+      },
+      {
+        question: 'Sureau frais ou cuit ?',
+        answer:
+          "Toujours cuit ou commercialisé. Les baies crues contiennent de la sambunigrine, mal tolérée par l'organisme. Préférez sirops, sirops maison cuits, ou décoctions traditionnelles.",
+      },
+      {
+        question: 'Échinacée pendant la grossesse ?',
+        answer:
+          "Données insuffisantes pour la considérer sûre. Par précaution, à éviter pendant la grossesse et l'allaitement, sauf avis professionnel.",
+      },
+    ],
+    en: [
+      {
+        question: 'When to start an echinacea course?',
+        answer:
+          "At the first signs (scratchy throat, chills, unusual tiredness). In a short course (7 to 10 days maximum). Avoid as permanent prevention.",
+      },
+      {
+        question: 'Fresh or cooked elderberry?',
+        answer:
+          "Always cooked or commercially prepared. Raw berries contain sambunigrin, poorly tolerated. Prefer syrups, cooked homemade syrups, or traditional decoctions.",
+      },
+      {
+        question: 'Echinacea during pregnancy?',
+        answer:
+          "Data is insufficient to consider it safe. As a precaution, avoid during pregnancy and breastfeeding unless professionally advised.",
+      },
+    ],
+  },
+  'aubepine-plante-coeur': {
+    fr: [
+      {
+        question: "L'aubépine est-elle compatible avec des médicaments cardiaques ?",
+        answer:
+          "Possiblement, mais uniquement sur avis médical : elle peut renforcer certains hypotenseurs ou ralentisseurs cardiaques. Ne jamais l'associer en automédication.",
+      },
+      {
+        question: 'Combien de temps pour ressentir les effets ?',
+        answer:
+          "Sur les manifestations légères de stress et palpitations bénignes, on parle généralement d'une cure de 3 à 4 semaines pour évaluer le bénéfice.",
+      },
+      {
+        question: 'Aubépine et caféine ?',
+        answer:
+          "Privilégiez la tisane le soir et limitez le café ou le thé fort en parallèle. La caféine peut neutraliser l'effet apaisant recherché.",
+      },
+    ],
+    en: [
+      {
+        question: 'Is hawthorn compatible with heart medications?',
+        answer:
+          "Possibly, but only with medical advice: it can amplify certain blood-pressure or heart-rate medications. Never combine without professional guidance.",
+      },
+      {
+        question: 'How long to feel the effects?',
+        answer:
+          "For mild stress manifestations and benign palpitations, expect a 3- to 4-week course to assess the benefit.",
+      },
+      {
+        question: 'Hawthorn and caffeine?',
+        answer:
+          "Prefer the infusion in the evening and limit coffee or strong tea alongside. Caffeine can offset the calming effect.",
+      },
+    ],
+  },
+  'tilleul-tisane-soir-excellence': {
+    fr: [
+      {
+        question: 'Le tilleul fait-il vraiment dormir ?',
+        answer:
+          "Il favorise la détente et l'endormissement chez la plupart des personnes. L'effet est doux et adapté aux enfants comme aux adultes.",
+      },
+      {
+        question: 'Quelle quantité de fleurs par tasse ?',
+        answer:
+          "1 cuillère à soupe de fleurs séchées dans 250 ml d'eau frémissante, 5 à 7 minutes. Au-delà l'infusion devient amère et perd son effet apaisant.",
+      },
+      {
+        question: 'Tilleul ou camomille pour les enfants ?',
+        answer:
+          "Les deux conviennent dès 1 an, en tisane bien diluée. Le tilleul a un goût plus floral, la camomille plus douce et fruitée — choisissez selon le palais de l'enfant.",
+      },
+    ],
+    en: [
+      {
+        question: 'Does linden really help sleep?',
+        answer:
+          "It supports relaxation and falling asleep in most people. The effect is gentle and suitable for children as well as adults.",
+      },
+      {
+        question: 'How many flowers per cup?',
+        answer:
+          "1 tablespoon of dried flowers in 250 ml of simmering water, 5 to 7 minutes. Beyond that the infusion becomes bitter and loses its soothing effect.",
+      },
+      {
+        question: 'Linden or chamomile for kids?',
+        answer:
+          "Both work from age 1, in well-diluted infusion. Linden has a more floral taste, chamomile is softer and fruitier — pick based on the child's palate.",
+      },
+    ],
+  },
+  'lavande-bien-plus-fleur-parfumee': {
+    fr: [
+      {
+        question: "Comment utiliser l'huile essentielle pour dormir ?",
+        answer:
+          "2 à 3 gouttes sur l'oreiller ou en diffusion atmosphérique 10 minutes avant le coucher. Évitez la diffusion continue toute la nuit.",
+      },
+      {
+        question: "La lavande est-elle bonne contre l'anxiété légère ?",
+        answer:
+          "Des études cliniques sur l'huile essentielle orale (formulation standardisée) suggèrent un effet sur l'anxiété légère à modérée. La tisane et l'aromathérapie ont un effet plus doux mais réel sur la détente.",
+      },
+      {
+        question: 'Différence entre lavande fine et lavande aspic ?',
+        answer:
+          "La lavande fine (vraie, officinalis) est calmante. La lavande aspic est plus stimulante et antiseptique — moins indiquée le soir, mais utile pour les piqûres d'insectes et brûlures bénignes.",
+      },
+    ],
+    en: [
+      {
+        question: 'How to use the essential oil for sleep?',
+        answer:
+          "2 to 3 drops on the pillow or in atmospheric diffusion 10 minutes before bedtime. Avoid continuous diffusion all night.",
+      },
+      {
+        question: 'Is lavender good for mild anxiety?',
+        answer:
+          "Clinical studies on oral essential oil (standardized formulation) suggest an effect on mild to moderate anxiety. Infusion and aromatherapy have a gentler but real effect on relaxation.",
+      },
+      {
+        question: 'Difference between fine lavender and spike lavender?',
+        answer:
+          "Fine lavender (true, officinalis) is calming. Spike lavender is more stimulating and antiseptic — less suited to evenings, but useful for insect bites and minor burns.",
+      },
+    ],
+  },
+}
+
 async function findId(payload: any, collection: string, slug: string): Promise<string | null> {
   try {
     const r = await payload.find({
@@ -616,11 +987,14 @@ export async function GET(req: NextRequest) {
         if (featuredImageId) break
       }
 
+      const faqs = ARTICLE_FAQS[article.slug] || { fr: [], en: [] }
+
       const baseData: any = {
         title: article.fr.title,
         slug: article.slug,
         excerpt: article.fr.excerpt,
         content: richText(article.fr.content, article.fr.headings),
+        faq: faqs.fr,
         author: authorId,
         category: categoryId,
         tags: tagIds,
@@ -702,6 +1076,7 @@ export async function GET(req: NextRequest) {
           title: article.en.title,
           excerpt: article.en.excerpt,
           content: richText(article.en.content, article.en.headings),
+          faq: faqs.en,
         },
         overrideAccess: true,
         req: makeSeedReq() as any,
