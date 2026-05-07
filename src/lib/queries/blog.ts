@@ -6,6 +6,7 @@ export async function getBlogPosts(options?: {
   category?: string
   search?: string
   locale?: string
+  benefitIds?: Array<string | number>
 }) {
   const payload = await getPayloadClient()
   const { limit = 9, page = 1, locale = 'fr', category = '', search = '' } =
@@ -22,6 +23,9 @@ export async function getBlogPosts(options?: {
         { excerpt: { like: search.trim() } },
       ],
     })
+  }
+  if (options?.benefitIds && options.benefitIds.length > 0) {
+    andClauses.push({ relatedBenefits: { in: options.benefitIds } })
   }
   const where = andClauses.length === 1 ? andClauses[0] : { and: andClauses }
 

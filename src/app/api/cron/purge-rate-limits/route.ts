@@ -70,10 +70,10 @@ export async function POST(req: NextRequest) {
     } catch {
       /* swallow logger failure */
     }
-    return NextResponse.json(
-      { error: 'purge_failed', message: err instanceof Error ? err.message : String(err) },
-      { status: 500 },
-    )
+    // Ne pas exposer le message d'erreur au client : il peut contenir des
+    // détails de la BD (path, host, query). Le détail est déjà loggé via
+    // payload.logger ci-dessus.
+    return NextResponse.json({ error: 'purge_failed' }, { status: 500 })
   }
 }
 

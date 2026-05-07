@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
 import { scanForbiddenClaims, gatePublishCompliance, createAuditLog, autoSlug, assignPlantNumber } from '@/hooks'
 import { backupAfterChange } from '@/hooks/backupAfterChange'
+import { revalidateAfterChange } from '@/hooks/revalidateAfterChange'
 import { coerceUploadIds } from '@/hooks/coerceUploadIds'
 import { makeEmbedHook } from '@/hooks/embedAfterChange'
 import { wikiEntriesExtractor } from '@/hooks/embedExtractors'
@@ -12,6 +13,7 @@ import { seoGenerateField } from '@/components/admin/fields/seoGenerateField'
 import { aiHistoryField } from '@/components/admin/fields/aiHistoryField'
 import { geoTab } from '@/fields/geoFields'
 import { slugify } from '@/lib/slugify'
+import { validateImageUrl } from '@/lib/url-validators'
 
 export const WikiEntries: CollectionConfig = {
   slug: 'wikiEntries',
@@ -56,6 +58,7 @@ export const WikiEntries: CollectionConfig = {
       createAuditLog,
       backupAfterChange,
       makeEmbedHook('wikiEntries', wikiEntriesExtractor),
+      revalidateAfterChange,
     ],
   },
   fields: [
@@ -411,10 +414,31 @@ export const WikiEntries: CollectionConfig = {
               name: 'externalImageUrl',
               type: 'text',
               label: 'Image principale (URL Cloudinary)',
+              validate: validateImageUrl as any,
               admin: {
                 placeholder: 'https://res.cloudinary.com/laboratoire-calebasse/image/upload/rdm/plants/<slug>.png',
                 description: 'URL Cloudinary de l\u2019image principale de la plante. Auto-construite par le seed \u00e0 partir du slug.',
               },
+            },
+            {
+              name: 'detectedVariants',
+              type: 'array',
+              label: 'Variantes Cloudinary auto-détectées',
+              labels: { singular: 'URL', plural: 'URLs' },
+              admin: {
+                readOnly: true,
+                description:
+                  "Variantes auto-détectées par /api/refresh-plant-variants (slug-2, slug-tisane…). " +
+                  "Ne pas éditer manuellement — utiliser la galerie ci-dessous pour ajouter des images.",
+              },
+              fields: [
+                {
+                  name: 'url',
+                  type: 'text',
+                  required: true,
+                  label: 'URL',
+                },
+              ],
             },
             {
               name: 'galleryUrls',
@@ -430,6 +454,7 @@ export const WikiEntries: CollectionConfig = {
                   type: 'text',
                   required: true,
                   label: 'URL',
+                  validate: validateImageUrl as any,
                   admin: { placeholder: 'https://res.cloudinary.com/...' },
                 },
                 {

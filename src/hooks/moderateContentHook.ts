@@ -173,6 +173,7 @@ export function makeModerateContentAfterChangeHook(opts: {
               skipModeration: true,
               skipCompliance: true,
               skipEmbed: true,
+              fromHook: true,
             },
             overrideAccess: true,
             depth: 0,

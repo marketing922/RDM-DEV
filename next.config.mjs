@@ -2,7 +2,10 @@ import { withPayload } from '@payloadcms/next/withPayload'
 
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://*.cloudinary.com",
+  // 'unsafe-eval' retiré : CustomCodeBlock n'évalue plus de JS utilisateur.
+  // 'unsafe-inline' conservé tant que tous les <style> ne sont pas migrés en
+  // CSS module / nonce-based — étape suivante du hardening.
+  "script-src 'self' 'unsafe-inline' https://js.stripe.com https://*.cloudinary.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com",

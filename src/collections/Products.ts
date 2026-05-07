@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
 import { scanForbiddenClaims, gatePublishCompliance, createAuditLog, autoSlug } from '@/hooks'
 import { backupAfterChange } from '@/hooks/backupAfterChange'
+import { revalidateAfterChange } from '@/hooks/revalidateAfterChange'
 import { coerceUploadIds } from '@/hooks/coerceUploadIds'
 import { makeEmbedHook } from '@/hooks/embedAfterChange'
 import { productsExtractor } from '@/hooks/embedExtractors'
@@ -11,6 +12,7 @@ import { complianceCheckField } from '@/components/admin/fields/complianceCheckF
 import { seoGenerateField } from '@/components/admin/fields/seoGenerateField'
 import { aiHistoryField } from '@/components/admin/fields/aiHistoryField'
 import { slugify } from '@/lib/slugify'
+import { validateImageUrl } from '@/lib/url-validators'
 
 export const Products: CollectionConfig = {
   slug: 'products',
@@ -48,6 +50,7 @@ export const Products: CollectionConfig = {
       createAuditLog,
       backupAfterChange,
       makeEmbedHook('products', productsExtractor),
+      revalidateAfterChange,
     ],
   },
   fields: [
@@ -233,6 +236,7 @@ export const Products: CollectionConfig = {
               name: 'externalImageUrl',
               type: 'text',
               label: 'URL image externe (fallback)',
+              validate: validateImageUrl as any,
               admin: {
                 description:
                   'URL directe vers une image h\u00e9berg\u00e9e ailleurs (utilis\u00e9e si aucune image upload\u00e9e). Pour les produits import\u00e9s.',

@@ -10,7 +10,6 @@ import { BreadcrumbJsonLd, GeoStructuredData } from '@/components/seo'
 import { getWikiEntryBySlug, getWikiEntries, getBlogPosts, getProducts } from '@/lib/queries'
 import { siteMetadataBase } from '@/lib/metadata'
 import { resolveMediaUrl } from '@/lib/mediaUrl'
-import { getPlantVariants } from '@/lib/cloudinaryVariants'
 import {
   EditorialSection,
   EditorialFigure,
@@ -26,6 +25,10 @@ import PlantImage from '@/components/plantes/PlantImage'
 import { DEFAULT_PLANT_IMAGE } from '@/lib/brand-assets'
 
 export const revalidate = 3600
+// Pré-génère les 30 plantes les plus récentes au build, le reste en ISR à
+// la demande. Évite de pré-builder 100+ × 2 locales = 200+ pages au cold
+// build (3-5min sinon, et explosion du Vercel build minutes Hobby).
+export const dynamicParams = true
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>
@@ -37,7 +40,8 @@ type Props = {
 
 export async function generateStaticParams() {
   try {
-    const { docs: plants } = await getWikiEntries({ limit: 999 })
+    // Top 30 plus récentes au build, le reste à la demande (dynamicParams=true).
+    const { docs: plants } = await getWikiEntries({ limit: 30, sort: '-updatedAt' })
     const params: Array<{ locale: string; slug: string }> = []
     for (const plant of plants) {
       const slug = (plant as any).slug
@@ -205,8 +209,15 @@ export default async function PlantDetailPage({ params }: Props) {
       }
     }
   }
-  const detectedVariants = await getPlantVariants(slug).catch(() => [] as string[])
-  for (const url of detectedVariants) pushGallery(url)
+  // Variantes auto-détectées : on lit le manifest persistant (`detectedVariants`,
+  // peuplé par /api/refresh-plant-variants) au lieu de probe Cloudinary à
+  // chaque render. Évite 128 HEAD requests par cold start Vercel.
+  if (Array.isArray(e.detectedVariants)) {
+    for (const dv of e.detectedVariants) {
+      const url = (dv as any)?.url
+      if (typeof url === 'string' && url.trim()) pushGallery(url)
+    }
+  }
   if (Array.isArray(e.images)) {
     for (let i = 0; i < e.images.length; i++) {
       const img = (e.images[i] as any)?.image

@@ -15,6 +15,7 @@ import { siteMetadataBase } from '@/lib/metadata'
 import { DEFAULT_PLANT_IMAGE } from '@/lib/brand-assets'
 
 export const revalidate = 3600
+export const dynamicParams = true
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>
@@ -22,7 +23,8 @@ type Props = {
 
 export async function generateStaticParams() {
   try {
-    const { docs: products } = await getProducts({ limit: 999 })
+    // Top 30 produits au build, le reste à la demande (dynamicParams=true).
+    const { docs: products } = await getProducts({ limit: 30 })
     const params: Array<{ locale: string; slug: string }> = []
     for (const p of products) {
       const slug = (p as any).slug

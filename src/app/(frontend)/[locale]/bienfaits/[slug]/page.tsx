@@ -20,12 +20,14 @@ import {
   getProducts,
   getBlogPosts,
   getWikiEntries,
+  QUERY_LIMITS,
 } from '@/lib/queries'
 import { resolveMediaUrl } from '@/lib/mediaUrl'
 import { siteMetadataBase } from '@/lib/metadata'
 import { DEFAULT_PLANT_IMAGE } from '@/lib/brand-assets'
 
 export const revalidate = 3600
+export const dynamicParams = true
 
 const DEFAULT_PRODUCT_IMAGE = DEFAULT_PLANT_IMAGE
 
@@ -35,7 +37,8 @@ type Props = {
 
 export async function generateStaticParams() {
   try {
-    const { docs: benefits } = await getBenefits({ limit: 999 })
+    // Top 30 au build, le reste à la demande (dynamicParams=true).
+    const { docs: benefits } = await getBenefits({ limit: 30 })
     const params: Array<{ locale: string; slug: string }> = []
     for (const benefit of benefits) {
       const slug = (benefit as any).slug
@@ -121,25 +124,22 @@ export default async function BienfaitDetailPage({ params }: Props) {
     : []
 
   if (relatedPlants.length === 0 && b.id) {
+    // Reverse query côté DB : `wikiEntries.benefits` contient l'id du bienfait.
+    // `in: [b.id]` matche les rows où ce bienfait apparaît dans le hasMany,
+    // bien plus efficient que findAll + filter JS (et scalable >100 plantes).
     try {
-      const { docs } = await getWikiEntries({ limit: 100, locale })
-      relatedPlants = (docs as any[])
-        .filter((plant) => {
-          const bs = plant?.benefits
-          if (!Array.isArray(bs)) return false
-          return bs.some((x: any) => {
-            if (typeof x === 'string' || typeof x === 'number') return x === b.id
-            return x?.id === b.id || x?.slug === slug
-          })
-        })
-        .map((plant: any) => ({
-          id: plant.id,
-          name: plant.name,
-          slug: plant.slug,
-          latinName: plant.latinName,
-          shortDescription: plant.shortDescription,
-        }))
-        .slice(0, 8)
+      const { docs } = await getWikiEntries({
+        limit: QUERY_LIMITS.SIDEBAR,
+        locale,
+        where: { benefits: { in: [b.id] } },
+      })
+      relatedPlants = (docs as any[]).map((plant: any) => ({
+        id: plant.id,
+        name: plant.name,
+        slug: plant.slug,
+        latinName: plant.latinName,
+        shortDescription: plant.shortDescription,
+      }))
     } catch {
       relatedPlants = []
     }
@@ -154,21 +154,20 @@ export default async function BienfaitDetailPage({ params }: Props) {
     : []
 
   if (relatedProducts.length === 0 && b.id) {
+    // Reverse query : `getProducts` accepte déjà `benefitIds` qui se traduit
+    // en `where.benefits = { in: [...] }` côté DB.
     try {
-      const { docs } = await getProducts({ limit: 4, locale })
-      relatedProducts = (docs as any[]).filter((p) => {
-        const bs = p.benefits
-        if (!Array.isArray(bs)) return false
-        return bs.some((x: any) => {
-          if (typeof x === 'string' || typeof x === 'number') return x === b.id
-          return x?.id === b.id || x?.slug === slug
-        })
+      const { docs } = await getProducts({
+        limit: QUERY_LIMITS.SIDEBAR,
+        locale,
+        benefitIds: [b.id],
       })
+      relatedProducts = docs as any[]
     } catch {
       relatedProducts = []
     }
   }
-  relatedProducts = relatedProducts.slice(0, 4)
+  relatedProducts = relatedProducts.slice(0, QUERY_LIMITS.SIDEBAR)
 
   // Related articles — d'abord la relation explicite, puis fallback inverse
   // sur les articles dont `relatedBenefits` cite ce bienfait. Le tag-matching
@@ -180,33 +179,19 @@ export default async function BienfaitDetailPage({ params }: Props) {
     : []
 
   if (relatedArticles.length === 0 && b.id) {
+    // Reverse query : `getBlogPosts` filtre désormais par `benefitIds` côté DB.
     try {
-      const { docs: allPosts } = await getBlogPosts({ limit: 50, locale })
-      relatedArticles = (allPosts as any[]).filter((post) => {
-        const rb = post?.relatedBenefits
-        if (!Array.isArray(rb)) return false
-        return rb.some((x: any) => {
-          if (typeof x === 'string' || typeof x === 'number') return x === b.id
-          return x?.id === b.id || x?.slug === slug
-        })
+      const { docs } = await getBlogPosts({
+        limit: QUERY_LIMITS.SIDEBAR,
+        locale,
+        benefitIds: [b.id],
       })
-
-      // Dernier filet de sécurité (legacy) : tag-matching.
-      if (relatedArticles.length === 0) {
-        relatedArticles = (allPosts as any[]).filter((post) => {
-          const tags = Array.isArray(post.tags) ? post.tags : []
-          return tags.some((t: any) => {
-            const tSlug = typeof t === 'object' ? t?.slug : null
-            const tName = typeof t === 'object' ? t?.name : null
-            return tSlug === slug || tName?.toLowerCase() === benefitName.toLowerCase()
-          })
-        })
-      }
+      relatedArticles = docs as any[]
     } catch {
       relatedArticles = []
     }
   }
-  relatedArticles = relatedArticles.slice(0, 3)
+  relatedArticles = relatedArticles.slice(0, QUERY_LIMITS.SIDEBAR)
 
   // Long description text (Lexical richText → plain, preserving paragraphs)
   const descriptionText = b.description ? richTextToPlain(b.description) : ''

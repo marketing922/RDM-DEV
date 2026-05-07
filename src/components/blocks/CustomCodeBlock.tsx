@@ -10,6 +10,13 @@ type Props = {
   js?: string
 }
 
+// SECURITY: l'exécution de JS arbitraire (`new Function(js)`) a été
+// désactivée pour permettre de retirer `'unsafe-eval'` de la CSP. Le champ
+// `js` reste dans le schéma admin pour ne pas casser les données existantes,
+// mais son contenu est ignoré au runtime. Pour ré-activer un script
+// dynamique, créer un composant React dédié et l'enregistrer dans
+// `BlockRenderer.tsx` plutôt que d'évaluer du code utilisateur.
+
 const scopeCss = (css: string, scope: string): string => {
   if (!css) return ''
   // Retire les commentaires /* ... */ pour simplifier le parsing
@@ -82,13 +89,12 @@ const CustomCodeBlock: React.FC<Props> = ({ id, label, html, css, js }) => {
   const scopedCss = useMemo(() => (css ? scopeCss(css, scopeClass) : ''), [css, scopeClass])
 
   useEffect(() => {
-    if (!js || !rootRef.current) return
-    try {
-      const fn = new Function('root', js)
-      fn(rootRef.current)
-    } catch (err) {
+    if (js && process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line no-console
-      console.error(`[CustomCodeBlock${label ? ` · ${label}` : ''}] JS error:`, err)
+      console.warn(
+        `[CustomCodeBlock${label ? ` · ${label}` : ''}] le champ JS est ignoré (CSP). ` +
+          `Migrez le comportement vers un composant React enregistré.`,
+      )
     }
   }, [js, label])
 

@@ -6,7 +6,11 @@ import { purgeOrphanEmbeddings } from '@/lib/embeddings-db'
 import { captureError } from '@/lib/error-tracker'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 300
+// Vercel Hobby cap les fonctions à 60s en pratique malgré maxDuration
+// déclaré. La purge doit donc s'auto-borner — purgeOrphanEmbeddings travaille
+// par chunks (cf. embeddings-db.ts) et retourne un flag `hasMore` ; le
+// prochain tick reprend.
+export const maxDuration = 60
 
 /**
  * POST /api/cron/purge-embeddings
@@ -61,13 +65,9 @@ export async function POST(req: NextRequest) {
       level: 'error',
       route: 'POST /api/cron/purge-embeddings',
     })
-    return NextResponse.json(
-      {
-        ok: false,
-        error: err instanceof Error ? err.message : String(err),
-      },
-      { status: 500 },
-    )
+    // Erreur loggée via captureError ci-dessus, ne pas la renvoyer au client
+    // (peut contenir un path SQL / connection string).
+    return NextResponse.json({ ok: false, error: 'purge_failed' }, { status: 500 })
   }
 }
 

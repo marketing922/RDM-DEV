@@ -1,98 +1,144 @@
-import fs from 'fs/promises'
-import path from 'path'
+import 'server-only'
 import crypto from 'crypto'
+import type { Pool } from 'pg'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
 
-const BACKUP_DIR = process.env.WORM_BACKUP_DIR || path.join(process.cwd(), 'backups', 'worm')
+/**
+ * WORM backup en Postgres.
+ *
+ * Avant : `./backups/worm/<collection>/<YYYY/MM>/<id>_<ts>.json` sur le FS.
+ *   → Inutilisable sur Vercel (FS éphémère, perdu à chaque cold start).
+ *
+ * Maintenant : ligne dans `rdm_audit.worm_backups` (schéma à part, géré
+ *   par migration manuelle, jamais touché par drizzle-push de Payload).
+ *
+ * Politique d'erreur : fail-soft (logger.error puis return null) — la
+ * sauvegarde de l'admin ne doit pas être bloquée si la BD est temporairement
+ * indisponible. Le hook `backupAfterChange` ne fait pas remonter l'erreur.
+ */
 
 export interface WormEntry {
-  filename: string
-  sha256: string
-  createdAt: string
+  id: number
   collection: string
   documentId: string
+  hash: string
   size: number
+  createdAt: string
 }
 
-async function ensureDir(dir: string) {
-  await fs.mkdir(dir, { recursive: true })
+async function getPool(): Promise<Pool | null> {
+  try {
+    const payload = await getPayload({ config: configPromise })
+    const pool = (payload.db as unknown as { pool?: Pool }).pool
+    return pool ?? null
+  } catch {
+    return null
+  }
 }
 
 export async function writeWormBackup(
   collection: string,
   documentId: string,
   data: Buffer | string,
-  extension = 'json',
-): Promise<WormEntry> {
-  const now = new Date()
-  const yearMonth = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}`
-  const dir = path.join(BACKUP_DIR, collection, yearMonth)
-  await ensureDir(dir)
+): Promise<WormEntry | null> {
+  const pool = await getPool()
+  if (!pool) return null
 
-  const content = typeof data === 'string' ? Buffer.from(data, 'utf-8') : data
-  const sha256 = crypto.createHash('sha256').update(content).digest('hex')
-  const timestamp = now.toISOString().replace(/[:.]/g, '-')
-  const filename = `${documentId}_${timestamp}.${extension}`
-  const filepath = path.join(dir, filename)
+  const content = typeof data === 'string' ? data : data.toString('utf-8')
+  const hash = crypto.createHash('sha256').update(content).digest('hex')
+  const size = Buffer.byteLength(content, 'utf-8')
 
-  // Write file
-  await fs.writeFile(filepath, content)
-
-  // Make read-only (WORM: Write Once Read Many)
   try {
-    await fs.chmod(filepath, 0o444)
-  } catch {
-    // chmod may fail on Windows — log but don't block
-    console.warn(`WORM chmod failed for ${filepath} — Windows may not support read-only enforcement`)
+    const result = await pool.query<{
+      id: string
+      created_at: string
+    }>(
+      `INSERT INTO rdm_audit.worm_backups
+        (collection, document_id, snapshot, hash, size_bytes)
+       VALUES ($1, $2, $3::jsonb, $4, $5)
+       RETURNING id, created_at;`,
+      [collection, String(documentId), content, hash, size],
+    )
+    const row = result.rows[0]
+    if (!row) return null
+    return {
+      id: Number(row.id),
+      collection,
+      documentId: String(documentId),
+      hash,
+      size,
+      createdAt: new Date(row.created_at).toISOString(),
+    }
+  } catch (err) {
+    // Fail-soft : l'admin ne doit pas être bloqué par un échec backup.
+    console.error(`[worm] insert failed for ${collection}/${documentId}:`, err)
+    return null
   }
-
-  // Write index entry
-  const entry: WormEntry = {
-    filename,
-    sha256,
-    createdAt: now.toISOString(),
-    collection,
-    documentId,
-    size: content.length,
-  }
-
-  const indexPath = path.join(dir, '_index.jsonl')
-  await fs.appendFile(indexPath, JSON.stringify(entry) + '\n')
-
-  return entry
 }
 
-export async function verifyWormIntegrity(filepath: string, expectedSha256: string): Promise<boolean> {
+export async function verifyWormIntegrity(
+  id: number,
+  expectedHash: string,
+): Promise<boolean> {
+  const pool = await getPool()
+  if (!pool) return false
   try {
-    const content = await fs.readFile(filepath)
-    const actual = crypto.createHash('sha256').update(content).digest('hex')
-    return actual === expectedSha256
+    const result = await pool.query<{ hash: string; snapshot: string }>(
+      `SELECT hash, snapshot::text FROM rdm_audit.worm_backups WHERE id = $1`,
+      [id],
+    )
+    const row = result.rows[0]
+    if (!row) return false
+    if (row.hash !== expectedHash) return false
+    const recomputed = crypto.createHash('sha256').update(row.snapshot).digest('hex')
+    return recomputed === expectedHash
   } catch {
     return false
   }
 }
 
-export async function listWormBackups(collection: string): Promise<WormEntry[]> {
-  const entries: WormEntry[] = []
-  const collectionDir = path.join(BACKUP_DIR, collection)
+export async function listWormBackups(
+  collection: string,
+  opts: { limit?: number; documentId?: string } = {},
+): Promise<WormEntry[]> {
+  const pool = await getPool()
+  if (!pool) return []
+  const limit = Math.min(Math.max(1, opts.limit ?? 100), 500)
 
   try {
-    const years = await fs.readdir(collectionDir)
-    for (const year of years) {
-      const months = await fs.readdir(path.join(collectionDir, year))
-      for (const month of months) {
-        const indexPath = path.join(collectionDir, year, month, '_index.jsonl')
-        try {
-          const content = await fs.readFile(indexPath, 'utf-8')
-          const lines = content.trim().split('\n').filter(Boolean)
-          entries.push(...lines.map((l) => JSON.parse(l)))
-        } catch {
-          // No index file
-        }
-      }
+    const params: any[] = [collection]
+    let where = `collection = $1`
+    if (opts.documentId) {
+      params.push(String(opts.documentId))
+      where += ` AND document_id = $${params.length}`
     }
-  } catch {
-    // Collection dir doesn't exist yet
+    params.push(limit)
+    const result = await pool.query<{
+      id: string
+      collection: string
+      document_id: string
+      hash: string
+      size_bytes: number
+      created_at: string
+    }>(
+      `SELECT id, collection, document_id, hash, size_bytes, created_at
+         FROM rdm_audit.worm_backups
+        WHERE ${where}
+        ORDER BY created_at DESC
+        LIMIT $${params.length};`,
+      params,
+    )
+    return result.rows.map((r) => ({
+      id: Number(r.id),
+      collection: r.collection,
+      documentId: r.document_id,
+      hash: r.hash,
+      size: r.size_bytes,
+      createdAt: new Date(r.created_at).toISOString(),
+    }))
+  } catch (err) {
+    console.error(`[worm] list failed for ${collection}:`, err)
+    return []
   }
-
-  return entries
 }

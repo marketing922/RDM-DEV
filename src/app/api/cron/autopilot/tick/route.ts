@@ -7,7 +7,10 @@ import { runAutopilotTick } from '@/lib/autopilot'
 import { captureError } from '@/lib/error-tracker'
 
 export const dynamic = 'force-dynamic'
-export const maxDuration = 300
+// Vercel Hobby cap à 60s. runAutopilotTick traite UN candidat par tick par
+// design — donc cohérent avec la limite. Si le pipeline IA prend > 60s,
+// captureError sera invoqué et le tick sera retenté au prochain cron.
+export const maxDuration = 60
 
 /**
  * POST /api/cron/autopilot/tick
@@ -136,12 +139,7 @@ export async function POST(req: NextRequest) {
       route: 'POST /api/cron/autopilot/tick',
       context: { channel, force, onlyKind },
     })
-    return NextResponse.json(
-      {
-        error: 'autopilot_tick_failed',
-        message: err instanceof Error ? err.message : 'Unknown autopilot error',
-      },
-      { status: 500 },
-    )
+    // Erreur loggée via captureError ; ne pas exposer le message au client.
+    return NextResponse.json({ error: 'autopilot_tick_failed' }, { status: 500 })
   }
 }

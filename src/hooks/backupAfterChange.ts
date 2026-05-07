@@ -4,14 +4,18 @@ import { writeWormBackup } from '@/lib/backup-worm'
 export const backupAfterChange: CollectionAfterChangeHook = async ({
   doc,
   collection,
-  operation,
+  req,
 }) => {
+  // Short-circuit cascade : si un hook interne a déclenché ce save (ex.
+  // moderateContentHook réécrit complianceLLM), pas la peine de re-backup.
+  if ((req.context as any)?.fromHook) return doc
+
   // Only backup on create/update of published documents (Payload versioning)
   if (doc._status !== 'published') return doc
 
   try {
     const data = JSON.stringify(doc, null, 2)
-    await writeWormBackup(collection.slug, doc.id, data, 'json')
+    await writeWormBackup(collection.slug, doc.id, data)
   } catch (error) {
     console.error(`WORM backup failed for ${collection.slug}/${doc.id}:`, error)
     // Don't block the save operation

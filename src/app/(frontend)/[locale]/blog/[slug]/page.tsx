@@ -28,6 +28,7 @@ import BlogActions from '@/components/blog/BlogActions'
 import { siteMetadataBase } from '@/lib/metadata'
 
 export const revalidate = 3600
+export const dynamicParams = true
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>
@@ -223,7 +224,8 @@ function extractSections(content: unknown): ExtractedSection[] {
 
 export async function generateStaticParams() {
   try {
-    const { docs: posts } = await getBlogPosts({ limit: 999 })
+    // Top 20 articles au build, le reste à la demande (dynamicParams=true).
+    const { docs: posts } = await getBlogPosts({ limit: 20 })
     const params: Array<{ locale: string; slug: string }> = []
     for (const post of posts) {
       const slug = (post as any).slug

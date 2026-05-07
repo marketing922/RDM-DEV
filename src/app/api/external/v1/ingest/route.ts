@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 
-import { authenticateExternal } from '@/lib/external-auth'
+import { authenticateExternalSigned } from '@/lib/external-auth'
 import { ExternalIngestSchema, runExternalIngest } from '@/lib/external-ingest'
 import { isAiAvailable } from '@/lib/ai-settings'
 import { isWithinDailyBudget } from '@/lib/ai-budget'
@@ -19,10 +19,20 @@ export const maxDuration = 120
  * factory. See `Documentation/api-external.md` for the contract.
  */
 export async function POST(req: NextRequest) {
-  const auth = authenticateExternal(req)
-  if (!auth) {
-    return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
+  // On lit le body une seule fois pour permettre la vérif HMAC sur le rawBody.
+  // Si la signature est invalide, on s'arrête avant tout autre traitement.
+  let rawBody: string
+  try {
+    rawBody = await req.text()
+  } catch {
+    return NextResponse.json({ error: 'invalid_body' }, { status: 400 })
   }
+
+  const authResult = await authenticateExternalSigned(req, rawBody)
+  if (!authResult.ok) {
+    return NextResponse.json({ error: authResult.reason }, { status: authResult.status })
+  }
+  const auth = authResult.auth
 
   // Kill-switch (modération a besoin de l'IA — si OFF, on rejette).
   const availability = await isAiAvailable()
@@ -60,10 +70,10 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // Parse + validate body.
+  // Parse + validate body (déjà lu pour HMAC).
   let raw: unknown
   try {
-    raw = await req.json()
+    raw = JSON.parse(rawBody)
   } catch {
     return NextResponse.json({ error: 'invalid_json' }, { status: 400 })
   }

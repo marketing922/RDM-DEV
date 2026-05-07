@@ -36,6 +36,11 @@ export function makeEmbedHook(
     if (isTruthyFlag(ctx.skipEmbed)) {
       return doc
     }
+    // Short-circuit si dans une cascade de hooks (un update interne déclenché
+    // par un autre hook ne doit pas re-générer un embedding).
+    if (isTruthyFlag(ctx.fromHook)) {
+      return doc
+    }
 
     // Only embed published content. `_status` comes from Payload drafts feature.
     const status =

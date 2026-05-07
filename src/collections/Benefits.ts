@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
 import { scanForbiddenClaims, gatePublishCompliance, createAuditLog, autoSlug, assignBenefitNumber } from '@/hooks'
 import { backupAfterChange } from '@/hooks/backupAfterChange'
+import { revalidateAfterChange } from '@/hooks/revalidateAfterChange'
 import { coerceUploadIds } from '@/hooks/coerceUploadIds'
 import { makeEmbedHook } from '@/hooks/embedAfterChange'
 import { benefitsExtractor } from '@/hooks/embedExtractors'
@@ -53,6 +54,7 @@ export const Benefits: CollectionConfig = {
       createAuditLog,
       backupAfterChange,
       makeEmbedHook('benefits', benefitsExtractor),
+      revalidateAfterChange,
     ],
   },
   fields: [

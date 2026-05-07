@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { isAdminOrEditor, isPublishedOrAdmin, isAdmin } from '@/access'
 import { scanForbiddenClaims, gatePublishCompliance, createAuditLog, autoSlug } from '@/hooks'
 import { backupAfterChange } from '@/hooks/backupAfterChange'
+import { revalidateAfterChange } from '@/hooks/revalidateAfterChange'
 import { coerceUploadIds } from '@/hooks/coerceUploadIds'
 import { makeEmbedHook } from '@/hooks/embedAfterChange'
 import { blogPostsExtractor } from '@/hooks/embedExtractors'
@@ -12,6 +13,7 @@ import { seoGenerateField } from '@/components/admin/fields/seoGenerateField'
 import { aiHistoryField } from '@/components/admin/fields/aiHistoryField'
 import { geoTab } from '@/fields/geoFields'
 import { slugify } from '@/lib/slugify'
+import { validateImageUrl } from '@/lib/url-validators'
 
 export const BlogPosts: CollectionConfig = {
   slug: 'blogPosts',
@@ -54,6 +56,7 @@ export const BlogPosts: CollectionConfig = {
       createAuditLog,
       backupAfterChange,
       makeEmbedHook('blogPosts', blogPostsExtractor),
+      revalidateAfterChange,
     ],
   },
   fields: [
@@ -148,6 +151,7 @@ export const BlogPosts: CollectionConfig = {
                   type: 'text',
                   required: true,
                   label: 'URL',
+                  validate: validateImageUrl as any,
                   admin: { placeholder: 'https://res.cloudinary.com/...' },
                 },
                 {
