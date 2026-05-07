@@ -127,9 +127,22 @@ export const BlogPosts: CollectionConfig = {
               name: 'featuredImage',
               type: 'upload',
               relationTo: 'media',
-              label: 'Image \u00e0 la une',
+              label: 'Image \u00e0 la une (upload)',
               admin: {
-                description: 'Image principale affich\u00e9e en en-t\u00eate de l\u2019article',
+                description:
+                  'Image principale upload\u00e9e via Payload. Pr\u00e9f\u00e9rer externalImageUrl ci-dessous (URL Cloudinary).',
+              },
+            },
+            {
+              name: 'externalImageUrl',
+              type: 'text',
+              label: 'Image \u00e0 la une (URL Cloudinary)',
+              validate: validateImageUrl as any,
+              admin: {
+                placeholder:
+                  'https://res.cloudinary.com/laboratoire-calebasse/image/upload/rdm/blog/<slug>.jpg',
+                description:
+                  'URL Cloudinary directe de l\u2019image principale. Prioritaire sur l\u2019upload ci-dessus si rempli.',
               },
             },
             {

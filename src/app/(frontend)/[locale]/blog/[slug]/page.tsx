@@ -258,7 +258,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: p.directAnswer || p.excerpt || `${dict.blog.subtitle}`,
     openGraph: {
       ...(() => {
-        const ogUrl = resolveMediaUrl(p.featuredImage, 'card')
+        const ogUrl =
+          (typeof (p as any).externalImageUrl === 'string' && (p as any).externalImageUrl.trim()
+            ? (p as any).externalImageUrl.trim()
+            : null) || resolveMediaUrl(p.featuredImage, 'card')
         return ogUrl
           ? { images: [{ url: ogUrl, width: 1200, height: 630, alt: p.title }] }
           : {}
@@ -370,8 +373,14 @@ export default async function BlogDetailPage({ params }: Props) {
     }
   }
 
-  // Featured image
+  // Featured image — priorité à externalImageUrl (URL Cloudinary directe),
+  // sinon fallback sur l'upload Payload (champ featuredImage).
+  const externalImg =
+    typeof (p as any).externalImageUrl === 'string' && (p as any).externalImageUrl.trim()
+      ? (p as any).externalImageUrl.trim()
+      : null
   const featuredUrl =
+    externalImg ??
     resolveMediaUrl(p.featuredImage, 'original') ??
     resolveMediaUrl(p.featuredImage, 'card')
   const featuredAlt = p.featuredImage?.alt || articleTitle
@@ -1088,7 +1097,11 @@ export default async function BlogDetailPage({ params }: Props) {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
                 {otherArticles.map((article: any, idx: number) => {
                   const img =
-                    resolveMediaUrl(article.featuredImage, 'card') ?? null
+                    (typeof article.externalImageUrl === 'string' && article.externalImageUrl.trim()
+                      ? article.externalImageUrl.trim()
+                      : null) ||
+                    resolveMediaUrl(article.featuredImage, 'card') ||
+                    null
                   const num = `N°${String(idx + 1).padStart(2, '0')}`
                   return (
                     <Link

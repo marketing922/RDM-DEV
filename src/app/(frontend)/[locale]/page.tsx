@@ -697,7 +697,12 @@ export default async function HomePage({ params }: Props) {
               const featured = posts[0] as any
               const side = posts.slice(1) as any[]
               const getImg = (p: any) =>
-                p.image || resolveMediaUrl(p.featuredImage, 'card') || DEFAULT_BLOG_IMAGE
+                p.image ||
+                (typeof p.externalImageUrl === 'string' && p.externalImageUrl.trim()
+                  ? p.externalImageUrl.trim()
+                  : null) ||
+                resolveMediaUrl(p.featuredImage, 'card') ||
+                DEFAULT_BLOG_IMAGE
               const getCat = (p: any) => p.category?.name || p.category || ''
               const getDate = (p: any) =>
                 p.date ||

@@ -35,6 +35,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
+function blogPostImage(post: any, size: 'card' | 'thumbnail' = 'card'): string | null {
+  if (typeof post?.externalImageUrl === 'string' && post.externalImageUrl.trim()) {
+    return post.externalImageUrl.trim()
+  }
+  return resolveMediaUrl(post?.featuredImage, size) ?? null
+}
+
 function formatDate(value: string | undefined, locale: string) {
   if (!value) return ''
   try {
@@ -182,10 +189,10 @@ export default async function BlogPage({ params, searchParams }: Props) {
                 className="group bg-rm-paper border border-rm-rule overflow-hidden grid grid-cols-1 md:grid-cols-[40%_1fr] h-full transition-colors hover:border-rm-ruleStrong"
               >
                 <div className="relative aspect-[4/3] md:aspect-auto md:h-full md:min-h-[260px] bg-rm-creamSoft overflow-hidden">
-                  {featuredPost.featuredImage ? (
+                  {blogPostImage(featuredPost, 'card') ? (
                     <Image
-                      src={resolveMediaUrl(featuredPost.featuredImage, 'card') ?? ''}
-                      alt={featuredPost.featuredImage.alt || featuredPost.title}
+                      src={blogPostImage(featuredPost, 'card') ?? ''}
+                      alt={featuredPost.featuredImage?.alt || featuredPost.title}
                       fill
                       sizes="(max-width: 768px) 100vw, 320px"
                       className="object-contain object-center p-3 transition-transform duration-500 group-hover:scale-[1.02]"
@@ -242,10 +249,10 @@ export default async function BlogPage({ params, searchParams }: Props) {
                       className="group flex gap-3 sm:gap-4 bg-rm-paper border border-rm-rule p-3 sm:p-4 hover:border-rm-ruleStrong transition-colors h-full"
                     >
                       <div className="relative w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-rm-creamSoft overflow-hidden border border-rm-rule">
-                        {post.featuredImage ? (
+                        {blogPostImage(post, 'thumbnail') ? (
                           <Image
-                            src={resolveMediaUrl(post.featuredImage, 'thumbnail') ?? ''}
-                            alt={post.featuredImage.alt || post.title}
+                            src={blogPostImage(post, 'thumbnail') ?? ''}
+                            alt={post.featuredImage?.alt || post.title}
                             fill
                             sizes="96px"
                             className="object-cover"
@@ -299,10 +306,10 @@ export default async function BlogPage({ params, searchParams }: Props) {
                     className="group bg-rm-paper border border-rm-rule overflow-hidden flex flex-col h-full hover:border-rm-ruleStrong transition-colors"
                   >
                     <div className="relative aspect-[4/3] bg-rm-creamSoft overflow-hidden">
-                      {post.featuredImage ? (
+                      {blogPostImage(post, 'card') ? (
                         <Image
-                          src={resolveMediaUrl(post.featuredImage, 'card') ?? ''}
-                          alt={post.featuredImage.alt || post.title}
+                          src={blogPostImage(post, 'card') ?? ''}
+                          alt={post.featuredImage?.alt || post.title}
                           fill
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
