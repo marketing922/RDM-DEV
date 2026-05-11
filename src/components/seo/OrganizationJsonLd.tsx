@@ -54,10 +54,10 @@ export function OrganizationJsonLd() {
       url: 'https://calebasse.com',
       logo: 'https://calebasse.com/logo.png', // __TODO__ remplacer par le vrai logo Calebasse si différent
       description:
-        "Holding française qui édite des marques santé naturelle et bien-être autour des plantes — Les Remèdes de Mamie, Flore de France.",
+        "Holding française qui édite des marques santé naturelle et bien-être autour des plantes — Laboratoire calebasse, Les Remèdes de Mamie, Flore de France.",
       address: SHARED_ADDRESS,
       email: CONTACT_EMAIL,
-      // foundingDate: '__TODO__YYYY-MM-DD',
+      foundingDate: '1997',
       // taxID: '__TODO__numéro de TVA intracommunautaire',
       // vatID: '__TODO__numéro de TVA intracommunautaire',
       // identifier: { '@type': 'PropertyValue', propertyID: 'SIREN', value: '__TODO__9 chiffres SIREN' },
@@ -68,7 +68,7 @@ export function OrganizationJsonLd() {
         { '@id': ID.flore },
       ],
       sameAs: [
-        // __TODO__ 'https://www.linkedin.com/company/calebasse'
+        'https://www.linkedin.com/in/laboratoire-calebasse-1b254932b/'
       ],
     },
 

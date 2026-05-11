@@ -1,0 +1,5 @@
+Snapshots GEO commités ici via /api/export-geo, repeuplés via /api/seed-geo.
+Fichiers attendus :
+  plants-geo.json
+  benefits-geo.json
+  blog-posts-geo.json
