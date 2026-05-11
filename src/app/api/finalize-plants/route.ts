@@ -184,7 +184,7 @@ async function resolveImage(payload: any, plant: any): Promise<
 }
 
 export async function GET(req: NextRequest) {
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === 'production' && process.env.ALLOW_SEED_IN_PROD !== 'true') {
     return NextResponse.json({ error: 'Disabled in production.' }, { status: 403 })
   }
   const auth = await authenticateSeedRoute(req)
