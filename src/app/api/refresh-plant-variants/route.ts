@@ -95,7 +95,9 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url)
   const targetSlug = url.searchParams.get('slug')
   const cursor = Math.max(1, Number(url.searchParams.get('page')) || 1)
-  const pageSize = 20
+  // pageSize configurable (?pageSize=N) pour s'adapter au cap 60s Vercel Hobby
+  // si les HEAD Cloudinary sont lents. Default 20, max 50, min 1.
+  const pageSize = Math.min(50, Math.max(1, Number(url.searchParams.get('pageSize')) || 20))
 
   const payload = await getPayload({ config: configPromise })
 
