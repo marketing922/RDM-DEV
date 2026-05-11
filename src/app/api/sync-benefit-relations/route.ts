@@ -188,8 +188,14 @@ export async function GET(req: NextRequest) {
   }
 
   // ── 4) Écriture : pour chaque bienfait, mettre à jour les 3 relations
+  // Slicing pour éviter le timeout Vercel Hobby (60s). ?from=N&to=M
+  const url4 = new URL(req.url)
+  const from = Number(url4.searchParams.get('from') || '0')
+  const to = Number(url4.searchParams.get('to') || benefits.length)
+  const benefitsSlice = benefits.slice(from, to)
+
   const summary: any[] = []
-  for (const benefit of benefits) {
+  for (const benefit of benefitsSlice) {
     const a = agg[benefit.id]
     const data = {
       relatedPlants: uniqueIds(a.plants).slice(0, 50),
@@ -234,6 +240,9 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     ok: true,
     benefits: benefits.length,
+    from,
+    to,
+    processed: benefitsSlice.length,
     plants: plants.length,
     products: products.length,
     posts: posts.length,
