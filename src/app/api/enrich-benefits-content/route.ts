@@ -364,7 +364,13 @@ export async function GET(req: NextRequest) {
     depth: 0,
     overrideAccess: true,
   })
-  const benefits: any[] = Array.isArray(r?.docs) ? r.docs : []
+  const allBenefits: any[] = Array.isArray(r?.docs) ? r.docs : []
+
+  // Slicing pour éviter le timeout Vercel Hobby (60s). ?from=N&to=M
+  const url = new URL(req.url)
+  const from = Number(url.searchParams.get('from') || '0')
+  const to = Number(url.searchParams.get('to') || allBenefits.length)
+  const benefits = allBenefits.slice(from, to)
 
   const summary: any[] = []
   for (const benefit of benefits) {
@@ -419,7 +425,10 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({
     ok: true,
-    benefits: benefits.length,
+    total: allBenefits.length,
+    from,
+    to,
+    processed: benefits.length,
     summary,
   })
 }
