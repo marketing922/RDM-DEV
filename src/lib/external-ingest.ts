@@ -143,12 +143,17 @@ const WikiDataSchema = z.object({
   relations: RelationsWikiSchema.optional().default({}),
 })
 
+// Callback HTTPS optionnel — appelé après création/replay. URL whitelistée
+// (HTTPS public uniquement, pas d'IP privée — cf. isAllowedWebhookUrl).
+const WebhookUrlSchema = z.string().url().max(500).optional()
+
 export const ExternalIngestSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('blog'),
     locale: z.enum(['fr', 'en']).default('fr'),
     publish: z.boolean().default(true),
     idempotencyKey: z.string().uuid(),
+    webhookUrl: WebhookUrlSchema,
     data: BlogDataSchema,
   }),
   z.object({
@@ -156,6 +161,7 @@ export const ExternalIngestSchema = z.discriminatedUnion('kind', [
     locale: z.enum(['fr', 'en']).default('fr'),
     publish: z.boolean().default(true),
     idempotencyKey: z.string().uuid(),
+    webhookUrl: WebhookUrlSchema,
     data: WikiDataSchema,
   }),
 ])
