@@ -233,21 +233,25 @@ export default async function PlantDetailPage({ params }: Props) {
 
   // Helper : rend les images galleryUrls ciblant cette section (sectionIndex=N).
   // Inséré juste après le contenu de chaque <EditorialSection>.
+  // Utilise Image width/height (pas fill) pour respecter le ratio natif —
+  // sinon les images se compressent en bande dans un parent sans hauteur fixée.
   const renderSectionImages = (n: number) => {
     const imgs = sectionImages.get(n)
     if (!imgs || imgs.length === 0) return null
     return (
-      <div className="not-prose mt-8 mb-2 grid gap-4 sm:grid-cols-2 max-w-3xl">
+      <div className="not-prose mt-8 mb-2 space-y-6 max-w-3xl">
         {imgs.map((img, i) => (
           <figure
             key={`section-${n}-img-${i}`}
-            className="relative overflow-hidden rounded-[8px] border border-rm-rule bg-rm-creamSoft"
+            className="w-full overflow-hidden rounded-[8px] border border-rm-rule bg-rm-creamSoft"
           >
-            <PlantImage
+            <Image
               src={img.src}
               alt={img.alt || img.caption || ''}
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover w-full h-auto"
+              width={1200}
+              height={800}
+              sizes="(max-width: 768px) 100vw, 720px"
+              className="w-full h-auto object-cover"
             />
             {img.caption && (
               <figcaption className="px-3 py-2 font-serif italic text-[12px] text-rm-inkSoft">
