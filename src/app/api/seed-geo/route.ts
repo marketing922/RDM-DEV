@@ -218,7 +218,7 @@ export async function GET(req: NextRequest) {
   const payload = await getPayload({ config: configPromise })
 
   if (collectionParam === 'all') {
-    const results = []
+    const results: any[] = []
     for (const c of GEO_COLLECTIONS) {
       results.push(await seedCollection(payload, c, { from, to, overwrite, dry }))
     }
