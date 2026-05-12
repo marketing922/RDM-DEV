@@ -170,6 +170,11 @@ export default async function PlantDetailPage({ params }: Props) {
   // `image/upload/...` (auto-détecté) sont considérés comme distincts alors
   // qu'ils servent le même asset.
   const galleryItems: Array<{ src: string; alt?: string; caption?: string }> = []
+  // Map<sectionIndex (1-based), images[]> — images injectées inline après la
+  // section N du contenu (Portrait, Histoire, Principes actifs, Usages…).
+  // Les galleryUrls SANS sectionIndex (ou hors bornes 1-9) tombent dans
+  // galleryItems = grille "Portrait botanique" comme avant (rétrocompat).
+  const sectionImages = new Map<number, Array<{ src: string; alt?: string; caption?: string }>>()
   const seen = new Set<string>()
   const normalizeForDedupe = (url: string): string => {
     try {
@@ -193,9 +198,20 @@ export default async function PlantDetailPage({ params }: Props) {
   if (Array.isArray(e.galleryUrls)) {
     for (const g of e.galleryUrls) {
       const url = (g as any)?.url
-      if (typeof url === 'string' && url.trim()) {
-        pushGallery(url, { caption: (g as any)?.caption })
+      if (typeof url !== 'string' || !url.trim()) continue
+      const caption = (g as any)?.caption
+      const idx = typeof (g as any)?.sectionIndex === 'number' ? (g as any).sectionIndex : null
+      // sectionIndex valide → injecte inline après la section N
+      if (idx && idx >= 1 && idx <= 9) {
+        const key = normalizeForDedupe(url)
+        if (seen.has(key) || key === heroKey) continue
+        seen.add(key)
+        if (!sectionImages.has(idx)) sectionImages.set(idx, [])
+        sectionImages.get(idx)!.push({ src: url, caption })
+        continue
       }
+      // Pas de sectionIndex → galerie classique (Portrait botanique grid)
+      pushGallery(url, { caption })
     }
   }
   // Variantes auto-détectées : on lit le manifest persistant (`detectedVariants`,
@@ -213,6 +229,35 @@ export default async function PlantDetailPage({ params }: Props) {
       const url = resolveMediaUrl(img, 'original')
       if (url) pushGallery(url, { alt: img?.alt })
     }
+  }
+
+  // Helper : rend les images galleryUrls ciblant cette section (sectionIndex=N).
+  // Inséré juste après le contenu de chaque <EditorialSection>.
+  const renderSectionImages = (n: number) => {
+    const imgs = sectionImages.get(n)
+    if (!imgs || imgs.length === 0) return null
+    return (
+      <div className="not-prose mt-8 mb-2 grid gap-4 sm:grid-cols-2 max-w-3xl">
+        {imgs.map((img, i) => (
+          <figure
+            key={`section-${n}-img-${i}`}
+            className="relative overflow-hidden rounded-[8px] border border-rm-rule bg-rm-creamSoft"
+          >
+            <PlantImage
+              src={img.src}
+              alt={img.alt || img.caption || ''}
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover w-full h-auto"
+            />
+            {img.caption && (
+              <figcaption className="px-3 py-2 font-serif italic text-[12px] text-rm-inkSoft">
+                {img.caption}
+              </figcaption>
+            )}
+          </figure>
+        ))}
+      </div>
+    )
   }
 
   // ── Textual content ---------------------------------------
@@ -727,6 +772,7 @@ export default async function PlantDetailPage({ params }: Props) {
                   toujours l’identification avant toute cueillette sauvage et
                   privilégiez, au moindre doute, un fournisseur de confiance.
                 </EditorialAside>
+                {renderSectionImages(1)}
               </EditorialSection>
             </Reveal>
 
@@ -739,6 +785,7 @@ export default async function PlantDetailPage({ params }: Props) {
                       <p key={i}>{p}</p>
                     ))}
                   </div>
+                  {renderSectionImages(2)}
                 </EditorialSection>
               </Reveal>
             )}
@@ -756,6 +803,7 @@ export default async function PlantDetailPage({ params }: Props) {
                       <p key={i}>{p}</p>
                     ))}
                   </div>
+                  {renderSectionImages(3)}
                 </EditorialSection>
               </Reveal>
             )}
@@ -798,6 +846,7 @@ export default async function PlantDetailPage({ params }: Props) {
                       ))}
                     </ul>
                   )}
+                  {renderSectionImages(4)}
                 </EditorialSection>
               </Reveal>
             )}
@@ -819,6 +868,7 @@ export default async function PlantDetailPage({ params }: Props) {
                       e.partsUsed ? ['Partie utilisée', e.partsUsed] : null,
                     ].filter(Boolean) as Array<Array<string>>}
                   />
+                  {renderSectionImages(5)}
                 </EditorialSection>
               </Reveal>
             )}
@@ -844,6 +894,7 @@ export default async function PlantDetailPage({ params }: Props) {
                       Avertissement santé →
                     </Link>
                   </p>
+                  {renderSectionImages(6)}
                 </EditorialSection>
               </Reveal>
             )}
@@ -871,6 +922,7 @@ export default async function PlantDetailPage({ params }: Props) {
                       </div>
                     ))}
                   </dl>
+                  {renderSectionImages(7)}
                 </EditorialSection>
               </Reveal>
             )}
@@ -904,6 +956,7 @@ export default async function PlantDetailPage({ params }: Props) {
                         ))}
                     </ol>
                   </div>
+                  {renderSectionImages(8)}
                 </EditorialSection>
               </Reveal>
             )}
@@ -926,6 +979,7 @@ export default async function PlantDetailPage({ params }: Props) {
                       ),
                     }))}
                   />
+                  {renderSectionImages(9)}
                 </EditorialSection>
               </Reveal>
             )}

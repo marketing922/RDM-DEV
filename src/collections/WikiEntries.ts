@@ -446,7 +446,10 @@ export const WikiEntries: CollectionConfig = {
               label: 'Galerie (URLs Cloudinary)',
               labels: { singular: 'URL', plural: 'URLs' },
               admin: {
-                description: 'URLs Cloudinary additionnelles (variantes : tisane, frais, poudre, etc.)',
+                description:
+                  "URLs Cloudinary additionnelles inject\u00e9es dans le contenu de la fiche. " +
+                  "Hosts autoris\u00e9s : res.cloudinary.com, images.unsplash.com (URL directe), cdn.sanity.io. " +
+                  "Plusieurs images peuvent cibler la m\u00eame section. Laisser \u00ab Section n\u00b0 \u00bb vide pour les afficher en fin de fiche.",
               },
               fields: [
                 {
@@ -462,6 +465,17 @@ export const WikiEntries: CollectionConfig = {
                   type: 'text',
                   label: 'L\u00e9gende',
                   admin: { placeholder: 'Ex : Camomille en infusion' },
+                },
+                {
+                  name: 'sectionIndex',
+                  type: 'number',
+                  min: 1,
+                  label: 'Section n\u00b0',
+                  admin: {
+                    description:
+                      "Num\u00e9ro de la section (1, 2, 3\u2026) apr\u00e8s laquelle ins\u00e9rer l'image. " +
+                      "Vide = en fin de fiche.",
+                  },
                 },
               ],
             },
