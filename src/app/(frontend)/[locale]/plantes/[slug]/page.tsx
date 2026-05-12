@@ -1187,8 +1187,12 @@ export default async function PlantDetailPage({ params }: Props) {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
                 {citingPosts.map((post: any) => {
                   const imgSrc =
-                    resolveMediaUrl(post.coverImage, 'card') ??
-                    resolveMediaUrl(post.heroImage, 'card') ??
+                    (typeof post.externalImageUrl === 'string' && post.externalImageUrl.trim()
+                      ? post.externalImageUrl.trim()
+                      : null) ||
+                    resolveMediaUrl(post.featuredImage, 'card') ||
+                    resolveMediaUrl(post.coverImage, 'card') ||
+                    resolveMediaUrl(post.heroImage, 'card') ||
                     null
                   return (
                     <Link
