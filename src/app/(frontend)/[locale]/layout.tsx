@@ -11,6 +11,7 @@ import { CookieBanner } from '@/components/cookies/CookieBanner'
 import { loadNavigation, loadFooter } from '@/lib/layoutGlobals'
 
 import { OrganizationJsonLd } from '@/components/seo'
+import { Analytics } from '@vercel/analytics/next'
 import '@/styles/globals.css'
 
 type Props = { children: React.ReactNode; params: Promise<{ locale: string }> }
@@ -69,6 +70,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <main id="main-content" className="min-h-screen">{children}</main>
         <Footer dict={dict} locale={locale} footer={footer} />
         <CookieBanner />
+        <Analytics />
       </body>
     </html>
   )
