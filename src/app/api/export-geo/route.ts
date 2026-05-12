@@ -101,15 +101,8 @@ async function exportCollection(payload: any, collection: GeoCollection) {
 }
 
 export async function GET(req: NextRequest) {
-  if (
-    process.env.NODE_ENV === 'production' &&
-    process.env.ALLOW_SEED_IN_PROD !== 'true'
-  ) {
-    return NextResponse.json(
-      { error: 'Disabled in production. Set ALLOW_SEED_IN_PROD=true to enable.' },
-      { status: 403 },
-    )
-  }
+  // Route read-only — pas de garde-fou ALLOW_SEED_IN_PROD ici (qui sert à
+  // bloquer les routes destructives). On se contente de l'auth admin/api-key.
   const auth = await authenticateSeedRoute(req)
   if (!auth.ok) return NextResponse.json({ error: auth.reason }, { status: auth.status })
 
