@@ -44,33 +44,45 @@ export default function BodyExplorer({ regions, locale }: Props) {
         className="relative mx-auto w-full max-w-[320px] sm:max-w-[400px] lg:max-w-[480px] aspect-[400/580]"
         aria-label="Silhouette humaine interactive pour explorer les plantes par région"
       >
-        {/* Body outline */}
+        {/* Body outline — silhouette épurée en un seul trait */}
         <svg
           viewBox={`0 0 ${VB_W} ${VB_H}`}
-          className="absolute inset-0 w-full h-full opacity-70"
+          className="absolute inset-0 w-full h-full opacity-60"
           fill="none"
           stroke="#054A57"
-          strokeWidth="1.2"
+          strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
           aria-hidden="true"
         >
-          {/* Head */}
-          <circle cx="200" cy="70" r="46" />
-          {/* Neck + collarbones */}
-          <path d="M200 116 L200 130 M170 130 Q200 160 230 130 L230 150" />
-          {/* Left arm */}
-          <path d="M170 130 L110 180 L95 310 L120 340" />
-          {/* Right arm */}
-          <path d="M230 130 L290 180 L305 310 L280 340" />
-          {/* Left leg */}
-          <path d="M170 150 L160 340 L155 440 L170 560 L190 560 L195 440 L190 340 Z" />
-          {/* Right leg */}
-          <path d="M230 150 L240 340 L245 440 L230 560 L210 560 L205 440 L210 340 Z" />
-          {/* Pectorals */}
-          <path d="M170 180 Q200 210 230 180 L240 270 Q200 290 160 270 Z" />
-          {/* Abdominals */}
-          <path d="M170 270 Q200 300 230 270 L238 330 Q200 348 162 330 Z" />
+          {/* Tête */}
+          <circle cx="200" cy="70" r="42" />
+          {/* Cou */}
+          <path d="M186 110 L186 130 L214 130 L214 110" />
+          {/* Tronc + bras + jambes en un contour continu */}
+          <path d="
+            M150 140
+            Q120 150 105 195
+            L95 310
+            Q92 330 100 345
+            L115 330
+            Q125 270 135 220
+            L135 340
+            L150 540
+            L185 540
+            L195 360
+            L205 360
+            L215 540
+            L250 540
+            L265 340
+            L265 220
+            Q275 270 285 330
+            L300 345
+            Q308 330 305 310
+            L295 195
+            Q280 150 250 140
+            Z
+          " />
         </svg>
 
         {/* Hotspots overlay */}

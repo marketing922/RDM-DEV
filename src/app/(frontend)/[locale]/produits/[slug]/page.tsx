@@ -262,6 +262,11 @@ export default async function ProductDetailPage({ params }: Props) {
                     </a>
                   )}
                 </div>
+                <p className="mt-4 font-serif italic text-[12px] leading-[1.55] text-rm-inkSoft/80">
+                  Référez-vous toujours aux consignes d&apos;utilisation et précautions
+                  indiquées sur l&apos;emballage du produit acheté ainsi qu&apos;à la notice
+                  fournie par le vendeur.
+                </p>
               </div>
             )}
 

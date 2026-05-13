@@ -629,13 +629,6 @@ export default async function PlantDetailPage({ params }: Props) {
                       resolveMediaUrl((p.images?.[0] as any)?.image, 'thumbnail') ||
                       p.externalImageUrl ||
                       null
-                    const price =
-                      typeof p.price === 'number'
-                        ? new Intl.NumberFormat('fr-FR', {
-                            style: 'currency',
-                            currency: 'EUR',
-                          }).format(p.price)
-                        : null
                     return (
                       <li
                         key={p.slug || p.id}
@@ -660,11 +653,6 @@ export default async function PlantDetailPage({ params }: Props) {
                             <div className="font-serif text-[13px] text-rm-ink leading-snug group-hover:text-rm-burgundy transition-colors line-clamp-2">
                               {p.name}
                             </div>
-                            {price && (
-                              <div className="font-mono text-[11px] text-rm-ochre mt-0.5">
-                                {price}
-                              </div>
-                            )}
                           </div>
                         </Link>
                       </li>

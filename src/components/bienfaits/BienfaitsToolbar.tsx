@@ -1,6 +1,7 @@
 'use client'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useTransition } from 'react'
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 
 type Region = { key: string; label: string }
 
@@ -22,8 +23,11 @@ export default function BienfaitsToolbar({
   const router = useRouter()
   const pathname = usePathname()
   const sp = useSearchParams()
+  const [isPending, startTransition] = useTransition()
 
   const [searchValue, setSearchValue] = useState(initialSearch)
+  // Optimistic UI : on bascule visuellement avant que le SSR ait répondu
+  const [optimisticRegion, setOptimisticRegion] = useState(initialRegion)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lastPushedRef = useRef(initialSearch)
 
@@ -68,8 +72,16 @@ export default function BienfaitsToolbar({
   }
 
   const setRegion = (key: string) => {
-    router.replace(buildUrl({ region: key === 'all' ? null : key }))
+    setOptimisticRegion(key === 'all' ? '' : key)
+    startTransition(() => {
+      router.replace(buildUrl({ region: key === 'all' ? null : key }), { scroll: false })
+    })
   }
+
+  // Synchronise la sélection optimiste avec la prop si elle change (back/forward)
+  useEffect(() => {
+    setOptimisticRegion(initialRegion)
+  }, [initialRegion])
 
   return (
     <div className="max-w-4xl mx-auto mt-8 space-y-5">
@@ -130,21 +142,28 @@ export default function BienfaitsToolbar({
       <div className="-mx-4 sm:mx-0 px-4 sm:px-0 overflow-x-auto scrollbar-hide">
         <div className="flex sm:flex-wrap sm:justify-center gap-2 min-w-max sm:min-w-0">
           {regions.map((r) => {
-            const isActive = r.key === initialRegion || (r.key === 'all' && !initialRegion)
+            const isActive = r.key === optimisticRegion || (r.key === 'all' && !optimisticRegion)
+            const href = buildUrl({ region: r.key === 'all' ? null : r.key })
             return (
-              <button
+              <Link
                 key={r.key}
-                suppressHydrationWarning
-                type="button"
-                onClick={() => setRegion(r.key)}
+                href={href}
+                prefetch
+                replace
+                scroll={false}
+                onClick={(e) => {
+                  // Optimistic update : bascule visuel immédiat, navigation gérée par Link
+                  e.preventDefault()
+                  setRegion(r.key)
+                }}
                 className={`inline-flex items-center h-10 sm:h-9 px-4 rounded-full font-sans text-[12px] font-semibold tracking-[0.02em] transition-colors whitespace-nowrap ${
                   isActive
                     ? 'bg-rm-burgundy text-white border border-rm-burgundy'
                     : 'bg-rm-paper text-rm-teal border border-rm-rule hover:border-rm-burgundy hover:text-rm-burgundy'
-                }`}
+                } ${isPending && isActive ? 'opacity-80' : ''}`}
               >
                 {r.label}
-              </button>
+              </Link>
             )
           })}
         </div>

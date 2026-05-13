@@ -204,7 +204,15 @@ export function Navbar({ dict, locale, navigation }: NavbarProps) {
       <header className="sticky top-0 z-40 hidden lg:block border-b border-rm-rule bg-[rgba(254,249,233,0.92)] backdrop-blur-md backdrop-saturate-150">
         <nav className="max-w-[1280px] mx-auto px-10 py-3.5 grid grid-cols-[1fr_auto_1fr] items-center gap-6">
           <div className="flex items-center gap-3">
-            <Link href={`/${locale}`} aria-label={dict.meta.siteName} className="block shrink-0">
+            <Link href={`/${locale}`} aria-label={dict.meta.siteName} className="flex items-center gap-2.5 shrink-0">
+              <img
+                src="/assets/brand/rm-hero-illustration.png"
+                alt=""
+                aria-hidden="true"
+                width={46}
+                height={46}
+                className="h-[44px] w-auto object-contain"
+              />
               <img
                 src="/assets/brand/rm-logo.png"
                 alt={dict.meta.siteName}
@@ -279,7 +287,15 @@ export function Navbar({ dict, locale, navigation }: NavbarProps) {
             {mobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
 
-          <Link href={`/${locale}`} aria-label={dict.meta.siteName} className="block">
+          <Link href={`/${locale}`} aria-label={dict.meta.siteName} className="flex items-center gap-1.5">
+            <img
+              src="/assets/brand/rm-hero-illustration.png"
+              alt=""
+              aria-hidden="true"
+              width={36}
+              height={36}
+              className="h-[34px] w-auto object-contain"
+            />
             <img
               src="/assets/brand/rm-logo.png"
               alt={dict.meta.siteName}

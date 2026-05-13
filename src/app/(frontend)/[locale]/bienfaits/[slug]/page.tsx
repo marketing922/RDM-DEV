@@ -416,11 +416,6 @@ export default async function BienfaitDetailPage({ params }: Props) {
                             <h3 className="font-display text-[15px] leading-tight text-rm-teal group-hover:text-rm-burgundy transition-colors line-clamp-2">
                               {product.name}
                             </h3>
-                            {typeof product.price === 'number' && (
-                              <p className="mt-1 font-mono text-[13px] font-semibold text-rm-teal">
-                                {product.price.toFixed(2).replace('.', ',')} €
-                              </p>
-                            )}
                           </div>
                         </Link>
                       </li>

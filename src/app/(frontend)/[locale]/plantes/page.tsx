@@ -125,7 +125,7 @@ export default async function PlantesPage({ params, searchParams }: Props) {
               <span className="block w-7 h-px bg-rm-burgundy" />
             </div>
             <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] text-[32px] sm:text-[44px] md:text-[52px] lg:text-[60px]">
-              L&apos;almanach des{' '}
+              L&apos;encyclopédie des{' '}
               <em className="italic text-rm-burgundy">plantes</em>
             </h1>
             <p className="font-serif italic text-[15px] sm:text-[17px] md:text-[19px] leading-[1.55] text-rm-inkSoft mt-4 sm:mt-5">

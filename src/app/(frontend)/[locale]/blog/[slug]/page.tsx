@@ -723,13 +723,6 @@ export default async function BlogDetailPage({ params }: Props) {
                       resolveMediaUrl((rp.images?.[0] as any)?.image, 'thumbnail') ||
                       rp.externalImageUrl ||
                       null
-                    const price =
-                      typeof rp.price === 'number'
-                        ? new Intl.NumberFormat('fr-FR', {
-                            style: 'currency',
-                            currency: 'EUR',
-                          }).format(rp.price)
-                        : null
                     return (
                       <li
                         key={rp.slug || rp.id}
@@ -754,11 +747,6 @@ export default async function BlogDetailPage({ params }: Props) {
                             <div className="font-serif text-[13px] text-rm-ink leading-snug group-hover:text-rm-burgundy transition-colors line-clamp-2">
                               {rp.name}
                             </div>
-                            {price && (
-                              <div className="font-mono text-[11px] text-rm-ochre mt-0.5">
-                                {price}
-                              </div>
-                            )}
                           </div>
                         </Link>
                       </li>

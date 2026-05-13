@@ -73,21 +73,12 @@ export default function AProposTemplate({
               </p>
             </div>
             <div className="relative aspect-[4/5] bg-rm-creamSoft border border-rm-rule overflow-hidden max-w-[320px] sm:max-w-[420px] mx-auto lg:mx-0 w-full">
-              <div className="absolute inset-3 sm:inset-4 border border-rm-ruleStrong flex items-center justify-center flex-col gap-2">
-                <svg
-                  viewBox="0 0 24 24"
-                  width="100"
-                  height="100"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-rm-teal opacity-50 sm:w-[140px] sm:h-[140px]"
-                >
-                  <path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 17 3.5 17 3.5s2.5 3.5.5 9.2A7 7 0 0 1 11 20Z" />
-                  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
-                </svg>
+              <div className="absolute inset-3 sm:inset-4 border border-rm-ruleStrong flex items-center justify-center flex-col gap-2 p-4">
+                <img
+                  src="/assets/brand/rm-hero-illustration.png"
+                  alt="Les Remèdes de Mamie — illustration de marque"
+                  className="max-w-[80%] max-h-[70%] object-contain"
+                />
                 <div className="font-serif italic text-[12px] sm:text-[13px] text-rm-inkSoft mt-2 sm:mt-3 text-center px-2">
                   — 15 rue de la Vistule, Paris 13e
                 </div>
@@ -266,7 +257,7 @@ export default function AProposTemplate({
               « Écrire ce que l'on peut dire, avec rigueur, et le dire bien. »
             </div>
             <div className="text-[11px] sm:text-[12px] tracking-[0.15em] opacity-70 mt-4 sm:mt-5 uppercase">
-              — Ligne éditoriale, Les Remèdes de Mamie
+              — Notre promesse, Les Remèdes de Mamie
             </div>
           </div>
         </Reveal>

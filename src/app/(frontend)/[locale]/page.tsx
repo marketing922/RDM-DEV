@@ -262,7 +262,7 @@ export default async function HomePage({ params }: Props) {
 
             {/* Display headline */}
             <h1 className="font-display font-normal text-rm-teal leading-[1.02] tracking-[-0.02em] text-[34px] sm:text-[48px] md:text-[60px] lg:text-[62px] xl:text-[78px]">
-              <span className="block">L'almanach des</span>
+              <span className="block">L'encyclopédie des</span>
               <span className="block sm:whitespace-nowrap">
                 <em className="italic text-rm-burgundy">plantes</em> qui soignent
               </span>
@@ -649,15 +649,15 @@ export default async function HomePage({ params }: Props) {
             <div className="flex items-center justify-center gap-2.5 mb-4">
               <span className="block w-7 h-px bg-rm-burgundy" />
               <span className="font-sans text-[10px] sm:text-[11px] tracking-[0.25em] text-rm-burgundy uppercase">
-                Chapitre II · Le corps &amp; la plante
+                Chapitre II · Vos domaines de bien-être
               </span>
               <span className="block w-7 h-px bg-rm-burgundy" />
             </div>
             <h2 className="font-display text-[28px] sm:text-[34px] md:text-[44px] leading-[1.08] text-rm-teal tracking-[-0.01em]">
-              Où <em className="italic text-rm-burgundy">avez-vous</em> besoin d&apos;aide&nbsp;?
+              Quel <em className="italic text-rm-burgundy">domaine</em> vous concerne&nbsp;?
             </h2>
             <p className="font-serif italic text-[15px] sm:text-[16px] md:text-[18px] leading-[1.55] text-rm-inkSoft mt-4">
-              Touchez une région pour découvrir les plantes qui la soulagent traditionnellement.
+              Touchez un domaine pour découvrir les plantes qui s&apos;y rapportent traditionnellement.
             </p>
           </Reveal>
 
