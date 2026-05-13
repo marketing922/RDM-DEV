@@ -119,7 +119,7 @@ const BlogDataSchema = z.object({
   content: LexicalContentSchema,
   seo: SeoSchema,
   geo: GeoSchema,
-  images: z.array(ImageSchema).min(1).max(6),
+  images: z.array(ImageSchema).max(6).optional().default([]),
   relations: RelationsBlogSchema.optional().default({}),
 })
 
@@ -139,7 +139,7 @@ const WikiDataSchema = z.object({
   precautionsText: z.string().max(1500).optional(),
   seo: SeoSchema,
   geo: GeoSchema,
-  images: z.array(ImageSchema).min(1).max(6),
+  images: z.array(ImageSchema).max(6).optional().default([]),
   relations: RelationsWikiSchema.optional().default({}),
 })
 
@@ -552,33 +552,22 @@ export async function runExternalIngest(opts: {
       }
     }
 
-    // 6. Download + upload images (sequential — small N).
-    const featured = data.images.find((i) => i.role === 'featured') || data.images[0]
-    const sectionImgs = data.images.filter((i) => i.role === 'section')
-    let featuredMediaId: number | string | null = null
-    const sectionMediaIds: Array<{ id: number | string; sectionIndex: number }> = []
-    try {
-      featuredMediaId = await downloadAndUploadImage(
-        payload,
-        featured.url,
-        featured.alt,
-        slugify(data.slug),
-      )
-      for (const img of sectionImgs) {
-        try {
-          const id = await downloadAndUploadImage(payload, img.url, img.alt, slugify(data.slug))
-          sectionMediaIds.push({ id, sectionIndex: img.sectionIndex ?? 0 })
-        } catch (err) {
-          warnings.push(`Image section échouée (${img.url}): ${err instanceof Error ? err.message : String(err)}`)
-        }
-      }
-    } catch (err) {
-      return {
-        ok: false,
-        error: 'image_failed',
-        message: `Téléchargement image principale échoué : ${err instanceof Error ? err.message : String(err)}`,
-      }
-    }
+    // 6. Mapping images → URLs directes (zéro téléchargement filesystem).
+    // Compatible Vercel (filesystem read-only). Le champ externalImageUrl
+    // sert l'image principale sur la fiche ; galleryUrls sert les images
+    // de section avec leur sectionIndex.
+    const images = data.images || []
+    const featured = images.find((i) => i.role === 'featured') || images[0] || null
+    const sectionImgs = images.filter((i) => i.role === 'section' && i.url !== featured?.url)
+    const externalImageUrl: string | null = featured?.url || null
+    const galleryUrlsPayload: Array<{ url: string; caption?: string; sectionIndex?: number }> =
+      sectionImgs.map((img) => ({
+        url: img.url,
+        caption: img.alt,
+        sectionIndex: typeof img.sectionIndex === 'number' && img.sectionIndex > 0
+          ? img.sectionIndex
+          : undefined,
+      }))
 
     // 7. Build the doc payload.
     const lastFactCheckedAt = data.geo.lastFactCheckedAt
@@ -619,7 +608,8 @@ export async function runExternalIngest(opts: {
         title: d.title,
         excerpt: d.excerpt,
         content: d.content,
-        featuredImage: featuredMediaId,
+        externalImageUrl: externalImageUrl || undefined,
+        galleryUrls: galleryUrlsPayload.length > 0 ? galleryUrlsPayload : undefined,
         category: resolved.ids.category,
         tags: resolved.ids.tags,
         relatedPlants: resolved.ids.plants,
@@ -642,9 +632,8 @@ export async function runExternalIngest(opts: {
         form: d.form,
         conservation: d.conservation,
         precautionsText: d.precautionsText,
-        images: featuredMediaId
-          ? [{ image: featuredMediaId }, ...sectionMediaIds.map((s) => ({ image: s.id }))]
-          : sectionMediaIds.map((s) => ({ image: s.id })),
+        externalImageUrl: externalImageUrl || undefined,
+        galleryUrls: galleryUrlsPayload.length > 0 ? galleryUrlsPayload : undefined,
         benefits: resolved.ids.benefits,
         relatedProducts: resolved.ids.products,
         relatedPosts: resolved.ids.relatedPosts,
