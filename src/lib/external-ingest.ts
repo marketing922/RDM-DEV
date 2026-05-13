@@ -123,15 +123,27 @@ const BlogDataSchema = z.object({
   relations: RelationsBlogSchema.optional().default({}),
 })
 
+const WIKI_CATEGORY_VALUES = [
+  'nervous', 'digestive', 'respiratory', 'female', 'male', 'circulatory',
+  'joints', 'immunity', 'skin', 'metabolism', 'multi',
+] as const
+
+const PARTS_USED_VALUES = [
+  'flower', 'leaf', 'flowering-tops', 'root', 'rhizome', 'bark', 'fruit',
+  'seed', 'berry', 'bud', 'stem', 'bulb', 'whole-plant', 'essential-oil',
+  'resin', 'mushroom',
+] as const
+
 const WikiDataSchema = z.object({
   slug: z.string().regex(SLUG_RE, 'slug must be kebab-case (a-z, 0-9, -)'),
   title: z.string().min(2).max(200), // = name
   excerpt: z.string().min(40).max(400), // = shortDescription
   content: LexicalContentSchema, // = longDescription rendered as Lexical
   latinName: z.string().min(2).max(120),
+  category: z.enum(WIKI_CATEGORY_VALUES),
   family: z.string().max(120).optional(),
   origin: z.string().max(500).optional(),
-  partsUsed: z.string().max(500).optional(),
+  partsUsed: z.array(z.enum(PARTS_USED_VALUES)).min(1).max(16),
   activeCompounds: z.string().max(800).optional(),
   harvest: z.string().max(500).optional(),
   form: z.string().max(500).optional(),
@@ -627,6 +639,7 @@ export async function runExternalIngest(opts: {
         latinName: d.latinName,
         shortDescription: d.excerpt,
         longDescription: lexicalToPlainText(d.content as never),
+        category: d.category,
         family: d.family,
         origin: d.origin,
         partsUsed: d.partsUsed,

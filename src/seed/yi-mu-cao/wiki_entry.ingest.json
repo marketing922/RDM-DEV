@@ -810,9 +810,10 @@
         ]
       }
     },
+    "category": "female",
     "family": "lamiaceae",
     "origin": "Chine, Asie de l'Est",
-    "partsUsed": "Parties aériennes (tiges, feuilles, fleurs)",
+    "partsUsed": ["stem", "leaf", "flower"],
     "activeCompounds": "Léonurine, stachydrine, acide linolénique, rutine, acide fumarique",
     "harvest": "",
     "form": "Décoction",
