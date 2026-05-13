@@ -559,21 +559,32 @@ export default async function BlogDetailPage({ params }: Props) {
               ) : null}
             </p>
 
-            {/* Title display — tail in burgundy italic */}
-            <h1 className="font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] text-[36px] sm:text-[44px] md:text-[52px] lg:text-[58px]">
-              {titleHead ? (
-                <>
-                  {titleHead}{' '}
-                  <em className="italic text-rm-burgundy font-normal">
-                    {titleTail}
-                  </em>
-                </>
-              ) : (
-                <em className="italic text-rm-burgundy font-normal">
-                  {titleTail}
-                </em>
-              )}
-            </h1>
+            {/* Title display — tail in burgundy italic. Size shrinks with length. */}
+            {(() => {
+              const len = articleTitle.length
+              const sizeClass =
+                len <= 25 ? 'text-[44px] sm:text-[56px] md:text-[68px] lg:text-[78px]' :
+                len <= 50 ? 'text-[40px] sm:text-[48px] md:text-[58px] lg:text-[66px]' :
+                len <= 90 ? 'text-[36px] sm:text-[44px] md:text-[52px] lg:text-[58px]' :
+                len <= 130 ? 'text-[30px] sm:text-[36px] md:text-[42px] lg:text-[46px]' :
+                'text-[24px] sm:text-[30px] md:text-[34px] lg:text-[38px]'
+              return (
+                <h1 className={`font-display font-normal text-rm-teal leading-[1.05] tracking-[-0.02em] ${sizeClass}`}>
+                  {titleHead ? (
+                    <>
+                      {titleHead}{' '}
+                      <em className="italic text-rm-burgundy font-normal">
+                        {titleTail}
+                      </em>
+                    </>
+                  ) : (
+                    <em className="italic text-rm-burgundy font-normal">
+                      {titleTail}
+                    </em>
+                  )}
+                </h1>
+              )
+            })()}
 
             {/* Subtitle / excerpt */}
             {p.excerpt && (

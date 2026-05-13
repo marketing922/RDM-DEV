@@ -486,10 +486,22 @@ export default async function PlantDetailPage({ params }: Props) {
               <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-rm-burgundy">
                 N° {fiche} · Fiche botanique
               </p>
-              <h1 className="mt-3 sm:mt-4 font-display text-[36px] sm:text-[48px] md:text-[64px] lg:text-[88px] leading-[0.95] tracking-[-0.02em] text-rm-teal font-normal">
-                {titleLead && <span>{titleLead} </span>}
-                <span className="italic text-rm-burgundy">{titleTail}</span>
-              </h1>
+              {(() => {
+                const len = plantName.length
+                const sizeClass =
+                  len <= 12 ? 'text-[56px] sm:text-[80px] md:text-[100px] lg:text-[120px]' :
+                  len <= 25 ? 'text-[44px] sm:text-[64px] md:text-[84px] lg:text-[100px]' :
+                  len <= 50 ? 'text-[36px] sm:text-[48px] md:text-[64px] lg:text-[88px]' :
+                  len <= 90 ? 'text-[30px] sm:text-[40px] md:text-[52px] lg:text-[64px]' :
+                  len <= 130 ? 'text-[26px] sm:text-[34px] md:text-[42px] lg:text-[50px]' :
+                  'text-[22px] sm:text-[28px] md:text-[34px] lg:text-[40px]'
+                return (
+                  <h1 className={`mt-3 sm:mt-4 font-display ${sizeClass} leading-[0.95] tracking-[-0.02em] text-rm-teal font-normal`}>
+                    {titleLead && <span>{titleLead} </span>}
+                    <span className="italic text-rm-burgundy">{titleTail}</span>
+                  </h1>
+                )
+              })()}
               {e.latinName && (
                 <p className="mt-3 sm:mt-4 font-serif italic text-[16px] sm:text-[20px] md:text-[22px] text-rm-burgundy/90">
                   {e.latinName}
