@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
-import fs from 'fs/promises'
-import path from 'path'
 
 import { authenticateSeedRoute } from '@/lib/seed-auth'
 import {
@@ -11,34 +9,25 @@ import {
   type ExternalIngestInput,
 } from '@/lib/external-ingest'
 
+// Imports JSON inlinés au build → bundlés par Next.js dans le runtime
+// Vercel (sinon ENOENT car /var/task ne contient pas les fichiers du repo).
+import blogJson from '@/seed/yi-mu-cao/blog_post.ingest.json'
+import wikiJson from '@/seed/yi-mu-cao/wiki_entry.ingest.json'
+
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
 
-const FILES = [
-  { kind: 'blog' as const, file: 'Documentation/blog_post.ingest.json' },
-  { kind: 'wiki' as const, file: 'Documentation/wiki_entry.ingest.json' },
+const FILES: Array<{ kind: 'blog' | 'wiki'; data: unknown }> = [
+  { kind: 'blog', data: blogJson },
+  { kind: 'wiki', data: wikiJson },
 ]
 
-async function loadAndValidate(file: string): Promise<
+function validate(raw: unknown):
   | { ok: true; input: ExternalIngestInput }
-  | { ok: false; error: string; details?: unknown }
-> {
-  const abs = path.join(process.cwd(), file)
-  let raw: string
-  try {
-    raw = await fs.readFile(abs, 'utf8')
-  } catch (err) {
-    return { ok: false, error: `read_failed:${file}:${err instanceof Error ? err.message : String(err)}` }
-  }
-  let parsed: unknown
-  try {
-    parsed = JSON.parse(raw)
-  } catch (err) {
-    return { ok: false, error: `json_parse_failed:${file}:${err instanceof Error ? err.message : String(err)}` }
-  }
-  const validation = ExternalIngestSchema.safeParse(parsed)
+  | { ok: false; error: string; details?: unknown } {
+  const validation = ExternalIngestSchema.safeParse(raw)
   if (!validation.success) {
-    return { ok: false, error: `schema_invalid:${file}`, details: validation.error.format() }
+    return { ok: false, error: 'schema_invalid', details: validation.error.format() }
   }
   return { ok: true, input: validation.data }
 }
@@ -59,8 +48,7 @@ export async function GET(req: NextRequest) {
 
   if (req.nextUrl.searchParams.get('confirm') !== 'yes') {
     return NextResponse.json({
-      message: 'Add ?confirm=yes to ingest Yi Mu Cao blog + wiki from Documentation/*.ingest.json',
-      files: FILES.map((f) => f.file),
+      message: 'Add ?confirm=yes to ingest Yi Mu Cao blog + wiki (bundled JSON).',
     })
   }
 
@@ -69,8 +57,8 @@ export async function GET(req: NextRequest) {
   const actorId = 'seed-yi-mu-cao'
 
   const results: Record<string, unknown> = {}
-  for (const { kind, file } of FILES) {
-    const loaded = await loadAndValidate(file)
+  for (const { kind, data } of FILES) {
+    const loaded = validate(data)
     if (!loaded.ok) {
       results[kind] = loaded
       continue
@@ -78,8 +66,8 @@ export async function GET(req: NextRequest) {
     if (loaded.input.kind !== kind) {
       results[kind] = {
         ok: false,
-        error: `kind_mismatch`,
-        message: `Expected kind=${kind} in ${file}, got ${loaded.input.kind}`,
+        error: 'kind_mismatch',
+        message: `Expected kind=${kind}, got ${loaded.input.kind}`,
       }
       continue
     }
