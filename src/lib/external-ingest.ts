@@ -505,14 +505,17 @@ export async function runExternalIngest(opts: {
         message: `Modération indisponible : ${err instanceof Error ? err.message : String(err)}`,
       }
     }
-    if (
-      moderation.verdict === 'block' ||
-      (moderation.verdict === 'risk' && (moderation.confidence ?? 0) >= 0.7)
-    ) {
+    // Politique de modération : on ne bloque QUE sur verdict 'block' explicite.
+    // 'risk' (même à haute confidence) → ingest accepté avec warning loggé
+    // dans complianceLLM. L'éditeur peut reviewer ensuite depuis l'admin.
+    // Motif : le vocabulaire de la MTC / phytothérapie traditionnelle
+    // (« vivifier le sang », « soutenir le cycle ») produit beaucoup de
+    // faux positifs si on bloque sur risk.
+    if (moderation.verdict === 'block') {
       return {
         ok: false,
         error: 'moderation_blocked',
-        message: `Modération : ${moderation.verdict} (${moderation.reason})`,
+        message: `Modération : block (${moderation.reason})`,
         details: {
           verdict: moderation.verdict,
           confidence: moderation.confidence,
