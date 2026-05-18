@@ -3,7 +3,6 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import { BuyPopup } from '@/components/shared/BuyPopup'
-import { formatPrice } from '@/lib/utils'
 import { resolveMediaUrl } from '@/lib/mediaUrl'
 
 type ProductImage = { image?: { url?: string; alt?: string } | null } | null
@@ -51,8 +50,6 @@ export function ProductCard({ product }: ProductCardProps) {
 
   const {
     name,
-    price,
-    compareAtPrice,
     shortDescription,
     images,
     externalImageUrl,
@@ -67,8 +64,6 @@ export function ProductCard({ product }: ProductCardProps) {
   const firstImage = images?.[0]?.image
   const imageUrl = resolveMediaUrl(firstImage, 'card') ?? externalImageUrl
   const imageAlt = firstImage?.alt || name
-
-  const hasPromo = !!compareAtPrice && compareAtPrice > price
 
   // Cap total chips to keep cards uniform; benefits get priority.
   const allBenefits = extractChips(benefits)
@@ -127,16 +122,7 @@ export function ProductCard({ product }: ProductCardProps) {
             ))}
           </div>
 
-          <div className="mt-auto flex items-baseline gap-2 pt-1">
-            <span className="text-lg font-bold text-[#A2211E]">{formatPrice(price)}</span>
-            {hasPromo && (
-              <span className="text-sm text-[#712E2F]/50 line-through">
-                {formatPrice(compareAtPrice!)}
-              </span>
-            )}
-          </div>
-
-          <p className="text-xs text-[#712E2F]/70 min-h-[16px]">{weight || ''}</p>
+          <p className="mt-auto pt-1 text-xs text-[#712E2F]/70 min-h-[16px]">{weight || ''}</p>
 
           <button
             type="button"

@@ -26,15 +26,6 @@ export async function generateStaticParams() {
   return []
 }
 
-function formatPrice(value: number | null | undefined): string {
-  if (typeof value !== 'number' || Number.isNaN(value)) return ''
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
-    minimumFractionDigits: 2,
-  }).format(value)
-}
-
 function productImages(p: any): string[] {
   const urls: string[] = []
   if (Array.isArray(p?.images)) {
@@ -95,15 +86,6 @@ export default async function ProductDetailPage({ params }: Props) {
     images.push(DEFAULT_PLANT_IMAGE)
   }
 
-  const price = formatPrice(p.price)
-  const compareAtPrice = formatPrice(p.compareAtPrice)
-  const hasPromo =
-    typeof p.compareAtPrice === 'number' &&
-    typeof p.price === 'number' &&
-    p.compareAtPrice > p.price
-  const discountPct = hasPromo
-    ? Math.round(((p.compareAtPrice - p.price) / p.compareAtPrice) * 100)
-    : 0
 
   const benefits: Array<{ name: string; slug: string }> = Array.isArray(p.benefits)
     ? p.benefits.filter((b: any) => b && typeof b === 'object' && b.name && b.slug)
@@ -203,22 +185,6 @@ export default async function ProductDetailPage({ params }: Props) {
               </p>
             )}
 
-            {/* Price */}
-            <div className="mt-5 sm:mt-6 flex items-baseline gap-3 flex-wrap">
-              <span className="font-display text-[32px] sm:text-[36px] md:text-[40px] text-rm-burgundy leading-none">
-                {price}
-              </span>
-              {hasPromo && (
-                <>
-                  <span className="font-serif italic text-[18px] text-rm-inkSoft line-through">
-                    {compareAtPrice}
-                  </span>
-                  <span className="inline-flex items-center px-2 py-0.5 font-mono text-[10px] tracking-[0.15em] uppercase bg-rm-burgundy text-white">
-                    −{discountPct}%
-                  </span>
-                </>
-              )}
-            </div>
 
             {/* Stock badge */}
             <div className="mt-4 flex items-center gap-2">
@@ -438,7 +404,6 @@ export default async function ProductDetailPage({ params }: Props) {
               {relatedProducts.map((rp: any, rIdx: number) => {
                 const rpImgs = productImages(rp)
                 const rpImg = rpImgs[0] || DEFAULT_PLANT_IMAGE
-                const rpPrice = formatPrice(rp.price)
                 return (
                   <Reveal key={rp.id || rp.slug} delay={(rIdx % 4) * 80}>
                   <Link
@@ -458,11 +423,6 @@ export default async function ProductDetailPage({ params }: Props) {
                       <h3 className="font-display text-[17px] leading-[1.2] text-rm-teal group-hover:text-rm-burgundy transition-colors line-clamp-2">
                         {rp.name}
                       </h3>
-                      {rpPrice && (
-                        <p className="mt-2 font-display text-[18px] text-rm-burgundy">
-                          {rpPrice}
-                        </p>
-                      )}
                     </div>
                   </Link>
                   </Reveal>
